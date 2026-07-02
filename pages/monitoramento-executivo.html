@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Gargalos | PMS J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    <script src="../assets/js/core/shared-report.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            /* HIGH-END NEON / EXECUTIVE THEME */
+            --bg: #0B1220;
+            --card: #151A23; 
+            --card-2: #0F172A;
+            --border: #1F2933;
+            --text: #E5E7EB;
+            --text-muted: #9CA3AF;
+            
+            /* NEON CORES POR SETOR */
+            --c-lay: #D946EF; --c-lay-glow: rgba(217, 70, 239, 0.4);
+            --c-prod: #06B6D4; --c-prod-glow: rgba(6, 182, 212, 0.4);
+            --c-fat: #10B981; --c-fat-glow: rgba(16, 185, 129, 0.4);
+            --c-pcp: #F59E0B; --c-pcp-glow: rgba(245, 158, 11, 0.4);
+            
+            /* GARGALO / ALERTA */
+            --c-err: #EF4444; --c-err-glow: rgba(239, 68, 68, 0.5);
+
+            --primary: #3B82F6;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow-card: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; outline: none; }
+        body { background: var(--bg); color: var(--text); display: flex; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+
+        /* ========================================================= */
+        /* SIDEBAR                                                   */
+        /* ========================================================= */
+        aside { 
+            width: 260px; min-width: 260px; background: transparent; 
+            border-right: 1px solid var(--border); display: flex; flex-direction: column; 
+            padding: 24px 20px; z-index: 100; position: fixed; height: 100vh; top: 0; left: 0;
+        }
+        
+        .logo-area { margin-bottom: 45px; display: flex; align-items: center; gap: 12px; padding-left: 5px;}
+        .logo-icon { 
+            width: 38px; height: 38px; background: linear-gradient(135deg, var(--c-err), #B91C1C); 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; 
+            color: #FFF; font-size: 1.6rem; box-shadow: 0 8px 20px var(--c-err-glow);
+        }
+        .logo-text { color: var(--text); font-weight: 900; font-size: 1.4rem; letter-spacing: 0.5px; }
+
+        nav { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-btn { 
+            background: transparent; color: var(--text-muted); border: none; padding: 14px 18px; 
+            width: 100%; border-radius: 50px; cursor: pointer; text-align: left; font-weight: 600; 
+            display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: 0.3s;
+        }
+        .nav-btn i { font-size: 1.3rem; }
+        .nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+        .nav-btn.active { 
+            background: linear-gradient(to right, rgba(239, 68, 68, 0.1), transparent); 
+            color: var(--c-err); border-left: 3px solid var(--c-err); 
+            border-radius: 0 50px 50px 0; padding-left: 15px;
+        }
+
+        .bottom-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+        .logout-btn { 
+            background: rgba(239, 68, 68, 0.1); color: var(--c-err); border: 1px solid rgba(239, 68, 68, 0.2); 
+            padding: 14px 18px; width: 100%; border-radius: 50px; cursor: pointer; text-align: left; 
+            font-weight: 700; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: all 0.3s;
+        }
+
+        /* ========================================================= */
+        /* CONTEÚDO PRINCIPAL                                        */
+        /* ========================================================= */
+        main { flex: 1; padding: 30px 40px; margin-left: 260px; overflow-y: auto;}
+        
+        .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; gap: 20px; flex-wrap: wrap;}
+        .page-header h1 { font-weight: 900; font-size: 2.2rem; color: var(--text); letter-spacing: -0.02em; line-height: 1.1; display: flex; align-items: center; gap: 12px;}
+        .page-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; font-weight: 500; }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--c-err), #B91C1C); color: #FFF; 
+            padding: 12px 24px; border-radius: 50px; font-weight: 800; border: none; cursor: pointer; 
+            display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px var(--c-err-glow); transition: 0.3s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(239,68,68,0.6); }
+
+        select, .input-box { 
+            padding: 12px 20px; font-size: 0.95rem; font-weight: 600; background: rgba(0,0,0,0.3); 
+            border: 1px solid var(--border); border-radius: 50px; color: var(--text); outline: none; transition: 0.3s;
+        }
+        select:focus, .input-box:focus { border-color: var(--c-err); box-shadow: 0 0 0 2px var(--c-err-glow); }
+        select option { background: var(--card); color: var(--text); }
+
+        .filter-container { display: flex; gap: 15px; margin-bottom: 25px; background: var(--card-2); padding: 15px 20px; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-card); align-items: center; flex-wrap: wrap; }
+
+        /* ========================================================= */
+        /* EFEITO CASCATA                                            */
+        /* ========================================================= */
+        .anim-element {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .anim-element.show-anim { opacity: 1; transform: translateY(0); }
+
+        /* ========================================================= */
+        /* A ESTEIRA (FLOWCHAIN) - VISÃO PRINCIPAL                   */
+        /* ========================================================= */
+        .flowchain-container {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--card); padding: 40px; border-radius: var(--radius-lg);
+            border: 1px solid var(--border); box-shadow: var(--shadow-card);
+            margin-bottom: 40px; position: relative; overflow: hidden;
+        }
+
+        .flow-node {
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            background: var(--card-2); padding: 25px 15px; border-radius: var(--radius-md);
+            border: 2px solid var(--border); position: relative; z-index: 2;
+            transition: 0.4s; min-width: 180px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .flow-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 15px; }
+        .flow-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 1px;}
+        .flow-time { font-size: 1.8rem; font-weight: 900; color: var(--text); letter-spacing: -0.02em;}
+
+        /* Linhas Conectoras Animadas */
+        .flow-connector {
+            flex: 0.3; height: 4px; background: rgba(255,255,255,0.05); margin: 0 10px;
+            position: relative; border-radius: 4px; overflow: hidden; z-index: 1;
+        }
+        .flow-connector::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: flowAnim 2s infinite linear;
+        }
+        @keyframes flowAnim { 100% { left: 200%; } }
+
+        /* Estilos Individuais */
+        .n-lay .flow-icon { background: rgba(217, 70, 239, 0.1); color: var(--c-lay); border: 1px solid rgba(217, 70, 239, 0.2); }
+        .n-pcp .flow-icon { background: rgba(245, 158, 11, 0.1); color: var(--c-pcp); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .n-prod .flow-icon { background: rgba(6, 182, 212, 0.1); color: var(--c-prod); border: 1px solid rgba(6, 182, 212, 0.2); }
+        .n-fat .flow-icon { background: rgba(16, 185, 129, 0.1); color: var(--c-fat); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+        /* O ESTADO DO GARGALO (Pulsante e Vermelho) */
+        .flow-node.is-gargalo {
+            border-color: var(--c-err);
+            background: radial-gradient(circle at top, rgba(239, 68, 68, 0.15), var(--card-2) 70%);
+            box-shadow: 0 0 20px var(--c-err-glow), inset 0 0 10px var(--c-err-glow);
+            transform: scale(1.05);
+            animation: pulse-danger 2s infinite;
+        }
+        .flow-node.is-gargalo .flow-icon { background: var(--c-err); color: #FFF; box-shadow: 0 0 15px var(--c-err-glow); border: none;}
+        .flow-node.is-gargalo .flow-time { color: var(--c-err); }
+        .gargalo-badge {
+            position: absolute; top: -15px; background: var(--c-err); color: #FFF;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px var(--c-err-glow);
+        }
+
+        @keyframes pulse-danger { 0% { box-shadow: 0 0 10px var(--c-err-glow); } 50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.6); } 100% { box-shadow: 0 0 10px var(--c-err-glow); } }
+
+        /* ========================================================= */
+        /* LISTA COMPLETA EXPANSÍVEL (RAIO-X)                        */
+        /* ========================================================= */
+        .list-row { 
+            background: var(--card); border-radius: var(--radius-md); border: 1px solid var(--border); 
+            box-shadow: var(--shadow-card); overflow: hidden; transition: 0.3s; margin-bottom: 15px; 
+        }
+        .list-row:hover { border-color: rgba(255,255,255,0.1); }
+        
+        .list-row.has-error { border-left: 4px solid var(--c-err); }
+        .list-row.no-error { border-left: 4px solid var(--c-fat); }
+        
+        .row-header { padding: 20px; display: flex; align-items: center; width: 100%; gap: 15px; cursor: pointer; flex-wrap: wrap;}
+        
+        .col-id { width: 90px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; }
+        .row-id { color: var(--text); font-weight: 900; font-size: 1.1rem; }
+        
+        .col-client { flex: 1.5; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
+        .row-client { font-weight: 800; font-size: 1.1rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .info-praz { color: var(--text-muted); display: flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: 600;}
+        
+        .col-badges { flex: 2; display: flex; gap: 10px; align-items: center; justify-content: flex-start; min-width: 250px;}
+        .badge-time { background: var(--card-2); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .badge-err { background: rgba(239, 68, 68, 0.1); color: var(--c-err); border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        
+        .col-actions { width: auto; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; margin-left: auto;}
+        .btn-detalhes { color: var(--text-muted); font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; text-transform: uppercase; background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 8px;}
+        .btn-detalhes:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+        /* RAIO-X DETALHES */
+        .card-details { display: none; padding: 25px; background: var(--card-2); border-top: 1px solid var(--border); }
+        .list-row.is-expanded .card-details { display: block; animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .list-row.is-expanded .btn-detalhes i { transform: rotate(180deg); color: var(--c-prod); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .timeline-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .timeline-step { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; gap: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        
+        .ts-title { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+        .ts-time { font-size: 1.4rem; font-weight: 900; color: var(--text); letter-spacing: -0.02em;}
+        .ts-users { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px;}
+        .ts-users i { font-size: 1rem; }
+
+        /* Cores Top Border Raio-X */
+        .t-lay { border-top: 3px solid var(--c-lay); }
+        .t-pcp { border-top: 3px solid var(--c-pcp); }
+        .t-prod { border-top: 3px solid var(--c-prod); }
+        .t-fat { border-top: 3px solid var(--c-fat); }
+
+        /* Bloco de Erros */
+        .error-block { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .error-title { font-size: 0.85rem; font-weight: 900; color: var(--c-err); text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px;}
+        .error-item { padding: 12px 0; border-bottom: 1px dashed rgba(239, 68, 68, 0.2); display: flex; flex-direction: column; gap: 6px; }
+        .error-item:last-child { border-bottom: none; padding-bottom: 0; }
+        
+        .e-act { font-weight: 800; font-size: 0.95rem; color: var(--text); }
+        .e-obs { font-weight: 500; font-size: 0.9rem; color: var(--text-muted); }
+        .e-meta { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 12px; margin-top: 4px;}
+    </style>
+</head>
+<body>
+    
+    <aside>
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+            <span class="logo-text">PMS J7S</span>
+        </div>
+        
+        <nav style="flex:1;">
+            <button class="nav-btn" onclick="window.location.href='diretoria.html'">
+                <i class="ph-fill ph-presentation-chart"></i> Painel Diretoria
+            </button>
+            <button class="nav-btn" onclick="window.location.href='metas-comercial.html'">
+                <i class="ph-fill ph-target"></i> Metas Comerciais
+            </button>
+            <button class="nav-btn" onclick="window.location.href='monitoramento-executivo.html'">
+                <i class="ph-fill ph-radar"></i> Rastreio de Pedidos
+            </button>
+            <button class="nav-btn active" onclick="return false;">
+                <i class="ph-fill ph-funnel-x"></i> Análise de Gargalos
+            </button>
+            <button class="nav-btn" onclick="window.location.href='admin.html'">
+                <i class="ph-fill ph-squares-four"></i> Visão Operacional
+            </button>
+        </nav>
+        
+        <div class="bottom-actions">
+            <button onclick="logout()" class="logout-btn">
+                <i class="ph-bold ph-sign-out"></i> Sair do Sistema
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1><i class="ph-fill ph-funnel-x" style="color: var(--c-err); filter: drop-shadow(0 0 10px rgba(239,68,68,0.5));"></i> Mapa de Eficiência e Gargalos</h1>
+                <p>Auditoria macro (Lead Time 24/7): descubra onde a esteira produtiva está a reter o capital.</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <select id="period-filter" onchange="loadData()">
+                    <option value="this_month" selected>Fechamento Mês Atual</option>
+                    <option value="last_month">Fechamento Mês Passado</option>
+                    <option value="all">Todo o Histórico</option>
+                </select>
+                <button class="btn-primary" onclick="loadData()" id="btn-sync">
+                    <i class="ph-bold ph-arrows-clockwise"></i> Sincronizar ERP
+                </button>
+            </div>
+        </div>
+
+        <div id="loading-state" style="text-align: center; padding: 100px; color: var(--text-muted);">
+            <i class="ph-bold ph-spinner ph-spin" style="font-size: 4rem; color: var(--c-err); margin-bottom: 20px;"></i>
+            <h2>Mapeando a Esteira...</h2>
+        </div>
+
+        <div id="dashboard-content" style="display: none; flex-direction: column;">
+            
+            <!-- A ESTEIRA (FLOWCHAIN) -->
+            <div class="flowchain-container anim-element" id="flowchain-container">
+                <!-- Injetado via JS -->
+            </div>
+
+            <!-- FILTROS DA LISTA COMPLETA -->
+            <div class="filter-container anim-element">
+                <div style="flex: 1; min-width: 250px; position: relative;">
+                    <i class="ph-bold ph-magnifying-glass" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem;"></i>
+                    <input type="text" id="search-input" class="input-box" placeholder="Buscar por ID ou Cliente..." style="padding-left: 50px;" onkeyup="renderAuditoriaList()">
+                </div>
+                <select id="filter-errors" style="width: 100%; max-width: 350px;" onchange="renderAuditoriaList()">
+                    <option value="all">Todos os Pedidos Finalizados</option>
+                    <option value="errors_only">Mostrar Apenas com Ocorrências / Retornos</option>
+                </select>
+            </div>
+
+            <!-- LISTA COMPLETA (RAIO-X) -->
+            <div id="orders-list">
+                <!-- Gerado via JS -->
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // =========================================================================
+        // FUNÇÕES CORE GERAIS E SESSÃO
+        // =========================================================================
+        const sessaoString = localStorage.getItem('sinaliza_sessao');
+        if (!sessaoString) window.location.href = 'index.html';
+
+        function logout() { localStorage.removeItem('sinaliza_sessao'); window.location.href = 'index.html'; }
+
+        window.toggleCard = function(id) {
+            const row = document.getElementById(`row-${id}`); if (!row) return;
+            const wasExpanded = row.classList.contains('is-expanded');
+            document.querySelectorAll('.list-row.is-expanded').forEach(c => c.classList.remove('is-expanded'));
+            if (!wasExpanded) row.classList.add('is-expanded');
+        };
+
+        let ordersData = [];
+        let configWorkflow = [];
+        let auditedData = [];
+
+        window.onload = async () => { await loadData(); };
+
+        async function loadData() {
+            const btn = document.getElementById('btn-sync');
+            if(btn) btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Baixando...';
+            
+            document.getElementById('loading-state').style.display = 'block';
+            document.getElementById('dashboard-content').style.display = 'none';
+            
+            document.querySelectorAll('.anim-element').forEach(el => el.classList.remove('show-anim'));
+
+            try {
+                const { workflow, orders } = await fetchWorkflowAndOrders();
+                configWorkflow = workflow;
+                
+                if (orders) {
+                    ordersData = orders.map(o => ({
+                        id: o.ID || o.id,
+                        client: o.CLIENTE || o.client,
+                        status: o.STATUS || o.status,
+                        history: parseOrderHistory(o.HISTORY || o.history),
+                        created_at: o.CREATED_AT || o.created_at || o.DATA_EMISSAO
+                    }));
+                    processDashboard();
+                }
+            } catch(e) {
+                console.error("Erro:", e);
+                Swal.fire('Falha', 'Não foi possível carregar os dados.', 'error');
+            } finally {
+                if(btn) btn.innerHTML = '<i class="ph-bold ph-arrows-clockwise"></i> Sincronizar ERP';
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'flex';
+            }
+        }
+
+        // =========================================================================
+        // O MOTOR DE INTELIGÊNCIA EXECUTIVA
+        // =========================================================================
+        function processDashboard() {
+            const period = document.getElementById('period-filter').value;
+            const now = new Date(); 
+            let sDate = new Date(2000, 0, 1), eDate = new Date(2100, 0, 1);
+            if (period === 'this_month') { sDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0); eDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59); } 
+            else if (period === 'last_month') { sDate = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0); eDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59); } 
+
+            const finalStage = configWorkflow.length > 0 ? getSafeStatus(configWorkflow[configWorkflow.length-1].name) : 'finalizado';
+            const fatStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('faturamento') || getSafeStatus(w.name).includes('faturam')).map(w => getSafeStatus(w.name));
+            const layStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('layout') || getSafeStatus(w.name).includes('layout')).map(w => getSafeStatus(w.name));
+            const pcpStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('pcp') || getSafeStatus(w.name).includes('pcp')).map(w => getSafeStatus(w.name));
+            const prodStages = configWorkflow.filter(w => { const r = getSafeStatus(w.role); return r.includes('produc') || r.includes('produç'); }).map(w => getSafeStatus(w.name));
+
+            auditedData = [];
+            
+            let tLay = 0, cLay = 0;
+            let tPcp = 0, cPcp = 0;
+            let tProd = 0, cProd = 0;
+            let tFat = 0, cFat = 0;
+
+            ordersData.forEach(o => {
+                let st = getSafeStatus(o.status);
+                const logs = (o.history || []).filter(h => h.date && !isNaN(new Date(h.date).getTime())).sort((a,b) => new Date(a.date) - new Date(b.date));
+                if (logs.length > 0 && logs[logs.length-1].to) st = getSafeStatus(logs[logs.length-1].to);
+
+                const isFat = fatStages.includes(st) || st.includes('faturam') || st.includes('nota');
+                const isFin = st === finalStage || st.includes('finalizad') || st.includes('concluid') || st.includes('entregue') || logs.some(h => String(h.action).toLowerCase().includes('nota emitida'));
+                if (!isFat && !isFin) return; 
+
+                const finishedDate = logs.length > 0 ? new Date(logs[logs.length-1].date) : new Date(o.created_at);
+                if (period !== 'all' && (finishedDate < sDate || finishedDate > eDate)) return;
+
+                let orderData = {
+                    id: o.id, client: o.client,
+                    timeLay: 0, usersLay: new Set(),
+                    timePcp: 0, usersPcp: new Set(),
+                    timeProd: 0, usersProd: new Set(),
+                    timeFat: 0, usersFat: new Set(),
+                    errors: [], totalMins: 0, finishedDate: finishedDate
+                };
+
+                let lastDate = new Date(o.created_at || o.DATA_EMISSAO);
+                if (isNaN(lastDate.getTime()) && logs.length > 0) lastDate = new Date(logs[0].date);
+
+                let currentStatus = '';
+                if (logs.length > 0) { currentStatus = getSafeStatus(logs[0].from); if (!currentStatus) currentStatus = getSafeStatus(logs[0].to); } 
+                else currentStatus = getSafeStatus(o.status);
+
+                logs.forEach(log => {
+                    const logDate = new Date(log.date);
+                    if (isNaN(logDate.getTime()) || logDate < lastDate) return;
+
+                    const dm = diffMinsCalc(lastDate, logDate);
+
+                    if (dm > 0 && dm < 43200) { 
+                        if (layStages.includes(currentStatus)) orderData.timeLay += dm;
+                        else if (prodStages.includes(currentStatus)) orderData.timeProd += dm;
+                        else if (pcpStages.includes(currentStatus) || currentStatus.includes('pcp') || currentStatus.includes('libera')) orderData.timePcp += dm;
+                        else if (fatStages.includes(currentStatus) || currentStatus.includes('faturam')) orderData.timeFat += dm;
+                    }
+
+                    const logTo = getSafeStatus(log.to);
+                    if (logTo) currentStatus = logTo;
+                    lastDate = logDate;
+
+                    const act = String(log.action).toLowerCase();
+                    const usr = normalizarNome(log.user);
+
+                    if (usr && usr !== 'SISTEMA') {
+                        if (act.includes('projeto') || act.includes('layout') || act.includes('arte')) orderData.usersLay.add(usr);
+                        else if (act.includes('pcp')) orderData.usersPcp.add(usr);
+                        else if (act.includes('produç') || act.includes('produc') || act.includes('máquina')) orderData.usersProd.add(usr);
+                        else if (act.includes('faturam') || act.includes('nota emitida')) orderData.usersFat.add(usr);
+                    }
+
+                    if (act.includes('devolução') || act.includes('retorno') || act.includes('reprov') || act.includes('problema')) {
+                        let obs = log.obs ? String(log.obs).replace(/\[Motivo:/i, 'Motivo:').replace(/\]/g, '').trim() : '';
+                        orderData.errors.push({ date: logDate, action: log.action, user: usr || 'Sistema', obs: obs });
+                    }
+                });
+
+                const finalDm = diffMinsCalc(lastDate, orderData.finishedDate);
+                if (finalDm > 0 && finalDm < 43200) {
+                    if (layStages.includes(currentStatus)) orderData.timeLay += finalDm;
+                    else if (prodStages.includes(currentStatus)) orderData.timeProd += finalDm;
+                    else if (pcpStages.includes(currentStatus) || currentStatus.includes('pcp')) orderData.timePcp += finalDm;
+                    else if (fatStages.includes(currentStatus) || currentStatus.includes('faturam')) orderData.timeFat += finalDm;
+                }
+
+                orderData.totalMins = orderData.timeLay + orderData.timePcp + orderData.timeProd + orderData.timeFat;
+
+                orderData.usersLay = Array.from(orderData.usersLay).join(', ');
+                orderData.usersProd = Array.from(orderData.usersProd).join(', ');
+                orderData.usersPcp = Array.from(orderData.usersPcp).join(', ');
+                orderData.usersFat = Array.from(orderData.usersFat).join(', ');
+
+                if (orderData.timeLay > 0) { tLay += orderData.timeLay; cLay++; }
+                if (orderData.timeProd > 0) { tProd += orderData.timeProd; cProd++; }
+                if (orderData.timePcp > 0) { tPcp += orderData.timePcp; cPcp++; }
+                if (orderData.timeFat > 0) { tFat += orderData.timeFat; cFat++; }
+                
+                auditedData.push(orderData);
+            });
+
+            // ==========================================
+            // PREPARAÇÃO DA ESTEIRA E GARGALO
+            // ==========================================
+            const avgLay = cLay > 0 ? (tLay / cLay) : 0;
+            const avgPcp = cPcp > 0 ? (tPcp / cPcp) : 0;
+            const avgProd = cProd > 0 ? (tProd / cProd) : 0;
+            const avgFat = cFat > 0 ? (tFat / cFat) : 0;
+
+            const averages = [
+                { id: 'lay', name: 'Layout', val: avgLay, icon: 'ph-paint-brush' },
+                { id: 'pcp', name: 'PCP', val: avgPcp, icon: 'ph-clipboard-text' },
+                { id: 'prod', name: 'Fábrica', val: avgProd, icon: 'ph-hammer' },
+                { id: 'fat', name: 'Emissão', val: avgFat, icon: 'ph-receipt' }
+            ];
+            
+            // Define Maior Gargalo
+            let gargaloMax = { id: '', val: 0 };
+            averages.forEach(a => { if(a.val > gargaloMax.val) gargaloMax = a; });
+
+            const flowContainer = document.getElementById('flowchain-container');
+            if (auditedData.length === 0) {
+                flowContainer.innerHTML = '<div style="text-align:center; width:100%; color:var(--text-muted); font-size:1.1rem;">Nenhum pedido finalizado no período para gerar o mapa.</div>';
+                document.getElementById('orders-list').innerHTML = '';
+                return;
+            }
+
+            let flowHtml = '';
+            averages.forEach((a, index) => {
+                const isGargalo = (a.id === gargaloMax.id && gargaloMax.val > 0) ? ' is-gargalo' : '';
+                const badgeHtml = isGargalo ? `<div class="gargalo-badge">Gargalo Crítico</div>` : '';
+                
+                flowHtml += `
+                <div class="flow-node n-${a.id}${isGargalo}">
+                    ${badgeHtml}
+                    <div class="flow-icon"><i class="ph-fill ${a.icon}"></i></div>
+                    <div class="flow-title">${a.name}</div>
+                    <div class="flow-time">${formatLeadTime(a.val)}</div>
+                </div>`;
+
+                if (index < averages.length - 1) {
+                    flowHtml += `<div class="flow-connector"></div>`;
+                }
+            });
+            flowContainer.innerHTML = flowHtml;
+
+            // Renderiza a Lista Completa
+            renderAuditoriaList();
+
+            // Ativa os elementos da tela superior
+            setTimeout(() => {
+                document.querySelectorAll('.anim-element').forEach((el, index) => {
+                    setTimeout(() => el.classList.add('show-anim'), index * 100);
+                });
+            }, 50);
+        }
+
+        // =========================================================================
+        // RENDERIZAR LISTA COMPLETA E PESQUISA (RAIO-X)
+        // =========================================================================
+        function renderAuditoriaList() {
+            const container = document.getElementById('orders-list');
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const filter = document.getElementById('filter-errors').value;
+
+            // Ordena SEMPRE do maior ofensor (tempo total) para o menor
+            let filtered = auditedData.sort((a,b) => b.totalMins - a.totalMins);
+
+            if (filter === 'errors_only') filtered = filtered.filter(o => o.errors.length > 0);
+            if (search) filtered = filtered.filter(o => String(o.id).includes(search) || (o.client && o.client.toLowerCase().includes(search)));
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding: 50px; color:var(--text-muted); font-size:1.1rem; background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border);">Nenhum pedido atende a estes critérios.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map((o, index) => {
+                const hasErrors = o.errors.length > 0;
+                
+                let errHtml = '';
+                if (hasErrors) {
+                    errHtml = `<div class="error-block">
+                        <div class="error-title"><i class="ph-fill ph-warning-octagon" style="font-size:1.3rem;"></i> Ocorrências Registradas (${o.errors.length})</div>
+                        ${o.errors.map(e => `
+                            <div class="error-item">
+                                <div class="e-act">${e.action}</div>
+                                <div class="e-obs">${e.obs}</div>
+                                <div class="e-meta">
+                                    <span><i class="ph-bold ph-user-circle" style="color:var(--c-err); font-size:1.1rem;"></i> ${e.user}</span>
+                                    <span><i class="ph-bold ph-calendar-blank"></i> ${e.date.toLocaleString('pt-BR')}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                }
+
+                return `
+                <div class="list-row anim-list-row" id="row-${o.id}">
+                    <div class="row-header" onclick="toggleCard('${o.id}')">
+                        <div class="col-id"><span class="row-id">#${o.id}</span></div>
+                        <div class="col-client">
+                            <span class="row-client" title="${o.client}">${o.client}</span>
+                            <span class="info-praz"><i class="ph-bold ph-check-circle" style="color:var(--c-fat)"></i> Concluído em: ${o.finishedDate.toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div class="col-badges">
+                            <div class="badge-time" title="Lead Time Total"><i class="ph-bold ph-clock" style="color:var(--primary)"></i> Lead Time: ${formatLeadTime(o.totalMins)}</div>
+                            ${hasErrors ? `<div class="badge-err"><i class="ph-bold ph-warning-octagon"></i> ${o.errors.length} Erro(s)</div>` : ''}
+                        </div>
+                        <div class="col-actions">
+                            <div class="btn-detalhes">Raio-X Setorial <i class="ph-bold ph-caret-down"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-details" onclick="event.stopPropagation()">
+                        <div style="font-size:0.8rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:15px; letter-spacing:0.5px;">Tempo Bruto por Setor (Sem Pausas)</div>
+                        <div class="timeline-container">
+                            <div class="timeline-step t-lay">
+                                <div class="ts-title"><i class="ph-fill ph-paint-brush" style="color:var(--c-lay);"></i> Layout</div>
+                                <div class="ts-time">${formatLeadTime(o.timeLay)}</div>
+                                <div class="ts-users" title="${o.usersLay}"><i class="ph-bold ph-user"></i> ${o.usersLay || 'N/D'}</div>
+                            </div>
+                            <div class="timeline-step t-pcp">
+                                <div class="ts-title"><i class="ph-fill ph-clipboard-text" style="color:var(--c-pcp);"></i> PCP</div>
+                                <div class="ts-time">${formatLeadTime(o.timePcp)}</div>
+                                <div class="ts-users" title="${o.usersPcp}"><i class="ph-bold ph-user"></i> ${o.usersPcp || 'N/D'}</div>
+                            </div>
+                            <div class="timeline-step t-prod">
+                                <div class="ts-title"><i class="ph-fill ph-hammer" style="color:var(--c-prod);"></i> Fábrica</div>
+                                <div class="ts-time">${formatLeadTime(o.timeProd)}</div>
+                                <div class="ts-users" title="${o.usersProd}"><i class="ph-bold ph-user"></i> ${o.usersProd || 'N/D'}</div>
+                            </div>
+                            <div class="timeline-step t-fat">
+                                <div class="ts-title"><i class="ph-fill ph-receipt" style="color:var(--c-fat);"></i> Emissão</div>
+                                <div class="ts-time">${formatLeadTime(o.timeFat)}</div>
+                                <div class="ts-users" title="${o.usersFat}"><i class="ph-bold ph-user"></i> ${o.usersFat || 'N/D'}</div>
+                            </div>
+                        </div>
+                        ${errHtml}
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Efeito Cascata exclusivo para a lista ao pesquisar/filtrar
+            setTimeout(() => {
+                document.querySelectorAll('.anim-list-row').forEach((row, index) => {
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(20px)';
+                    row.style.transition = 'opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    
+                    setTimeout(() => {
+                        row.style.opacity = '1';
+                        row.style.transform = 'translateY(0)';
+                    }, index * 50);
+                });
+            }, 10);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios Master | PMS J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    <script src="../assets/js/core/shared-report.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --cor-fundo: #F3F4F6; 
+            --cor-card-bg: #FFFFFF; 
+            --cor-panel-bg: #F9FAFB; 
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.1);
+            --cor-borda: #E5E7EB;
+            --cor-texto: #111827; 
+            --cor-texto-mutado: #6B7280;
+            
+            --sombra-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --sombra-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius-padrao: 8px;
+            --radius-card: 12px;
+
+            --lay-color: #9333EA; --lay-bg: #F3E8FF;
+            --pcp-color: #EA580C; --pcp-bg: #FFEDD5;
+            --prod-color: #0EA5E9; --prod-bg: #E0F2FE;
+            --fat-color: #10B981; --fat-bg: #D1FAE5;
+            --cor-erro: #EF4444; --cor-sucesso: #10B981;
+        }
+
+        /* ========================================================= */
+        /* 🌙 HIGH-END DARK MODE (Barra Azul + Preto OLED Absoluto)  */
+        /* ========================================================= */
+        [data-theme="dark"] {
+            /* Fundo Preto "Vivo" (Neutro e profundo) */
+            --cor-fundo: #000000; 
+            --cor-card-bg: #111111; 
+            --cor-panel-bg: #1A1A1A; 
+            --cor-input-bg: #000000; 
+            
+            /* Mantendo a Barra Lateral Azul Original */
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.15);
+            
+            /* Textos Contrastantes */
+            --cor-texto: #FFFFFF; 
+            --cor-texto-mutado: #A1A1AA; 
+            
+            /* Bordas Translúcidas */
+            --cor-borda: rgba(255, 255, 255, 0.12); 
+            --cor-borda-hover: rgba(255, 255, 255, 0.25);
+            
+            /* Sombras ajustadas para fundo preto puro */
+            --sombra-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.8);
+            --sombra-md: 0 4px 8px -1px rgba(0, 0, 0, 0.9), 0 2px 4px -1px rgba(0, 0, 0, 0.7);
+            --sombra-lg: 0 15px 25px -5px rgba(0, 0, 0, 0.9), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
+
+            /* Badges e Alertas */
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            
+            /* Cores de texto das observações */
+            --obs-com-text: #FDE68A;
+            --obs-lay-text: #E9D5FF;
+            --obs-pcp-text: #FDBA74;
+            --obs-fat-text: #FDA4AF;
+            
+            /* Filtro de Logo */
+            --filtro-logo-transportadora: brightness(0) invert(1) opacity(0.9);
+        }
+        
+        /* 🚀 Tweaks de Iluminação para Cartões Pretos */
+        [data-theme="dark"] .kpi-card, 
+        [data-theme="dark"] .chart-card, 
+        [data-theme="dark"] .config-panel, 
+        [data-theme="dark"] .list-row,
+        [data-theme="dark"] .modal-card,
+        [data-theme="dark"] .report-card,
+        [data-theme="dark"] .sales-toolbar {
+            background: linear-gradient(145deg, var(--cor-card-bg) 0%, #080808 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), var(--sombra-md);
+        }
+        
+        /* Tabelas no Modo Escuro */
+        [data-theme="dark"] table th {
+            background: #000000; 
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        /* Destaque suave ao passar o rato nos cartões (List-row) */
+        [data-theme="dark"] .list-row:hover {
+            background: linear-gradient(145deg, #1A1A1A 0%, #0A0A0A 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Efeito vermelho suave para pedidos retornados/atrasados */
+        [data-theme="dark"] .list-row.is-retorno,
+        [data-theme="dark"] .list-row.late {
+            background: linear-gradient(145deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.04) 100%) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        /* Efeito escavado nos Inputs */
+        [data-theme="dark"] input, 
+        [data-theme="dark"] select, 
+        [data-theme="dark"] textarea {
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; outline:none; transition: background-color 0.2s, border-color 0.2s; }
+        body { background: var(--cor-fundo); color: var(--cor-texto); display: flex; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* SIDEBAR PADRÃO OURO UNIFICADA */
+        aside { width: 260px; min-width: 260px; background: var(--cor-sidebar-bg); display: flex; flex-direction: column; padding: 24px 20px; z-index: 100; box-shadow: var(--sombra-md); position: fixed; height: 100vh; top: 0; left: 0;}
+        .logo-area { margin-bottom: 35px; display: flex; align-items: center; gap: 12px; padding-left: 5px;}
+        .logo-icon { width: 34px; height: 34px; background: #FFFFFF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--cor-sidebar-bg); font-size: 1.5rem;}
+        .logo-text { color: #FFFFFF; font-weight: 900; font-size: 1.4rem; letter-spacing: 0.5px; }
+
+        nav { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .nav-btn { background: transparent; color: var(--cor-sidebar-text); border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 600; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: background 0.2s;}
+        .nav-btn i { font-size: 1.3rem; }
+        .nav-btn:hover { background: var(--cor-sidebar-hover); color: #FFFFFF; }
+        .nav-btn.active { background: #FFFFFF; color: var(--cor-sidebar-bg); font-weight: 800; box-shadow: var(--sombra-sm); }
+        .nav-btn.active i { color: var(--cor-sidebar-bg); }
+
+        .bottom-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+        .logout-btn { background: rgba(0, 0, 0, 0.15); color: #FDA4AF; border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 700; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: all 0.2s; margin-top: 10px;}
+        .logout-btn:hover { background: rgba(225, 29, 72, 0.8); color: #FFFFFF; }
+
+        main { flex: 1; padding: 30px 40px; margin-left: 260px; width: calc(100% - 260px); overflow-y: auto;}
+        
+        .page-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; gap: 20px; flex-wrap: wrap; border-bottom: 1px solid var(--cor-borda); padding-bottom: 20px;}
+        .page-header h1 { font-weight: 900; font-size: 2rem; color: var(--cor-texto); letter-spacing: -0.04em; line-height: 1.1; }
+        .page-header p { color: var(--cor-texto-mutado); font-size: 0.95rem; margin-top: 6px; font-weight: 500; }
+        
+        .status-badge-top { background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding:6px 12px; border-radius:9999px; display:flex; align-items:center; gap:8px; font-weight:600; font-size:0.8rem; color:var(--cor-texto); box-shadow: var(--sombra-sm); }
+        .status-badge-top.online i { color: var(--cor-sucesso); }
+
+        .btn { padding:10px 18px; border-radius:var(--radius-padrao); font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size: 0.85rem; height: 40px; box-shadow: var(--sombra-sm);}
+        .btn-secondary { background: var(--cor-card-bg); color: var(--cor-texto); border: 1px solid var(--cor-borda);}
+        .btn-secondary:hover { background: var(--cor-panel-bg); }
+
+        .sector-block { margin-bottom: 40px; background: var(--cor-card-bg); border-radius: var(--radius-card); border: 1px solid var(--cor-borda); box-shadow: var(--sombra-sm); overflow: hidden;}
+        .sector-header { padding: 20px 25px; border-bottom: 1px solid var(--cor-borda); display: flex; align-items: center; justify-content: space-between; }
+        .sector-title { font-size: 1.3rem; font-weight: 900; color: var(--cor-texto); display: flex; align-items: center; gap: 10px; letter-spacing: -0.02em; text-transform: uppercase;}
+        
+        .sector-body { padding: 25px; }
+        
+        .top-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;}
+        .top-kpi-card { border: 1px solid var(--cor-borda); border-radius: 10px; padding: 20px; background: var(--cor-panel-bg); display: flex; flex-direction: column; justify-content: center; }
+        .top-kpi-label { font-weight: 800; font-size: 0.8rem; text-transform: uppercase; color: var(--cor-texto-mutado); margin-bottom: 10px; }
+        .top-kpi-val { font-size: 1.8rem; font-weight: 900; color: var(--cor-texto); line-height: 1; letter-spacing: -0.02em; }
+
+        .monthly-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; }
+        .monthly-card { min-width: 160px; border: 1px solid var(--cor-borda); border-radius: 8px; padding: 15px; background: var(--cor-card-bg); flex-shrink: 0; box-shadow: var(--sombra-sm); border-top: 3px solid;}
+        .monthly-title { font-weight: 900; font-size: 0.85rem; color: var(--cor-texto); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;}
+        .monthly-stat { font-size: 0.85rem; color: var(--cor-texto-mutado); font-weight: 600; display: flex; justify-content: space-between; margin-bottom: 4px;}
+        .monthly-val { font-size: 1.3rem; font-weight: 900; margin-top: 8px;}
+
+        .section-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: var(--cor-texto-mutado); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;}
+        .gamer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; width: 100%;}
+        .gamer-card { background: var(--cor-card-bg); border-radius: 10px; border: 1px solid var(--cor-borda); display: flex; flex-direction: column; overflow: hidden;}
+        
+        .gamer-header { padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--cor-borda); }
+        .avatar-circle { width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; border: 2px solid rgba(255,255,255,0.5); color: #FFF; flex-shrink: 0;}
+        .gamer-name { font-weight: 900; font-size: 1.1rem; color: #FFF; text-transform: uppercase; line-height: 1.1;}
+        
+        .gamer-body { padding: 15px; display: flex; flex-direction: column; gap: 10px;}
+        .bucket-row { display: flex; justify-content: space-between; align-items: center; }
+        .bucket-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--cor-texto-mutado); display: flex; align-items: center; gap: 6px;}
+        .bucket-val { font-size: 1rem; font-weight: 900; color: var(--cor-texto); }
+    </style>
+</head>
+<body>
+    
+    <aside>
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+            <span class="logo-text">PMS J7S</span>
+        </div>
+        
+        <nav style="flex:1;">
+            <button class="nav-btn" onclick="window.location.href='admin.html'">
+                <i class="ph-fill ph-squares-four" style="font-size: 1.4rem;"></i> Visão Geral
+            </button>
+            <button class="nav-btn" onclick="window.location.href='dashboard-comercial.html'">
+                <i class="ph-fill ph-briefcase" style="font-size: 1.4rem;"></i> Gestão Comercial
+            </button>
+            <button class="nav-btn active" onclick="return false;">
+                <i class="ph-fill ph-chart-line-up" style="font-size: 1.4rem;"></i> Relatórios Master
+            </button>
+            <button class="nav-btn" onclick="window.location.href='gargalos.html'">
+                <i class="ph-fill ph-magnifying-glass" style="font-size: 1.4rem;"></i> Análise de Gargalos
+            </button>
+            <button class="nav-btn" onclick="window.location.href='usuarios.html'">
+                <i class="ph-fill ph-users" style="font-size: 1.4rem;"></i> Utilizadores
+            </button>
+            <button class="nav-btn" onclick="window.location.href='configuracoes.html'">
+                <i class="ph-fill ph-gear" style="font-size: 1.4rem;"></i> Configurações
+            </button>
+        </nav>
+        
+        <div class="bottom-actions">
+            <button onclick="toggleTheme()" class="nav-btn" style="margin-bottom: 10px;">
+                <i id="theme-icon" class="ph-fill ph-moon" style="font-size: 1.4rem;"></i> <span id="theme-text">Modo Escuro</span>
+            </button>
+            <button onclick="logout()" class="logout-btn">
+                <i class="ph-bold ph-sign-out" style="font-size: 1.4rem;"></i> Sair do Sistema
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1>Relatórios Master de Produção</h1>
+                <p>Auditoria Accountability (Lead Time Integral: Desde a entrada na fila até à entrega).</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button class="btn btn-secondary" onclick="loadData()" id="btn-sync" style="margin-right: 15px;">
+                    <i class="ph-bold ph-arrows-clockwise"></i> Atualizar Dados
+                </button>
+                <div class="status-badge-top online"><i class="ph-fill ph-database"></i> Conectado</div>
+                <div class="status-badge-top"><i class="ph-bold ph-clock" style="color:var(--cor-texto-mutado)"></i> <span id="last-update-text">Atualizando...</span></div>
+            </div>
+        </div>
+
+        <div id="loading-state" style="text-align: center; padding: 100px; color: var(--cor-texto-mutado);">
+            <i class="ph-bold ph-spinner ph-spin" style="font-size: 4rem; color: var(--lay-color); margin-bottom: 20px;"></i>
+            <h2>Calculando Lead Time Integral...</h2>
+            <p>Atribuindo todo o tempo de espera + produção a quem resolve e entrega o projeto.</p>
+        </div>
+
+        <div id="reports-content" style="display: none; flex-direction: column;">
+            <div id="sectors-container"></div>
+        </div>
+    </main>
+
+    <script>
+        // =========================================================================
+        // WHITELIST DA EQUIPA OFICIAL
+        // =========================================================================
+        const TEAM_LAY  = ['CHRYS', 'LUCAS', 'ANA'];
+        const TEAM_PCP  = ['BRENO'];
+        const TEAM_PROD = ['ANDERSON'];
+        const TEAM_FAT  = ['SORAIA'];
+
+        // =========================================================================
+        // FUNÇÕES CORE GERAIS
+        // =========================================================================
+
+        function getFriendlyMonth(monthKey) {
+            if (!monthKey) return 'N/D';
+            const parts = monthKey.split('-');
+            if (parts.length !== 2) return monthKey;
+            const date = new Date(parts[0], parseInt(parts[1]) - 1, 1);
+            return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).replace(' de ', '/');
+        }
+
+        function toggleTheme() { const b=document.body; const n=b.getAttribute('data-theme')==='dark'?'light':'dark'; b.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateThemeIcon(n); }
+        function loadTheme() { const t=localStorage.getItem('theme')||'light'; document.body.setAttribute('data-theme',t); updateThemeIcon(t); }
+        function updateThemeIcon(t) { const i=document.getElementById('theme-icon'); if(i) i.className = t==='dark' ? 'ph-bold ph-sun' : 'ph-bold ph-moon'; }
+        function logout() { localStorage.removeItem('sinaliza_sessao'); window.location.href = 'index.html'; }
+
+        let ordersData = [];
+        let configWorkflow = [];
+
+        window.onload = async () => {
+            loadTheme();
+            const sessaoString = localStorage.getItem('sinaliza_sessao');
+            if (!sessaoString) { window.location.href = 'index.html'; return; }
+            await loadData();
+        };
+
+        async function loadData() {
+            const btn = document.getElementById('btn-sync');
+            if(btn) btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Atualizando...';
+            try {
+                const { workflow, orders } = await fetchWorkflowAndOrders();
+                configWorkflow = workflow;
+                
+                if (orders) {
+                    ordersData = orders.map(o => ({
+                        id: o.ID || o.id,
+                        status: o.STATUS || o.status,
+                        history: parseOrderHistory(o.HISTORY || o.history),
+                        created_at: o.CREATED_AT || o.created_at || o.DATA_EMISSAO
+                    }));
+                    processReportsData();
+                }
+            } catch(e) {
+                console.error("Erro:", e);
+            } finally {
+                if(btn) btn.innerHTML = '<i class="ph-bold ph-arrows-clockwise"></i> Atualizar Dados';
+                document.getElementById('last-update-text').innerText = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        // =========================================================================
+        // MOTOR DE LEAD TIME INTEGRAL
+        // Regra de Ouro: O utilizador herda 100% do tempo (Espera na Fila + Execução)
+        // =========================================================================
+        function processReportsData() {
+            const finalStage = configWorkflow.length > 0 ? getSafeStatus(configWorkflow[configWorkflow.length-1].name) : 'finalizado';
+            const layStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('layout') || getSafeStatus(w.name).includes('layout')).map(w => getSafeStatus(w.name));
+            const pcpStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('pcp') || getSafeStatus(w.name).includes('pcp')).map(w => getSafeStatus(w.name));
+            const prodStages = configWorkflow.filter(w => { const r = getSafeStatus(w.role); return r.includes('produc') || r.includes('produç'); }).map(w => getSafeStatus(w.name));
+            const fatStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('faturamento') || getSafeStatus(w.name).includes('faturam')).map(w => getSafeStatus(w.name));
+
+            let stats = {
+                lay: { name: 'Criação (Layout)', color: 'var(--lay-color)', bg: 'var(--lay-bg)', icon: 'ph-paint-brush', users: {}, monthly: {}, totalTime: 0, count: 0 },
+                pcp: { name: 'Liberação (PCP)', color: 'var(--pcp-color)', bg: 'var(--pcp-bg)', icon: 'ph-clipboard-text', users: {}, monthly: {}, totalTime: 0, count: 0 },
+                prod: { name: 'Fábrica (Produção)', color: 'var(--prod-color)', bg: 'var(--prod-bg)', icon: 'ph-hammer', users: {}, monthly: {}, totalTime: 0, count: 0 },
+                fat: { name: 'Emissão (Faturamento)', color: 'var(--fat-color)', bg: 'var(--fat-bg)', icon: 'ph-receipt', users: {}, monthly: {}, totalTime: 0, count: 0 }
+            };
+            
+            // Pré-carrega a equipa para os cartões aparecerem sempre
+            TEAM_LAY.forEach(n => stats.lay.users[n] = { time: 0, count: 0 });
+            TEAM_PCP.forEach(n => stats.pcp.users[n] = { time: 0, count: 0 });
+            TEAM_PROD.forEach(n => stats.prod.users[n] = { time: 0, count: 0 });
+            TEAM_FAT.forEach(n => stats.fat.users[n] = { time: 0, count: 0 });
+
+            const agora = new Date();
+
+            ordersData.forEach(o => {
+                const logs = o.history || [];
+                if(logs.length === 0) return;
+                
+                const revLogs = [...logs].reverse();
+                
+                // ==========================================
+                // 1. DETEÇÃO DE QUEM ENTREGOU (Aquele que aperta o botão Final)
+                // Usando exatamente as mesmas palavras-chave do admin.html
+                // ==========================================
+                
+                let layDeliverer = null;
+                const lLog = revLogs.find(h => {
+                    const act = String(h.action).toLowerCase();
+                    const toStatus = getSafeStatus(h.to);
+                    const isFinishing = act.includes('finalizad') || act.includes('arte finalizada') || act.includes('concluid') || act.includes('cliente aprovou') || act.includes('encaminhad');
+                    const isMovingOut = toStatus !== '' && !layStages.includes(toStatus);
+                    const isReturn = act.includes('retorno') || act.includes('reprov');
+                    return TEAM_LAY.includes(normalizarNome(h.user)) && (isFinishing || isMovingOut) && !isReturn;
+                });
+                if (lLog) layDeliverer = normalizarNome(lLog.user);
+
+                let prodDeliverer = null;
+                const prLog = revLogs.find(h => {
+                    const act = String(h.action).toLowerCase();
+                    const toStatus = getSafeStatus(h.to);
+                    const isFinishing = act.includes('finalizad') || act.includes('concluid');
+                    const isMovingOut = toStatus !== '' && !prodStages.includes(toStatus);
+                    const isReturn = act.includes('retorno') || act.includes('reprov');
+                    return TEAM_PROD.includes(normalizarNome(h.user)) && (isFinishing || isMovingOut) && !isReturn;
+                });
+                if (prLog) prodDeliverer = normalizarNome(prLog.user);
+
+                let pcpDeliverer = null;
+                const pcLog = revLogs.find(h => {
+                    const act = String(h.action).toLowerCase();
+                    const toStatus = getSafeStatus(h.to);
+                    const isFinishing = act.includes('liberad') || act.includes('avanço') || act.includes('concluid');
+                    const isMovingOut = toStatus !== '' && !pcpStages.includes(toStatus);
+                    const isReturn = act.includes('retorno') || act.includes('reprov');
+                    return TEAM_PCP.includes(normalizarNome(h.user)) && (isFinishing || isMovingOut) && !isReturn;
+                });
+                if (pcLog) pcpDeliverer = normalizarNome(pcLog.user);
+
+                let fatDeliverer = null;
+                const ftLog = revLogs.find(h => {
+                    const act = String(h.action).toLowerCase();
+                    const toStatus = getSafeStatus(h.to);
+                    const isFinishing = act.includes('faturad') || act.includes('nota') || act.includes('finalizad');
+                    const isMovingOut = toStatus === finalStage || (toStatus !== '' && !fatStages.includes(toStatus));
+                    const isReturn = act.includes('retorno') || act.includes('reprov');
+                    return TEAM_FAT.includes(normalizarNome(h.user)) && (isFinishing || isMovingOut) && !isReturn;
+                });
+                if (ftLog) fatDeliverer = normalizarNome(ftLog.user);
+
+                // ==========================================
+                // 2. ACUMULAR O TEMPO TOTAL EM CADA SETOR (Espera + Produção)
+                // ==========================================
+                let orderTimeLay = 0, orderTimeProd = 0, orderTimePcp = 0, orderTimeFat = 0;
+                let lastDate = new Date(o.created_at || o.DATA_EMISSAO);
+                if (isNaN(lastDate.getTime()) && logs.length > 0) lastDate = new Date(logs[0].date);
+
+                let currentStatus = '';
+                if (logs.length > 0) currentStatus = getSafeStatus(logs[0].from) || getSafeStatus(logs[0].to);
+                else currentStatus = getSafeStatus(o.status);
+
+                logs.forEach(log => {
+                    const logDate = new Date(log.date);
+                    if (isNaN(logDate.getTime()) || logDate < lastDate) return;
+                    
+                    const dm = diffMinsCalc(lastDate, logDate);
+                    if (dm > 0 && dm < 43200) {
+                        if (layStages.includes(currentStatus)) orderTimeLay += dm;
+                        else if (prodStages.includes(currentStatus)) orderTimeProd += dm;
+                        else if (pcpStages.includes(currentStatus) || currentStatus.includes('pcp') || currentStatus.includes('libera')) orderTimePcp += dm;
+                        else if (fatStages.includes(currentStatus) || currentStatus.includes('faturam')) orderTimeFat += dm;
+                    }
+                    const logTo = getSafeStatus(log.to);
+                    if (logTo) currentStatus = logTo;
+                    lastDate = logDate;
+                });
+
+                // Fatia de tempo final (para pedidos que ainda estão abertos no setor)
+                const st = getSafeStatus(o.status);
+                const isFin = st === finalStage || st.includes('finalizad') || st.includes('concluid') || st.includes('entregue') || logs.some(h => String(h.action).toLowerCase().includes('nota emitida'));
+                const endTime = isFin ? (logs.length > 0 ? new Date(logs[logs.length-1].date) : new Date(o.created_at)) : agora;
+
+                const finalDm = diffMinsCalc(lastDate, endTime);
+                if (finalDm > 0 && finalDm < 43200) {
+                    if (layStages.includes(currentStatus)) orderTimeLay += finalDm;
+                    else if (prodStages.includes(currentStatus)) orderTimeProd += finalDm;
+                    else if (pcpStages.includes(currentStatus) || currentStatus.includes('pcp')) orderTimePcp += finalDm;
+                    else if (fatStages.includes(currentStatus) || currentStatus.includes('faturam')) orderTimeFat += finalDm;
+                }
+
+                // ==========================================
+                // 3. ATRIBUIÇÃO DA RESPONSABILIDADE
+                // O tempo acumulado inteiro é jogado para quem finalizou, ou para quem está a assumir no momento.
+                // ==========================================
+
+                // --- LAYOUT ---
+                if (layDeliverer) {
+                    stats.lay.count++;
+                    stats.lay.totalTime += orderTimeLay;
+                    
+                    if (stats.lay.users[layDeliverer]) {
+                        stats.lay.users[layDeliverer].count++;
+                        stats.lay.users[layDeliverer].time += orderTimeLay;
+                    }
+
+                    const monthKey = new Date(lLog.date).getFullYear() + '-' + String(new Date(lLog.date).getMonth() + 1).padStart(2, '0');
+                    if (!stats.lay.monthly[monthKey]) stats.lay.monthly[monthKey] = { time: 0, count: 0 };
+                    stats.lay.monthly[monthKey].time += orderTimeLay; stats.lay.monthly[monthKey].count++;
+                } else if (layStages.includes(currentStatus)) {
+                    // O projeto ainda não foi entregue, mas alguém já assumiu?
+                    const inLog = revLogs.find(h => {
+                        const act = String(h.action).toLowerCase();
+                        return (act.includes('iniciad') || act.includes('início') || act.includes('inicio') || act.includes('assumi')) && TEAM_LAY.includes(normalizarNome(h.user));
+                    });
+                    if (inLog) {
+                        const activeUser = normalizarNome(inLog.user);
+                        if (stats.lay.users[activeUser]) stats.lay.users[activeUser].time += orderTimeLay;
+                    }
+                }
+
+                // --- PRODUÇÃO ---
+                if (prodDeliverer) {
+                    stats.prod.count++;
+                    stats.prod.totalTime += orderTimeProd;
+                    
+                    if (stats.prod.users[prodDeliverer]) {
+                        stats.prod.users[prodDeliverer].count++;
+                        stats.prod.users[prodDeliverer].time += orderTimeProd;
+                    }
+
+                    const monthKey = new Date(prLog.date).getFullYear() + '-' + String(new Date(prLog.date).getMonth() + 1).padStart(2, '0');
+                    if (!stats.prod.monthly[monthKey]) stats.prod.monthly[monthKey] = { time: 0, count: 0 };
+                    stats.prod.monthly[monthKey].time += orderTimeProd; stats.prod.monthly[monthKey].count++;
+                } else if (prodStages.includes(currentStatus)) {
+                    const inLog = revLogs.find(h => {
+                        const act = String(h.action).toLowerCase();
+                        return (act.includes('iniciad') || act.includes('início') || act.includes('inicio') || act.includes('assumi')) && TEAM_PROD.includes(normalizarNome(h.user));
+                    });
+                    if (inLog) {
+                        const activeUser = normalizarNome(inLog.user);
+                        if (stats.prod.users[activeUser]) stats.prod.users[activeUser].time += orderTimeProd;
+                    }
+                }
+
+                // --- PCP ---
+                if (pcpDeliverer) {
+                    stats.pcp.count++;
+                    stats.pcp.totalTime += orderTimePcp;
+                    
+                    if (stats.pcp.users[pcpDeliverer]) {
+                        stats.pcp.users[pcpDeliverer].count++;
+                        stats.pcp.users[pcpDeliverer].time += orderTimePcp;
+                    }
+
+                    const monthKey = new Date(pcLog.date).getFullYear() + '-' + String(new Date(pcLog.date).getMonth() + 1).padStart(2, '0');
+                    if (!stats.pcp.monthly[monthKey]) stats.pcp.monthly[monthKey] = { time: 0, count: 0 };
+                    stats.pcp.monthly[monthKey].time += orderTimePcp; stats.pcp.monthly[monthKey].count++;
+                } else if (pcpStages.includes(currentStatus)) {
+                    const inLog = revLogs.find(h => {
+                        const act = String(h.action).toLowerCase();
+                        return (act.includes('iniciad') || act.includes('início') || act.includes('inicio') || act.includes('assumi')) && TEAM_PCP.includes(normalizarNome(h.user));
+                    });
+                    if (inLog) {
+                        const activeUser = normalizarNome(inLog.user);
+                        if (stats.pcp.users[activeUser]) stats.pcp.users[activeUser].time += orderTimePcp;
+                    }
+                }
+
+                // --- FATURAMENTO ---
+                if (fatDeliverer) {
+                    stats.fat.count++;
+                    stats.fat.totalTime += orderTimeFat;
+                    
+                    if (stats.fat.users[fatDeliverer]) {
+                        stats.fat.users[fatDeliverer].count++;
+                        stats.fat.users[fatDeliverer].time += orderTimeFat;
+                    }
+
+                    const monthKey = new Date(ftLog.date).getFullYear() + '-' + String(new Date(ftLog.date).getMonth() + 1).padStart(2, '0');
+                    if (!stats.fat.monthly[monthKey]) stats.fat.monthly[monthKey] = { time: 0, count: 0 };
+                    stats.fat.monthly[monthKey].time += orderTimeFat; stats.fat.monthly[monthKey].count++;
+                } else if (fatStages.includes(currentStatus)) {
+                    const inLog = revLogs.find(h => {
+                        const act = String(h.action).toLowerCase();
+                        return (act.includes('iniciad') || act.includes('início') || act.includes('inicio') || act.includes('assumi')) && TEAM_FAT.includes(normalizarNome(h.user));
+                    });
+                    if (inLog) {
+                        const activeUser = normalizarNome(inLog.user);
+                        if (stats.fat.users[activeUser]) stats.fat.users[activeUser].time += orderTimeFat;
+                    }
+                }
+
+            });
+
+            renderSectors(stats);
+        }
+
+        // =========================================================================
+        // RENDERIZAÇÃO DA TELA
+        // =========================================================================
+        function renderSectors(stats) {
+            const container = document.getElementById('sectors-container');
+            let html = '';
+
+            const orderedKeys = ['lay', 'pcp', 'prod', 'fat'];
+
+            orderedKeys.forEach(key => {
+                const s = stats[key];
+                
+                const sectorAvg = s.count > 0 ? formatLeadTime(s.totalTime / s.count) : '0m';
+                
+                let monthlyHtml = '';
+                const sortedMonths = Object.keys(s.monthly).sort(); 
+                if (sortedMonths.length > 0) {
+                    monthlyHtml = sortedMonths.map(mKey => {
+                        const mData = s.monthly[mKey];
+                        const mAvg = formatLeadTime(mData.time / mData.count);
+                        return `
+                        <div class="monthly-card" style="border-top-color: ${s.color};">
+                            <div class="monthly-title">${getFriendlyMonth(mKey)}</div>
+                            <div class="monthly-stat"><span>Volume Finalizado:</span> <strong>${mData.count}</strong></div>
+                            <div class="monthly-val" style="color: ${s.color};" title="Tempo Médio Mensal">${mAvg}</div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    monthlyHtml = `<div style="color:var(--cor-texto-mutado); padding: 10px;">Sem entregas concluídas neste período.</div>`;
+                }
+
+                let usersHtml = '';
+                const sortedUsers = Object.keys(s.users).sort((a,b) => s.users[b].count - s.users[a].count);
+                    
+                if (sortedUsers.length > 0) {
+                    usersHtml = sortedUsers.map(user => {
+                        const u = s.users[user];
+                        // Média do que finalizou, ou o tempo que a "batata quente" está na mão dele
+                        const avg = u.count > 0 ? formatLeadTime(u.time / u.count) : formatLeadTime(u.time) + ' (Ativo)';
+                        return `
+                        <div class="gamer-card">
+                            <div class="gamer-header" style="background: ${s.color};">
+                                <div class="avatar-circle">${user.charAt(0)}</div>
+                                <div>
+                                    <div class="gamer-name">${user}</div>
+                                </div>
+                            </div>
+                            <div class="gamer-body">
+                                <div class="bucket-row">
+                                    <span class="bucket-label"><i class="ph-fill ph-check-circle"></i> Entregas Concluídas</span>
+                                    <span class="bucket-val">${u.count}</span>
+                                </div>
+                                <div class="bucket-row" style="background: ${s.bg}; border-color: ${s.color};">
+                                    <span class="bucket-label" style="color: ${s.color};"><i class="ph-bold ph-clock"></i> Lead Time do Ticket</span>
+                                    <span class="bucket-val" style="color: ${s.color};">${avg}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+
+                html += `
+                <div class="sector-block">
+                    <div class="sector-header" style="border-bottom: 3px solid ${s.color}; background: ${s.bg};">
+                        <div class="sector-title"><i class="ph-fill ${s.icon}" style="color:${s.color}"></i> ${s.name}</div>
+                    </div>
+                    <div class="sector-body">
+                        
+                        <div class="top-kpi-grid">
+                            <div class="top-kpi-card">
+                                <div class="top-kpi-label">Entregas Totais (No Setor)</div>
+                                <div class="top-kpi-val">${s.count}</div>
+                            </div>
+                            <div class="top-kpi-card">
+                                <div class="top-kpi-label" style="color:${s.color}">Lead Time Médio Global</div>
+                                <div class="top-kpi-val" style="color:${s.color}">${sectorAvg}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-title"><i class="ph-fill ph-calendar-blank"></i> Desempenho Mensal (Concluídos)</div>
+                        <div class="monthly-scroll">
+                            ${monthlyHtml}
+                        </div>
+                        
+                        <hr style="border:none; border-top:1px dashed var(--cor-borda); margin: 30px 0;">
+
+                        <div class="section-title"><i class="ph-fill ph-users"></i> Desempenho da Equipa (Lead Time Integral)</div>
+                        <div class="gamer-grid">
+                            ${usersHtml}
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('reports-content').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

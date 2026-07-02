@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | SinalizaFlow J7S</title>
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+    <button id="scrollTopBtn" class="btn-scroll-top" onclick="scrollToTop()">
+        <i class="ph-bold ph-arrow-up"></i>
+    </button>
+
+    <div class="commercial-shell admin-shell">
+        <aside class="app-sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+                <div class="brand-wordmark">Sinaliza<span>Flow</span></div>
+            </div>
+
+            <nav class="sidebar-nav admin-nav">
+                <div class="menu-label">PRINCIPAL</div>
+
+                <button id="btn-dash" class="nav-btn active" onclick="switchView('dash')">
+                    <i class="ph-fill ph-squares-four"></i>
+                    <span>Visão Geral</span>
+                </button>
+
+                <button id="btn-sales" class="nav-btn" onclick="switchView('sales')">
+                    <i class="ph-fill ph-briefcase"></i>
+                    <span>Gestão Comercial</span>
+                </button>
+
+                <button id="btn-reports" class="nav-btn" onclick="switchView('reports')">
+                    <i class="ph-fill ph-chart-line-up"></i>
+                    <span>Relatórios Master</span>
+                </button>
+
+                <button id="btn-gargalos" class="nav-btn" onclick="switchView('gargalos')">
+                    <i class="ph-fill ph-warning-diamond"></i>
+                    <span>Análise de Gargalos</span>
+                </button>
+
+                <button id="btn-orders-base" class="nav-btn" onclick="switchView('orders-base')" data-admin-only="true">
+                    <i class="ph-fill ph-database"></i>
+                    <span>Base de Pedidos</span>
+                </button>
+
+                <button id="btn-users" class="nav-btn" onclick="switchView('users')">
+                    <i class="ph-fill ph-users"></i>
+                    <span>Utilizadores</span>
+                </button>
+
+                <button id="btn-conf" class="nav-btn" onclick="switchView('conf')">
+                    <i class="ph-fill ph-gear"></i>
+                    <span>Configurações</span>
+                </button>
+
+                <div class="menu-label">PÁGINAS</div>
+
+                <button class="nav-btn nav-btn-external legacy-page-links" onclick="window.location.href='admin.html'">
+                    <i class="ph-fill ph-house"></i>
+                    <span>Admin</span>
+                </button>
+
+                <button class="nav-btn nav-btn-external legacy-page-links" onclick="window.location.href='dashboard-comercial.html'">
+                    <i class="ph-fill ph-presentation-chart"></i>
+                    <span>Dashboard Comercial</span>
+                </button>
+
+                <button class="nav-btn nav-btn-external legacy-page-links" onclick="window.location.href='relatorios.html'">
+                    <i class="ph-fill ph-file-text"></i>
+                    <span>Relatórios</span>
+                </button>
+
+                <button class="nav-btn nav-btn-external legacy-page-links" onclick="window.location.href='usuarios.html'">
+                    <i class="ph-fill ph-identification-card"></i>
+                    <span>Usuários</span>
+                </button>
+
+                <button class="nav-btn nav-btn-external legacy-page-links" onclick="window.location.href='configuracoes.html'">
+                    <i class="ph-fill ph-sliders-horizontal"></i>
+                    <span>Configurações Gerais</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button onclick="toggleTheme()" class="nav-btn">
+                    <i id="theme-icon" class="ph-fill ph-moon"></i>
+                    <span id="theme-text">Modo Escuro</span>
+                </button>
+
+                <button onclick="logout()" class="logout-btn">
+                    <i class="ph-bold ph-sign-out"></i>
+                    <span>Sair do Sistema</span>
+                </button>
+            </div>
+        </aside>
+
+        <main id="main-content">
+            <div class="topbar">
+                <div class="topbar-sector-context">
+                    <span class="sector-dot"></span>
+                    <div>
+                        <strong>Administração</strong>
+                        <span>PMS J7S • Banco de dados em tempo real</span>
+                    </div>
+                </div>
+
+                <div class="topbar-actions">
+                    <button class="icon-btn" onclick="forceReload()" title="Atualizar">
+                        <i class="ph-bold ph-arrows-clockwise"></i>
+                    </button>
+
+                    <div id="db-status-badge" class="status-badge-top online">
+                        <i class="ph-fill ph-database"></i>
+                        <span id="db-status-text">Conectado</span>
+                    </div>
+
+                    <div class="status-badge-top">
+                        <i class="ph-bold ph-clock"></i>
+                        <span id="last-update-text">Atualizando...</span>
+                    </div>
+
+                    <div class="topbar-user admin-topbar-user">
+                        <i class="ph-fill ph-user-circle"></i>
+                        <div>
+                            <strong id="topbar-user-name">ADMIN</strong>
+                            <span>Administrador</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-header admin-work-header">
+                <div class="page-user-identity layout-page-left">
+                    <span class="page-overline">
+                        <i class="ph-fill ph-shield-check"></i>
+                        Painel Master
+                    </span>
+                    <h1 id="page-title">Painel Administrativo</h1>
+                    <p id="page-subtitle">Gestão completa do fluxo, usuários, indicadores e pedidos.</p>
+                </div>
+
+                <div class="layout-user-highlight admin-user-highlight">
+                    <span>Administrador</span>
+                    <strong id="user-name">ADMIN</strong>
+                </div>
+            </div>
+
+            <div id="view-dash" class="action-workspace">
+            <div class="view-intro admin-view-intro">
+                <div>
+                    <span class="view-eyebrow"><i class="ph-fill ph-squares-four"></i> Visão executiva</span>
+                    <h2>Central Administrativa</h2>
+                    <p>Controle master de pedidos, fluxo, usuários, vendas e gargalos do PMS.</p>
+                </div>
+                <span class="view-chip"><i class="ph-fill ph-shield-check"></i> Gestão total</span>
+            </div>
+            <div id="kpi-container" class="kpi-grid"></div>
+
+            <div class="filters">
+                <div class="search-field">
+                    <div style="position:relative; width: 100%;">
+                        <i class="ph ph-magnifying-glass" style="position:absolute; left:14px; top:50%; transform: translateY(-50%); color:var(--cor-texto-mutado); font-size: 1.1rem;"></i>
+                        <input id="search-input" class="input-box" placeholder="Procurar pedido por Cliente ou ID..." style="padding-left:40px; margin:0;" onkeyup="renderOrders()">
+                    </div>
+                </div>
+                <select id="filter-status" class="input-box" style="width:auto; margin:0;" onchange="renderOrders()">
+                    <option value="all">Todos os Estados</option>
+                </select>
+                <button class="btn btn-primary" onclick="forceReload()" id="btn-sync"><i class="ph ph-arrows-clockwise"></i> Sincronizar</button>
+            </div>
+            
+            <div id="orders-container" class="orders-container"></div>
+        </div>
+
+        <div id="view-sales" class="hidden admin-workspace">
+            <div class="sales-toolbar">
+                <div style="display:flex; gap:10px; align-items:center; flex: 1; flex-wrap:wrap;">
+                    <i class="ph-fill ph-funnel" style="color:var(--cor-primaria); font-size:1.2rem;"></i>
+                    <select id="sales-period-filter" class="input-box" style="max-width:200px; margin:0;" onchange="renderSalesDashboard()">
+                        <option value="this_month" selected>📅 Este Mês</option>
+                        <option value="last_month">⏪ Mês Passado</option>
+                        <option value="this_year">📆 Este Ano</option>
+                        <option value="all">♾️ Todo o Período</option>
+                    </select>
+                    <select id="sales-person-filter" class="input-box" style="max-width:250px; margin:0;" onchange="renderSalesDashboard()">
+                        <option value="all" selected>👥 Todos os Vendedores</option>
+                    </select>
+                </div>
+                <div>
+                    <span style="font-size:0.8rem; color:var(--cor-texto-mutado); font-weight:600;" id="sales-info-label">A filtrar dados...</span>
+                </div>
+            </div>
+            <div class="sales-kpi-row kpi-grid" id="sales-kpi-container"></div>
+            <div class="sales-charts-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                <div class="chart-card">
+                    <div class="chart-title"><span>Vendas por Condição</span><i class="ph-fill ph-wallet" style="color:var(--cor-texto-mutado)"></i></div>
+                    <div id="chart-payment" style="height: 300px;"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title"><span>Top 5 Clientes</span><i class="ph-fill ph-trophy" style="color:var(--cor-alerta)"></i></div>
+                    <div id="chart-clients" style="height: 300px;"></div>
+                </div>
+            </div>
+            <div class="sales-charts-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                <div class="chart-card">
+                    <div class="chart-title"><span>Funil de Estados</span><i class="ph-fill ph-funnel" style="color:var(--cor-texto-mutado)"></i></div>
+                    <div id="chart-status" style="height: 300px;"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title"><span>Evolução Diária</span><i class="ph-fill ph-trend-up" style="color:var(--cor-sucesso)"></i></div>
+                    <div id="chart-daily" style="height: 300px;"></div>
+                </div>
+            </div>
+            <div class="config-panel">
+                <h3 style="margin-bottom:15px; font-weight: 700; color:var(--cor-texto); font-size: 1.1rem;">Detalhe dos Pedidos</h3>
+                <div class="table-responsive-container" style="border: none; box-shadow: none; background: transparent; margin-bottom:0;">
+                    <table class="report-table">
+                        <thead><tr><th>ID / Cliente</th><th>Vendedor</th><th>Valor</th><th>Pagamento</th><th>Emissão</th><th>Estado</th></tr></thead>
+                        <tbody id="sales-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-reports" class="hidden admin-workspace">
+            <div id="reports-loading-state" class="reports-loading-state">
+                <i class="ph-bold ph-spinner ph-spin"></i>
+                <h2>Calculando Lead Time Integral...</h2>
+                <p>Atribuindo tempo de fila e execu&ccedil;&atilde;o a quem entrega cada etapa.</p>
+            </div>
+
+            <div id="reports-content" class="reports-content" style="display:none;">
+                <div id="sectors-container"></div>
+            </div>
+        </div>
+        <div id="view-users" class="hidden admin-workspace">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                <h2>Controlo de Acesso</h2>
+                <button class="btn btn-primary" onclick="openUserModal()"><i class="ph-bold ph-user-plus"></i> Novo Utilizador</button>
+            </div>
+            <div class="table-responsive-container">
+                <table class="config-table"><thead><tr><th>Utilizador</th><th>Palavra-passe</th><th>Permissão (Role)</th><th style="width: 100px;">Ações</th></tr></thead><tbody id="users-body"></tbody></table>
+            </div>
+        </div>
+
+        <div id="view-gargalos" class="hidden admin-workspace admin-bottlenecks-workspace">
+            <div id="gargalos-kpi-container" class="kpi-grid"></div>
+            <div id="gargalos-insights" class="bottleneck-insights-grid"></div>
+
+            <div class="filters bottleneck-filters">
+                <div class="search-field">
+                    <div style="position:relative; width: 100%;">
+                        <i class="ph ph-magnifying-glass" style="position:absolute; left:14px; top:50%; transform: translateY(-50%); color:var(--cor-texto-mutado); font-size: 1.1rem;"></i>
+                        <input id="gargalos-search-input" class="input-box" placeholder="Buscar gargalo por cliente ou ID..." style="padding-left:40px; margin:0;" onkeyup="renderAdminBottleneckList()">
+                    </div>
+                </div>
+                <select id="gargalos-filter-errors" class="input-box" style="width:auto; margin:0;" onchange="renderAdminBottleneckList()">
+                    <option value="all">Todos os pedidos concluídos</option>
+                    <option value="errors_only">Somente com ocorrências</option>
+                </select>
+                <button class="btn btn-secondary" onclick="processAdminBottlenecks()"><i class="ph-bold ph-arrows-clockwise"></i> Atualizar Gargalos</button>
+            </div>
+
+            <div id="gargalos-orders-list" class="orders-container"></div>
+        </div>
+
+        <section id="view-orders-base" class="hidden admin-workspace admin-orders-base-workspace" data-admin-only="true">
+            <div class="view-intro admin-orders-base-intro">
+                <div>
+                    <span class="view-eyebrow"><i class="ph-fill ph-database"></i> GESTÃO GLOBAL</span>
+                    <h2>Base de Pedidos</h2>
+                    <p>Acesso administrativo a todos os pedidos do sistema, incluindo finalizados e pedidos fora do fluxo.</p>
+                </div>
+                <span class="view-chip"><i class="ph-fill ph-shield-check"></i> Admin</span>
+            </div>
+
+            <div class="admin-orders-toolbar">
+                <div class="admin-orders-search-wrap">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input id="admin-orders-search" class="input-box" type="text" placeholder="Buscar por ID, cliente, status, setor, data, vendedor ou responsável..." oninput="filterAdminOrdersBase()">
+                </div>
+
+                <select id="admin-orders-status-filter" class="input-box" onchange="filterAdminOrdersBase()">
+                    <option value="">Todos os status</option>
+                    <option value="ativos">Ativos</option>
+                    <option value="finalizados">Finalizados</option>
+                    <option value="atrasados">Atrasados</option>
+                    <option value="em_fluxo">Em fluxo</option>
+                    <option value="fora_fluxo">Fora do fluxo</option>
+                </select>
+
+                <select id="admin-orders-sector-filter" class="input-box" onchange="filterAdminOrdersBase()">
+                    <option value="">Todos os setores</option>
+                    <option value="comercial">Comercial</option>
+                    <option value="layout">Layout</option>
+                    <option value="pcp">PCP</option>
+                    <option value="producao">Produção</option>
+                    <option value="faturamento">Faturamento</option>
+                    <option value="finalizado">Finalizado</option>
+                </select>
+
+                <button id="btn-admin-orders-refresh" class="btn btn-primary" type="button" onclick="refreshAdminOrdersBase()">
+                    <i class="ph-bold ph-arrows-clockwise"></i> Atualizar
+                </button>
+            </div>
+
+            <div id="admin-orders-base-container" class="admin-orders-base-container"></div>
+        </section>
+
+        <div id="view-conf" class="hidden admin-workspace">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                <h2>Configurações do Sistema</h2>
+                <button class="btn btn-primary" onclick="saveConfig()"><i class="ph-bold ph-floppy-disk"></i> Guardar Alterações</button>
+            </div>
+            
+            <div class="config-panel" style="margin-bottom: 20px;">
+                <h3 style="font-size:1.1rem; margin-bottom:15px; color:var(--cor-texto); font-weight: 700;">Fluxo de Processos (Workflow)</h3>
+                <div class="table-responsive-container" style="box-shadow: none;">
+                    <table class="config-table"><thead><tr><th width="40">#</th><th>Nome da Etapa</th><th>Setor Responsável</th><th width="100">Prazo (h)</th><th width="80">Retorno?</th><th width="60"></th></tr></thead><tbody id="config-body"></tbody></table>
+                </div>
+                <button class="btn btn-secondary" onclick="addStep()" style="margin-top:10px;"><i class="ph-bold ph-plus"></i> Adicionar Nova Etapa</button>
+            </div>
+
+            <div class="config-panel">
+                <h3 style="font-size:1.1rem; margin-bottom:5px; color:var(--cor-texto); display:flex; align-items:center; gap:8px; font-weight: 700;"><i class="ph-fill ph-list-numbers" style="color:var(--cor-primaria)"></i> Motivos Obrigatórios</h3>
+                <p style="color:var(--cor-texto-mutado); font-size:0.85rem; margin-bottom:20px; font-weight: 500;">A lista de justificativas por setor.</p>
+                <div id="reasons-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+        </div>
+        </main>
+    </div>
+
+    <div id="bulk-actions-bar">
+        <span style="font-weight: 700; font-size:0.9rem; color:#fff; display:flex; align-items:center; gap:10px;">
+            <span id="bulk-count" style="background:var(--cor-primaria); color:white; padding:2px 8px; border-radius:12px;">0</span> selecionados
+        </span>
+        <select id="bulk-stage" class="input-box" style="width:auto; margin:0; padding:8px; border:none;"></select>
+        <button class="btn btn-primary" onclick="applyBulkAction()" id="btn-bulk-run" style="height:36px;">Mover Itens <i class="ph-bold ph-arrow-right"></i></button>
+        <button class="btn btn-secondary btn-icon-only" onclick="clearBulkSelection()" style="height:36px; width:36px;"><i class="ph-bold ph-x"></i></button>
+    </div>
+
+    <div id="editDateModal" class="modal-overlay"><div class="modal-card"><h3 style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-weight: 700; font-size: 1.3rem;"><i class="ph-fill ph-calendar-check" style="color:var(--cor-primaria);"></i> Alterar Data</h3><p style="color:var(--cor-texto-mutado); margin-bottom:20px; font-size:0.9rem;">Defina uma nova data de entrega global para este pedido.</p><label style="font-weight: 600; font-size:0.85rem;">Nova Data:</label><input type="date" id="new-delivery-date" class="config-input" style="margin-top: 5px;"><input type="hidden" id="edit-date-id"><div style="display:flex; justify-content:flex-end; gap:10px; margin-top: 25px;"><button class="btn btn-secondary" onclick="document.getElementById('editDateModal').style.display='none'">Cancelar</button><button class="btn btn-primary" onclick="saveNewDate()">Guardar Nova Data</button></div></div></div>
+    
+    <div id="editOrderModal" class="modal-overlay"><div class="modal-card"><h3 style="display:flex; align-items:center; gap:10px; margin-bottom:20px; font-weight: 700; font-size: 1.3rem;"><i class="ph-fill ph-pencil-simple" style="color:var(--cor-alerta);"></i> Editar Pedido Base</h3><div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;"><div><label style="font-weight: 600; font-size: 0.85rem;">Cliente</label><input type="text" id="eo-client" class="config-input" style="margin-top: 4px;"></div><div><label style="font-weight: 600; font-size: 0.85rem;">Vendedor</label><input type="text" id="eo-sales" class="config-input" style="margin-top: 4px;"></div></div><div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;"><div><label style="font-weight: 600; font-size: 0.85rem;">Valor (R$)</label><input type="number" id="eo-value" class="config-input" step="0.01" style="margin-top: 4px;"></div><div><label style="font-weight: 600; font-size: 0.85rem;">Condição Pagamento</label><input type="text" id="eo-payment" class="config-input" style="margin-top: 4px;"></div></div><label style="font-weight: 600; font-size: 0.85rem; color:var(--cor-alerta);">Motivo da Alteração (Obrigatório)</label><input type="text" id="eo-reason" class="config-input" placeholder="Ex: Correção de digitação..." style="border-color:var(--cor-alerta); margin-top: 4px;"><input type="hidden" id="eo-id"><div style="display:flex; justify-content:flex-end; gap:10px; margin-top: 25px;"><button class="btn btn-secondary" onclick="document.getElementById('editOrderModal').style.display='none'">Cancelar</button><button class="btn btn-warning" onclick="saveEditedOrder()">Guardar e Auditar</button></div></div></div>
+    
+    <div id="bypassModal" class="modal-overlay"><div class="modal-card"><h3 style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-weight: 700; font-size: 1.3rem;"><i class="ph-fill ph-magic-wand" style="color:var(--cor-alerta);"></i> Forçar Etapa (Bypass)</h3><label style="font-weight: 600; font-size: 0.85rem;">Destino:</label><select id="bypass-target" class="config-input" style="margin-top: 4px; margin-bottom:15px;"></select><label style="font-weight: 600; font-size: 0.85rem; color: var(--cor-alerta);">Motivo do Bypass:</label><input type="text" id="bypass-reason" class="config-input" placeholder="Justificativa da quebra de fluxo..." style="margin-top: 4px; border-color:var(--cor-alerta);"><input type="hidden" id="bypass-id"><div style="display:flex; justify-content:flex-end; gap:10px; margin-top: 25px;"><button class="btn btn-secondary" onclick="document.getElementById('bypassModal').style.display='none'">Cancelar</button><button class="btn btn-warning" onclick="confirmBypass()">Forçar Movimentação</button></div></div></div>
+    
+    <div id="actionModal" class="modal-overlay"><div class="modal-card"><h3 id="modal-title" style="font-weight: 700; font-size: 1.3rem;">Confirmar</h3><p id="modal-desc" style="color:var(--cor-texto-mutado); font-size: 0.95rem; margin-top:8px; margin-bottom:20px;"></p><label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:4px;">Motivo da Movimentação:</label><select id="modal-reason-select" class="config-input" style="margin-bottom:15px;"></select><label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:4px;">Observação Adicional (Opcional):</label><textarea id="modal-obs" placeholder="Detalhes adicionais..." class="config-input" style="min-height: 80px;"></textarea><input type="hidden" id="modal-id"><input type="hidden" id="modal-new-status"><input type="hidden" id="modal-move-type"><div style="display:flex; justify-content:flex-end; gap:10px; margin-top:25px;"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="confirmAction()" id="btn-confirm-action">Confirmar Ação</button></div></div></div>
+    
+    <div id="filesModal" class="modal-overlay"><div class="modal-card-lg" style="padding: 0;"><div style="padding: 20px 25px; border-bottom: 1px solid var(--cor-borda); display: flex; justify-content: space-between; align-items: center;"><h3 style="margin: 0; display:flex; align-items:center; gap:10px; font-size: 1.2rem; font-weight: 700;"><i class="ph-fill ph-folder-open" style="color:var(--cor-primaria);"></i> Arquivos do Pedido <strong id="files-order-id" style="margin-left: 5px; color: var(--cor-primaria);"></strong></h3><button class="btn btn-secondary btn-icon-only" onclick="document.getElementById('filesModal').style.display='none'"><i class="ph-bold ph-x"></i></button></div><div style="display: flex; flex: 1; overflow: hidden;"><div id="files-list-container" style="width: 280px; min-width: 280px; background: var(--cor-panel-bg); border-right: 1px solid var(--cor-borda); overflow-y: auto; padding: 15px;"></div><div style="flex: 1; display: flex; align-items: center; justify-content: center; position: relative;"><div id="files-preview-placeholder" style="color: var(--cor-texto-mutado); font-size: 0.95rem; font-weight: 600;">Selecione um arquivo à esquerda</div><iframe id="files-preview-iframe" src="" style="width: 100%; height: 100%; border: none; display: none; background: white;"></iframe></div></div></div></div>
+    
+    <div id="userModal" class="modal-overlay"><div class="modal-card"><h3 style="margin-bottom:20px; font-weight: 700; font-size: 1.3rem;">Dados do Utilizador</h3><label style="font-size:0.85rem; font-weight:600;">Login</label><input type="text" id="u-name" class="config-input" style="margin-bottom:15px; margin-top: 4px;"><label style="font-size:0.85rem; font-weight:600;">Palavra-passe</label><input type="password" id="u-pass" class="config-input" style="margin-bottom:15px; margin-top: 4px;"><label style="font-size:0.85rem; font-weight:600;">Setor / Permissão</label><select id="u-role" class="config-input" style="margin-bottom:25px; margin-top: 4px;"><option value="admin">Admin</option><option value="pcp">PCP</option><option value="layout">Layout</option><option value="producao">Produção</option><option value="faturamento">Faturamento</option><option value="comercial">Comercial</option><option value="diretoria">Diretoria</option><option value="tv">TV Monitor</option></select><input type="hidden" id="u-original"> <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn btn-secondary" onclick="document.getElementById('userModal').style.display='none'">Cancelar</button><button class="btn btn-primary" onclick="saveUser()">Guardar</button></div></div></div>
+    
+    <div id="historyModal" class="modal-overlay"><div class="modal-card" style="max-width: 600px; padding: 0; display: flex; flex-direction: column; max-height: 80vh;"><div style="padding: 20px 25px; border-bottom: 1px solid var(--cor-borda); display: flex; justify-content: space-between; align-items: center;"><h3 style="margin: 0; display:flex; align-items:center; gap:10px; font-weight: 700; font-size: 1.2rem;"><i class="ph-fill ph-clock-counter-clockwise" style="color:var(--cor-primaria);"></i> Histórico <span id="hist-order-id"></span></h3><button class="btn btn-secondary btn-icon-only" onclick="closeHistoryModal()"><i class="ph-bold ph-x"></i></button></div><div id="history-container" style="padding: 20px 25px; overflow-y: auto; flex: 1; background: var(--cor-panel-bg);"></div></div></div>
+
+    <div id="adminReopenOrderModal" class="modal-overlay">
+        <div class="modal-card admin-reopen-modal-card">
+            <h3><i class="ph-fill ph-arrow-counter-clockwise"></i> Reabrir Pedido</h3>
+            <p id="admin-reopen-order-summary" class="admin-reopen-summary"></p>
+
+            <label>Retornar para qual etapa?</label>
+            <select id="admin-reopen-target-status" class="config-input">
+                <option value="">Selecione a etapa</option>
+            </select>
+
+            <label>Motivo da reabertura</label>
+            <select id="admin-reopen-reason" class="config-input">
+                <option value="">Selecione o motivo</option>
+                <option value="erro_finalizacao">Erro na finalização</option>
+                <option value="ajuste_comercial">Ajuste Comercial</option>
+                <option value="correcao_layout">Correção de Layout</option>
+                <option value="ajuste_producao">Ajuste de Produção</option>
+                <option value="ajuste_faturamento">Ajuste de Faturamento</option>
+                <option value="pedido_cliente">Solicitação do Cliente</option>
+                <option value="outros">Outros</option>
+            </select>
+
+            <label>Observação obrigatória</label>
+            <textarea id="admin-reopen-observation" class="config-input" placeholder="Explique o motivo da reabertura..."></textarea>
+            <input type="hidden" id="admin-reopen-order-id">
+
+            <div class="admin-reopen-warning">
+                <i class="ph-fill ph-warning-diamond"></i>
+                Ação administrativa sensível. O back-end também deve validar permissão de Admin.
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" type="button" onclick="closeAdminReopenOrderModal()">Cancelar</button>
+                <button class="btn btn-warning" type="button" onclick="confirmAdminReopenOrder()">
+                    <i class="ph-bold ph-arrow-counter-clockwise"></i> Confirmar Reabertura
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="changePassModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="margin-bottom:20px; font-weight: 700; font-size: 1.3rem;"><i class="ph-fill ph-key" style="color:var(--cor-primaria);"></i> Alterar Senha</h3>
+            <label style="font-size:0.85rem; font-weight:600;">Senha Atual</label>
+            <input type="password" id="cp-old" class="config-input" style="margin-bottom:15px; margin-top: 4px;" placeholder="••••••••">
+            <label style="font-size:0.85rem; font-weight:600;">Nova Senha</label>
+            <input type="password" id="cp-new" class="config-input" style="margin-bottom:15px; margin-top: 4px;" placeholder="••••••••">
+            <label style="font-size:0.85rem; font-weight:600;">Confirmar Nova Senha</label>
+            <input type="password" id="cp-confirm" class="config-input" style="margin-bottom:25px; margin-top: 4px;" placeholder="••••••••">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('changePassModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-primary" id="btn-submit-cp" onclick="submitChangePass()">Alterar Senha</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/pages/admin.js"></script>
+</body>
+</html>

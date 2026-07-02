@@ -1,0 +1,448 @@
+@import url('./global.css');
+
+/* =========================================================
+   SINALIZAFLOW J7S — TEMA DO SETOR: COMERCIAL
+   Este arquivo deve conter apenas variáveis e ajustes específicos.
+   O layout principal vem de global.css.
+   ========================================================= */
+
+:root {
+    --cor-primaria: #0EA36C;
+    --cor-primaria-hover: #087348;
+    --cor-primaria-soft-bg: rgba(14, 163, 108, 0.12);
+
+    --primary: var(--cor-primaria);
+}
+
+[data-theme="dark"] {
+    --cor-primaria: #0EA36C;
+    --cor-primaria-hover: #087348;
+    --cor-primaria-soft-bg: color-mix(in srgb, #0EA36C 18%, transparent);
+}
+
+/* Ajuste opcional do selo de setor exibido no hero */
+#page-sector-label::after {
+    content: "Comercial";
+    display: none;
+}
+
+.comercial-date-btn {
+    min-height: 40px;
+    white-space: nowrap;
+}
+
+.comercial-date-btn i {
+    color: var(--cor-primaria);
+}
+
+.comercial-date-updated {
+    width: fit-content;
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--cor-primaria);
+    font-size: 0.68rem;
+    font-weight: 850;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.comercial-date-modal .comercial-date-card {
+    max-width: 640px;
+}
+
+.comercial-date-card > h3 + p:not(.comercial-date-intro) {
+    display: none;
+}
+
+.comercial-date-intro {
+    margin: 0 0 18px;
+    color: var(--cor-texto-mutado);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.comercial-date-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.comercial-date-summary div {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--radius-padrao);
+    background: var(--cor-card-bg);
+    box-shadow: var(--sombra-sm);
+}
+
+.comercial-date-summary span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--cor-texto-mutado);
+    font-size: 0.68rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.comercial-date-summary strong {
+    display: block;
+    overflow: hidden;
+    color: var(--cor-texto);
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.comercial-date-form {
+    display: grid;
+    gap: 8px;
+}
+
+.comercial-date-form .input-box {
+    margin: 0 0 8px;
+}
+
+.comercial-date-form textarea.input-box {
+    min-height: 92px;
+    resize: vertical;
+}
+
+.comercial-date-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.comercial-date-actions .btn:disabled {
+    opacity: 0.72;
+    cursor: wait;
+}
+
+.proposal-tool-card {
+    grid-column: 1 / -1;
+    min-height: 0 !important;
+    gap: 14px;
+}
+
+.proposal-tool-copy {
+    margin: -6px 0 2px;
+    color: var(--cor-texto-mutado);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.proposal-upload-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.proposal-upload-box {
+    min-height: 116px;
+    padding: 18px;
+    display: grid;
+    place-items: center;
+    gap: 6px;
+    border: 1px dashed color-mix(in srgb, var(--cor-primaria) 55%, var(--cor-borda));
+    border-radius: var(--radius-padrao);
+    background: var(--cor-primaria-soft-bg);
+    color: var(--cor-texto);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.proposal-upload-box:hover {
+    transform: translateY(-1px);
+    border-color: var(--cor-primaria);
+    background: color-mix(in srgb, var(--cor-primaria-soft-bg) 72%, white);
+}
+
+.proposal-upload-box i {
+    color: var(--cor-primaria);
+    font-size: 1.8rem;
+}
+
+.proposal-upload-box span {
+    font-weight: 900;
+}
+
+.proposal-upload-box small {
+    color: var(--cor-texto-mutado);
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.proposal-options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.proposal-options-grid label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--cor-texto);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.proposal-options-grid .input-box {
+    margin: 0;
+}
+
+.proposal-result-box {
+    display: none;
+    line-height: 1.45;
+}
+
+@media (max-width: 720px) {
+    .comercial-date-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .comercial-date-actions .btn,
+    .comercial-date-btn {
+        width: 100%;
+    }
+
+    .proposal-upload-grid,
+    .proposal-options-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   COMERCIAL - CARDS MAIS COMPACTOS
+   Baseado no aproveitamento de espaco dos cards do Admin.
+   ========================================================= */
+
+.commercial-shell .orders-container {
+    gap: 10px !important;
+}
+
+.commercial-shell .list-row {
+    overflow: visible !important;
+}
+
+.commercial-shell .list-row::before {
+    top: 16px !important;
+    bottom: 16px !important;
+    width: 6px !important;
+}
+
+.commercial-shell .row-header,
+.commercial-shell .order-card-main {
+    min-height: 88px !important;
+    padding: 14px 18px 14px 28px !important;
+    gap: 14px !important;
+}
+
+.commercial-shell .order-id-line,
+.commercial-shell .info-top {
+    gap: 7px !important;
+    margin-bottom: 5px !important;
+}
+
+.commercial-shell .id-badge,
+.commercial-shell .status-pill,
+.commercial-shell .status-badge {
+    min-height: 26px !important;
+    padding: 5px 9px !important;
+    font-size: 0.66rem !important;
+}
+
+.commercial-shell .client-name {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(0.98rem, 1.08vw, 1.2rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+}
+
+.commercial-shell .order-meta,
+.commercial-shell .info-bottom {
+    margin-top: 5px !important;
+    gap: 8px !important;
+    font-size: 0.72rem !important;
+}
+
+.commercial-shell .order-field {
+    min-width: 0 !important;
+    gap: 3px !important;
+}
+
+.commercial-shell .order-field span {
+    font-size: 0.62rem !important;
+    letter-spacing: 0 !important;
+}
+
+.commercial-shell .order-field strong {
+    font-size: 0.86rem !important;
+}
+
+.commercial-shell .comercial-date-updated {
+    margin-top: 3px !important;
+    font-size: 0.62rem !important;
+}
+
+.commercial-shell .order-actions,
+.commercial-shell .action-buttons {
+    gap: 7px !important;
+}
+
+.commercial-shell .order-actions .btn,
+.commercial-shell .comercial-date-btn {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding: 0 12px !important;
+    font-size: 0.78rem !important;
+}
+
+.commercial-shell .btn-act {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 14px !important;
+}
+
+.commercial-shell .card-details {
+    padding: 0 18px 16px 28px !important;
+}
+
+.commercial-shell .details-grid,
+.commercial-shell .detail-kv {
+    gap: 10px !important;
+}
+
+.commercial-shell .info-panel {
+    padding: 14px !important;
+    border-radius: 16px !important;
+}
+
+.commercial-shell .info-panel-title {
+    margin-bottom: 10px !important;
+}
+
+.commercial-shell .detail-kv > div {
+    padding: 9px 0 !important;
+}
+
+.commercial-shell .return-note {
+    margin-bottom: 10px !important;
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+}
+
+.commercial-shell .action-workspace .order-card-main {
+    grid-template-columns: minmax(300px, 1.5fr) minmax(118px, 0.36fr) minmax(118px, 0.34fr) minmax(260px, auto) !important;
+}
+
+.commercial-shell .action-workspace .order-card-main > .order-field:nth-child(2) {
+    display: none !important;
+}
+
+.commercial-shell .action-workspace .order-actions {
+    justify-content: flex-end !important;
+    flex-wrap: nowrap !important;
+}
+
+.commercial-shell .monitor-workspace .row-header {
+    grid-template-columns:
+        minmax(300px, 1.2fr)
+        minmax(360px, 1.45fr)
+        minmax(120px, 0.36fr)
+        minmax(115px, 0.32fr)
+        48px !important;
+}
+
+.commercial-shell .monitor-workspace .stepper-wrapper {
+    max-width: 460px !important;
+    gap: 6px !important;
+}
+
+.commercial-shell .monitor-workspace .stepper-item {
+    gap: 3px !important;
+}
+
+.commercial-shell .monitor-workspace .stepper-date {
+    min-height: 12px !important;
+    line-height: 12px !important;
+}
+
+.commercial-shell .monitor-workspace .stepper-circle {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+}
+
+.commercial-shell .monitor-workspace .stepper-label {
+    max-width: 70px !important;
+    min-height: 14px !important;
+    font-size: 0.58rem !important;
+    line-height: 1 !important;
+}
+
+.commercial-shell .monitor-workspace .stepper-line {
+    margin-top: 2px !important;
+}
+
+.commercial-shell .monitor-workspace .list-col-actions {
+    gap: 8px !important;
+}
+
+.commercial-shell .monitor-workspace .list-col-actions .btn-act {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+}
+
+@media (max-width: 1280px) {
+    .commercial-shell .action-workspace .order-card-main,
+    .commercial-shell .monitor-workspace .row-header {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    .commercial-shell .action-workspace .order-actions,
+    .commercial-shell .monitor-workspace .list-col-actions {
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+    }
+
+    .commercial-shell .monitor-workspace .stepper-wrapper {
+        max-width: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .commercial-shell .row-header,
+    .commercial-shell .order-card-main {
+        padding: 14px 14px 14px 22px !important;
+        border-radius: 18px !important;
+    }
+
+    .commercial-shell .client-name {
+        white-space: normal !important;
+    }
+
+    .commercial-shell .action-workspace .order-actions {
+        flex-wrap: wrap !important;
+    }
+
+    .commercial-shell .action-workspace .order-actions .btn {
+        flex: 1 1 100% !important;
+    }
+}

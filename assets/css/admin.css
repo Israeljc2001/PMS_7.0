@@ -1,0 +1,5730 @@
+@import url('./global.css');
+
+/* =========================================================
+   SINALIZAFLOW J7S — SETOR ADMIN
+   Padrão visual herdado do Comercial/Layout:
+   espaçamentos, fontes, shell, sidebar, topbar, cards e dark mode.
+   Alterar por setor apenas as cores principais.
+   ========================================================= */
+
+:root {
+    --cor-primaria: #111827;
+    --cor-primaria-hover: #000000;
+    --cor-primaria-soft-bg: rgba(17, 24, 39, 0.10);
+    --cor-retorno: #111827;
+    --retorno-bg: rgba(17, 24, 39, 0.12);
+    --primary: var(--cor-primaria);
+}
+
+body[data-theme="dark"] {
+    --cor-primaria: #F8FAFC;
+    --cor-primaria-hover: #FFFFFF;
+    --cor-primaria-soft-bg: rgba(248, 250, 252, 0.10);
+    --cor-retorno: #F8FAFC;
+    --retorno-bg: rgba(248, 250, 252, 0.09);
+}
+
+/* Identidade do setor no hero */
+.admin-shell .page-header::after {
+    content: "Painel master • ADMIN J7S" !important;
+}
+
+.admin-shell .page-overline i,
+.admin-shell .view-eyebrow i,
+.admin-shell .view-chip i,
+.admin-shell .status-badge-top.online i {
+    color: var(--cor-primaria) !important;
+}
+
+.admin-shell #page-sector-label {
+    background: #0B0D0C;
+    color: #fff;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 950;
+    letter-spacing: 0.02em;
+}
+
+.admin-shell .layout-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+/* Barra de busca/filtros do Layout */
+.admin-shell .filters {
+    margin: 0 0 18px !important;
+    padding: 14px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+}
+
+.admin-shell .filters > div:first-child {
+    flex: 1 1 360px !important;
+}
+
+.admin-shell .filters .input-box,
+.admin-shell .filters .btn {
+    min-height: 48px !important;
+}
+
+/* KPIs do setor */
+.admin-shell .kpi-grid-cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    margin-bottom: 18px !important;
+}
+
+.admin-shell .kpi-card {
+    min-height: 124px !important;
+}
+
+.admin-shell .kpi-val {
+    color: var(--cor-texto);
+    font-size: clamp(2rem, 2.8vw, 3rem);
+    line-height: 0.95;
+    font-weight: 950;
+    letter-spacing: -0.06em;
+}
+
+.admin-shell .kpi-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--cor-texto-mutado);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 950;
+}
+
+.admin-shell .kpi-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--sombra-sm);
+}
+
+/* Linhas de pedido do ADMIN */
+.admin-shell .orders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.admin-shell .list-row {
+    overflow: visible !important;
+    border-left: 6px solid transparent !important;
+}
+
+.admin-shell .list-row.late {
+    border-left-color: var(--cor-erro) !important;
+}
+
+.admin-shell .list-row.warning {
+    border-left-color: var(--cor-alerta) !important;
+}
+
+.admin-shell .list-row.is-retorno {
+    border-left-color: var(--cor-primaria) !important;
+}
+
+.admin-shell .row-header {
+    min-height: 112px !important;
+    padding: 20px 22px !important;
+    display: grid !important;
+    grid-template-columns: minmax(260px, 1.25fr) minmax(390px, 1.5fr) minmax(280px, auto) !important;
+    gap: 22px !important;
+    align-items: center !important;
+}
+
+.admin-shell .col-info,
+.admin-shell .col-stepper,
+.admin-shell .col-actions {
+    min-width: 0 !important;
+}
+
+.admin-shell .row-id {
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: #0B0D0C;
+    color: #FFFFFF;
+    font-size: 0.74rem !important;
+    line-height: 1;
+    font-weight: 950;
+}
+
+.admin-shell .row-client {
+    max-width: 100%;
+    color: var(--cor-texto);
+    font-size: clamp(1.04rem, 1.3vw, 1.32rem) !important;
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-shell .info-praz {
+    color: var(--cor-texto-mutado);
+    font-weight: 750;
+}
+
+.admin-shell .col-stepper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-shell .info-status {
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.56);
+    color: var(--cor-texto);
+    border: 1px solid rgba(255,255,255,0.54);
+    box-shadow: var(--sombra-sm);
+    font-size: 0.7rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.admin-shell .info-status.status-active i {
+    color: var(--cor-primaria);
+}
+
+.admin-shell .info-status.status-waiting i {
+    color: var(--cor-alerta);
+}
+
+.admin-shell .stepper-wrapper {
+    width: 100%;
+    max-width: 520px;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    overflow: visible !important;
+}
+
+.admin-shell .stepper-item {
+    min-width: 0 !important;
+    display: grid !important;
+    justify-items: center !important;
+    gap: 5px !important;
+}
+
+.admin-shell .stepper-circle {
+    width: 25px !important;
+    height: 25px !important;
+    min-width: 25px !important;
+    border-radius: 50%;
+}
+
+.admin-shell .stepper-label {
+    max-width: 72px;
+    color: var(--cor-texto-mutado);
+    font-size: 0.62rem;
+    line-height: 1.05;
+    font-weight: 900;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-shell .stepper-line {
+    width: 34px !important;
+    height: 2px !important;
+    margin-top: 2px !important;
+}
+
+.admin-shell .col-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.admin-shell .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.admin-shell .btn-detalhes {
+    color: var(--cor-texto-mutado);
+    font-size: 0.72rem;
+    font-weight: 900;
+}
+
+/* Tags de tipo/prioridade */
+.admin-shell .tag-urgente,
+.admin-shell .tag-homologado,
+.admin-shell .tag-projeto,
+.admin-shell .tag-normal,
+.admin-shell .tag-retorno {
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--cor-texto);
+    border: 1px solid rgba(255,255,255,0.54);
+    box-shadow: var(--sombra-sm);
+    font-size: 0.68rem;
+    font-weight: 950;
+}
+
+.admin-shell .tag-urgente { background: var(--danger-bg); color: var(--cor-erro); }
+.admin-shell .tag-homologado { background: var(--warning-bg); color: var(--cor-alerta); }
+.admin-shell .tag-projeto { background: var(--cor-primaria-soft-bg); color: var(--cor-primaria); }
+.admin-shell .tag-normal { background: var(--info-bg); color: var(--cor-info); }
+.admin-shell .tag-retorno { background: var(--retorno-bg); color: var(--cor-primaria); }
+
+/* Detalhes do card */
+.admin-shell .card-details {
+    padding: 0 22px 20px;
+}
+
+.admin-shell .obs-block,
+.admin-shell .obs-comercial {
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.44);
+    border: 1px solid rgba(255,255,255,0.48);
+    box-shadow: var(--sombra-sm);
+}
+
+.admin-shell .obs-comercial {
+    color: var(--cor-texto);
+}
+
+/* Modais / arquivos */
+.admin-shell ~ .modal-overlay .modal-card,
+.admin-shell ~ .modal-overlay .modal-card-lg,
+.modal-overlay .modal-card,
+.modal-overlay .modal-card-lg {
+    color: var(--cor-texto);
+}
+
+#filesModal .file-browser {
+    grid-template-columns: 330px minmax(0, 1fr) !important;
+}
+
+#filesModal > .modal-card-lg {
+    width: min(1500px, calc(100vw - 44px)) !important;
+    height: min(900px, calc(100vh - 44px)) !important;
+}
+
+/* Relatorios */
+#view-reports .reports-loading-state {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--cor-texto-mutado);
+}
+
+#view-reports .reports-loading-state i {
+    display: block;
+    font-size: 3rem;
+    color: var(--cor-primaria);
+    margin-bottom: 16px;
+}
+
+#view-reports .reports-loading-state h2 {
+    color: var(--cor-texto);
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+}
+
+#view-reports .reports-content {
+    flex-direction: column;
+}
+
+#view-reports .sector-block {
+    margin-bottom: 32px;
+    background: var(--cor-card-bg);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--cor-borda);
+    box-shadow: var(--sombra-sm);
+    overflow: hidden;
+}
+
+#view-reports .sector-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--cor-borda);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#view-reports .sector-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--cor-texto);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+}
+
+#view-reports .sector-body {
+    padding: 25px;
+}
+
+#view-reports .top-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+#view-reports .top-kpi-card {
+    border: 1px solid var(--cor-borda);
+    border-radius: 10px;
+    padding: 20px;
+    background: var(--cor-panel-bg);
+}
+
+#view-reports .top-kpi-label {
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--cor-texto-mutado);
+    margin-bottom: 10px;
+}
+
+#view-reports .top-kpi-val {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--cor-texto);
+    line-height: 1;
+}
+
+#view-reports .monthly-scroll {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+#view-reports .monthly-card {
+    min-width: 170px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 15px;
+    background: var(--cor-card-bg);
+    flex-shrink: 0;
+    box-shadow: var(--sombra-sm);
+    border-top: 3px solid;
+}
+
+#view-reports .monthly-title {
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: var(--cor-texto);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+#view-reports .monthly-stat {
+    font-size: 0.85rem;
+    color: var(--cor-texto-mutado);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+#view-reports .monthly-val {
+    font-size: 1.3rem;
+    font-weight: 900;
+    margin-top: 8px;
+}
+
+#view-reports .section-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--cor-texto-mutado);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#view-reports .gamer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+#view-reports .gamer-card {
+    background: var(--cor-card-bg);
+    border-radius: 10px;
+    border: 1px solid var(--cor-borda);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#view-reports .gamer-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+#view-reports .avatar-circle {
+    width: 45px;
+    height: 45px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 900;
+    border: 2px solid rgba(255,255,255,0.5);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+#view-reports .gamer-name {
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+#view-reports .gamer-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#view-reports .bucket-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+}
+
+#view-reports .bucket-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--cor-texto-mutado);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#view-reports .bucket-val {
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--cor-texto);
+    white-space: nowrap;
+}
+
+#view-reports .report-separator {
+    border: none;
+    border-top: 1px dashed var(--cor-borda);
+    margin: 30px 0;
+}
+
+#view-reports .reports-empty-inline,
+#view-reports .empty-state {
+    color: var(--cor-texto-mutado);
+    padding: 14px;
+    font-weight: 600;
+}
+/* Dark mode Layout com roxo preservado */
+body[data-theme="dark"] .admin-shell .layout-view-intro,
+body[data-theme="dark"] .admin-shell .action-workspace .view-intro {
+    border-left-color: var(--cor-primaria) !important;
+    box-shadow:
+        inset 7px 0 0 rgba(168,85,247,0.20),
+        0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .admin-shell .nav-btn.active {
+    border-color: rgba(168,85,247,0.42) !important;
+    box-shadow:
+        inset 4px 0 0 var(--cor-primaria),
+        0 18px 34px rgba(0,0,0,0.42) !important;
+}
+
+body[data-theme="dark"] .admin-shell .btn-primary,
+body[data-theme="dark"] .admin-shell .btn-success {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+    border-color: rgba(168,85,247,0.44) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        0 16px 36px rgba(147,51,234,0.24) !important;
+}
+
+body[data-theme="dark"] .admin-shell .page-header::after,
+body[data-theme="dark"] .admin-shell #page-sector-label {
+    background: #FFFFFF !important;
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .admin-shell .obs-block,
+body[data-theme="dark"] .admin-shell .obs-comercial {
+    background: linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+}
+
+/* Responsivo */
+@media (max-width: 1180px) {
+    .admin-shell .row-header {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .admin-shell .col-stepper {
+        align-items: stretch;
+    }
+
+    .admin-shell .stepper-wrapper {
+        max-width: none;
+    }
+
+    .admin-shell .col-actions {
+        align-items: stretch;
+    }
+
+    .admin-shell .action-buttons {
+        justify-content: flex-start;
+    }
+
+    .admin-shell .kpi-grid-cols {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* =========================================================
+   REAVALIAÇÃO — LAYOUT COMO PÁGINA DE TRABALHO
+   - Remove visual gigante do hero no setor Layout.
+   - Remove dependência visual da busca superior duplicada.
+   - Organiza relatórios em cards consistentes.
+   ========================================================= */
+
+/* Topbar sem busca duplicada: ações à direita, sem Ctrl K */
+.admin-shell .topbar {
+    min-height: 58px !important;
+    justify-content: flex-end !important;
+    padding: 8px 10px !important;
+    margin-bottom: 16px !important;
+}
+
+.admin-shell .topbar-actions {
+    margin-left: auto !important;
+}
+
+/* Botão de subir não deve aparecer solto no canto superior */
+#scrollTopBtn.btn-scroll-top {
+    right: 34px !important;
+    bottom: 28px !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 80 !important;
+}
+
+/* Hero mais objetivo para trabalho operacional */
+.admin-shell .page-header,
+.admin-shell .dashboard-header {
+    min-height: 118px !important;
+    margin-bottom: 16px !important;
+    padding: 24px 30px !important;
+    align-items: center !important;
+    border-radius: 30px !important;
+}
+
+.admin-shell .page-header::before {
+    display: none !important;
+    content: none !important;
+}
+
+.admin-shell .page-header::after {
+    display: none !important;
+    content: none !important;
+}
+
+.admin-shell .page-user-identity {
+    max-width: min(780px, 70vw) !important;
+}
+
+.admin-shell .page-overline {
+    margin-bottom: 7px !important;
+    padding: 6px 11px !important;
+    font-size: 0.68rem !important;
+}
+
+.admin-shell .page-header h1 {
+    font-size: clamp(2rem, 3vw, 3.2rem) !important;
+    line-height: 0.96 !important;
+    letter-spacing: -0.065em !important;
+}
+
+.admin-shell .page-header p {
+    margin-top: 7px !important;
+    font-size: 0.98rem !important;
+    max-width: 760px !important;
+}
+
+.admin-shell .page-header-actions .status-badge-top {
+    min-height: 42px !important;
+}
+
+/* Intro também compacta */
+.admin-shell .view-intro {
+    min-height: 92px !important;
+    padding: 20px 24px !important;
+    margin-bottom: 16px !important;
+    border-radius: 26px !important;
+}
+
+.admin-shell .view-intro h2 {
+    font-size: clamp(1.55rem, 2.2vw, 2.15rem) !important;
+    margin: 5px 0 4px !important;
+}
+
+.admin-shell .view-intro p {
+    font-size: 0.92rem !important;
+}
+
+/* KPIs e filtros mais próximos, sem parecer bloco solto */
+.admin-shell .kpi-grid-cols {
+    gap: 14px !important;
+    margin-bottom: 16px !important;
+}
+
+.admin-shell .kpi-card {
+    min-height: 112px !important;
+    padding: 18px 20px !important;
+}
+
+.admin-shell .filters {
+    margin: 0 0 16px !important;
+}
+
+/* Listas de pedido: melhor aproveitamento de tela */
+.admin-shell .row-header {
+    min-height: 104px !important;
+    padding: 18px 20px !important;
+    grid-template-columns: minmax(255px, 1.2fr) minmax(390px, 1.6fr) minmax(300px, auto) !important;
+}
+
+.admin-shell .action-buttons .btn,
+.admin-shell .action-buttons .btn-icon-only {
+    min-height: 38px !important;
+}
+
+.admin-shell .action-buttons .btn:not(.btn-icon-only) {
+    padding: 0 14px !important;
+}
+
+/* =========================================================
+   RELATÓRIOS FORMATADOS EM CARDS
+   ========================================================= */
+
+.admin-shell .report-workspace {
+    padding-bottom: 30px !important;
+}
+
+.admin-shell .report-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+.admin-shell .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: start !important;
+}
+
+.admin-shell .report-panel {
+    background: var(--cor-card-bg) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    border-radius: var(--radius-card) !important;
+    box-shadow: var(--sombra-sm) !important;
+    backdrop-filter: blur(18px) !important;
+    padding: 20px !important;
+    min-height: 180px !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .report-panel-full {
+    grid-column: 1 / -1 !important;
+}
+
+.admin-shell .report-panel-head {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 14px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.40) !important;
+}
+
+.admin-shell .report-panel-head h3 {
+    margin: 5px 0 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(1.1rem, 1.6vw, 1.45rem) !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.045em !important;
+}
+
+.admin-shell .designer-distribution-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+}
+
+.admin-shell .designer-pill {
+    min-height: 42px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px 14px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,0.54) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.88rem !important;
+    font-weight: 900 !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .designer-count {
+    min-width: 26px !important;
+    height: 26px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    border-radius: 999px !important;
+    background: var(--cor-primaria) !important;
+    color: #fff !important;
+    font-size: 0.75rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .report-metric-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.admin-shell .report-card-grid,
+.admin-shell .gamer-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.admin-shell .gamer-card,
+.admin-shell #micro-funnel-grid > div {
+    background: rgba(255,255,255,0.44) !important;
+    border: 1px solid rgba(255,255,255,0.46) !important;
+    border-radius: 22px !important;
+    box-shadow: var(--sombra-sm) !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .gamer-header,
+.admin-shell .gamer-body {
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell .report-list-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+/* Dark mode dos relatórios */
+body[data-theme="dark"] .admin-shell .report-panel,
+body[data-theme="dark"] .admin-shell .gamer-card,
+body[data-theme="dark"] .admin-shell #micro-funnel-grid > div,
+body[data-theme="dark"] .admin-shell .designer-pill {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(10,12,11,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .admin-shell .report-panel-head {
+    border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .report-view-intro {
+    box-shadow:
+        inset 7px 0 0 rgba(168,85,247,0.20),
+        0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+/* Responsivo */
+@media (max-width: 1280px) {
+    .admin-shell .report-metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .admin-shell .report-dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .admin-shell .page-header,
+    .admin-shell .dashboard-header {
+        min-height: auto !important;
+        padding: 22px !important;
+    }
+
+    .admin-shell .report-metric-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =========================================================
+   AJUSTE POR ETAPAS — HEADER OPERACIONAL DO LAYOUT
+   - Setor de Criação na barra superior.
+   - Página atual abaixo: Fila de Criação + usuário ao lado.
+   - Remove hero gigante e bloco repetido.
+   ========================================================= */
+
+.admin-shell .topbar {
+    min-height: 62px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 14px !important;
+    margin-bottom: 14px !important;
+}
+
+.admin-shell .topbar-sector-context {
+    display: flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    min-width: 260px !important;
+    padding: 8px 14px !important;
+    border-radius: 22px !important;
+    background: rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.52) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .topbar-sector-context .sector-dot {
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 999px !important;
+    background: var(--cor-primaria) !important;
+    box-shadow: 0 0 0 5px rgba(147, 51, 234, 0.12) !important;
+    flex: 0 0 auto !important;
+}
+
+.admin-shell .topbar-sector-context strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.05 !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.025em !important;
+}
+
+.admin-shell .topbar-sector-context span:not(.sector-dot) {
+    display: block !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1.1 !important;
+    font-weight: 750 !important;
+}
+
+.admin-shell .topbar-actions {
+    margin-left: auto !important;
+}
+
+/* Header objetivo da página */
+.admin-shell .layout-work-header {
+    min-height: 108px !important;
+    margin-bottom: 14px !important;
+    padding: 22px 28px !important;
+    border-radius: 28px !important;
+    align-items: center !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .layout-work-header::before,
+.admin-shell .layout-work-header::after {
+    display: none !important;
+    content: none !important;
+}
+
+.admin-shell .layout-work-header .page-user-identity {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+.admin-shell .layout-page-title-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+}
+
+.admin-shell .layout-work-header h1 {
+    margin: 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(2rem, 3.1vw, 3.2rem) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.065em !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .layout-work-header p {
+    margin: 7px 0 0 !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.96rem !important;
+    font-weight: 700 !important;
+}
+
+.admin-shell .layout-current-user {
+    min-height: 34px !important;
+    padding: 7px 12px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    background: #0B0D0C !important;
+    color: #FFFFFF !important;
+    font-size: 0.78rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .layout-current-user i,
+.admin-shell .layout-current-user span {
+    color: #FFFFFF !important;
+}
+
+/* Evita duplicidade da intro "Fila de Criação" logo abaixo do header */
+.admin-shell .layout-view-intro {
+    display: none !important;
+}
+
+/* Aproxima KPIs e filtros do cabeçalho operacional */
+.admin-shell .kpi-grid-cols {
+    margin-top: 0 !important;
+    margin-bottom: 14px !important;
+}
+
+.admin-shell .filters {
+    margin-bottom: 14px !important;
+}
+
+/* Dark mode do novo header */
+body[data-theme="dark"] .admin-shell .topbar-sector-context {
+    background: linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+    border-color: rgba(168,85,247,0.22) !important;
+}
+
+body[data-theme="dark"] .admin-shell .topbar-sector-context strong {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell .topbar-sector-context span:not(.sector-dot) {
+    color: #AEB7B2 !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-current-user {
+    background: #FFFFFF !important;
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-current-user i,
+body[data-theme="dark"] .admin-shell .layout-current-user span {
+    color: #050606 !important;
+}
+
+
+/* =========================================================
+   AJUSTE — BOTÃO SUBIR E STEPPER COM PROGRESSO
+   - A seta só aparece suspensa após scroll.
+   - Etapas validadas: check verde.
+   - Etapa atual: roxo com spinner de progresso.
+   ========================================================= */
+
+/* Botão subir flutuante */
+#scrollTopBtn.btn-scroll-top {
+    position: fixed !important;
+    right: 38px !important;
+    bottom: 34px !important;
+    left: auto !important;
+    top: auto !important;
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    min-height: 54px !important;
+    border-radius: 18px !important;
+    display: grid !important;
+    place-items: center !important;
+    z-index: 9998 !important;
+    background: linear-gradient(145deg, #0B0D0C, #050606) !important;
+    border: 1px solid rgba(255,255,255,0.36) !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        0 18px 42px rgba(0,0,0,0.34) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transform: translateY(18px) scale(0.92) !important;
+    transition: opacity .24s ease, transform .24s ease, visibility .24s ease !important;
+}
+
+#scrollTopBtn.btn-scroll-top.visible {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    transform: translateY(0) scale(1) !important;
+}
+
+#scrollTopBtn.btn-scroll-top i {
+    color: #FFFFFF !important;
+    font-size: 1.28rem !important;
+    line-height: 1 !important;
+}
+
+#scrollTopBtn.btn-scroll-top:hover {
+    background: linear-gradient(145deg, var(--cor-primaria), var(--cor-primaria-hover)) !important;
+    border-color: rgba(255,255,255,0.42) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+body[data-theme="dark"] #scrollTopBtn.btn-scroll-top {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+    border-color: rgba(168,85,247,0.55) !important;
+    box-shadow: 0 20px 46px rgba(168,85,247,0.22), 0 18px 42px rgba(0,0,0,0.54) !important;
+}
+
+/* Stepper: base mais clara e legível */
+.admin-shell .stepper-circle {
+    position: relative !important;
+    display: grid !important;
+    place-items: center !important;
+    background: rgba(255,255,255,0.68) !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    color: var(--cor-texto-mutado) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .stepper-item.done .stepper-circle {
+    background: linear-gradient(145deg, #10B981, #059669) !important;
+    border-color: rgba(16,185,129,0.65) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 10px 22px rgba(16,185,129,0.28) !important;
+}
+
+.admin-shell .stepper-item.done .stepper-circle i {
+    color: #FFFFFF !important;
+    font-size: 0.92rem !important;
+    font-weight: 900 !important;
+}
+
+.admin-shell .stepper-item.done .stepper-label {
+    color: #059669 !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .stepper-item.active .stepper-circle {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+    border-color: rgba(168,85,247,0.76) !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        0 0 0 5px rgba(168,85,247,0.13),
+        0 12px 26px rgba(168,85,247,0.34) !important;
+}
+
+.admin-shell .stepper-item.active .stepper-circle i {
+    color: #FFFFFF !important;
+}
+
+.admin-shell .stepper-item.active .stepper-label {
+    color: var(--cor-primaria) !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .stepper-item.active .stepper-spinner {
+    display: inline-block !important;
+    font-size: 0.96rem !important;
+    animation: layoutStepperSpin 0.95s linear infinite !important;
+}
+
+.admin-shell .stepper-line {
+    background: rgba(0,0,0,0.10) !important;
+    border-radius: 999px !important;
+}
+
+.admin-shell .stepper-item.done .stepper-line {
+    background: linear-gradient(90deg, #10B981, #7C3AED) !important;
+}
+
+/* Estados especiais mantêm alerta visual, mas com spinner */
+.admin-shell .stepper-item.active.warning .stepper-circle {
+    background: linear-gradient(145deg, #F59E0B, #D97706) !important;
+    border-color: rgba(245,158,11,0.70) !important;
+    box-shadow: 0 0 0 5px rgba(245,158,11,0.14), 0 12px 26px rgba(245,158,11,0.30) !important;
+}
+
+.admin-shell .stepper-item.active.late .stepper-circle {
+    background: linear-gradient(145deg, #EF4444, #DC2626) !important;
+    border-color: rgba(239,68,68,0.70) !important;
+    box-shadow: 0 0 0 5px rgba(239,68,68,0.14), 0 12px 26px rgba(239,68,68,0.30) !important;
+}
+
+@keyframes layoutStepperSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+body[data-theme="dark"] .admin-shell .stepper-circle {
+    background: rgba(255,255,255,0.10) !important;
+    border-color: rgba(255,255,255,0.12) !important;
+    color: #AEB7B2 !important;
+}
+
+body[data-theme="dark"] .admin-shell .stepper-item.done .stepper-circle {
+    background: linear-gradient(145deg, #12B981, #047857) !important;
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell .stepper-item.done .stepper-label {
+    color: #34D399 !important;
+}
+
+body[data-theme="dark"] .admin-shell .stepper-item.active .stepper-circle {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+}
+
+body[data-theme="dark"] .admin-shell .stepper-line {
+    background: rgba(255,255,255,0.10) !important;
+}
+
+body[data-theme="dark"] .admin-shell .stepper-item.done .stepper-line {
+    background: linear-gradient(90deg, #12B981, #A855F7) !important;
+}
+
+
+/* =========================================================
+   AJUSTE — USUÁRIO EM DESTAQUE + RADIAL ROXO NO DARK
+   - Remove dependência visual do usuário na topbar/sidebar.
+   - Usuário aparece grande no lado oposto do título da página.
+   - Dark mode ganha radial gradient roxo no canto superior esquerdo.
+   ========================================================= */
+
+/* remove espaços/resquícios de usuário na sidebar/topbar caso exista em cache */
+.admin-shell .sidebar-user,
+.admin-shell .topbar-user {
+    display: none !important;
+}
+
+.admin-shell .topbar-actions {
+    margin-left: auto !important;
+}
+
+.admin-shell .layout-work-header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 24px !important;
+    align-items: center !important;
+    min-height: 126px !important;
+    padding: 24px 30px !important;
+}
+
+.admin-shell .layout-page-left {
+    min-width: 0 !important;
+}
+
+.admin-shell .layout-page-title-row {
+    display: block !important;
+}
+
+.admin-shell .layout-work-header h1 {
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-shell .layout-user-highlight {
+    min-width: 230px !important;
+    padding: 18px 22px !important;
+    border-radius: 28px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(147,51,234,0.20), transparent 40%),
+        rgba(255,255,255,0.54) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .layout-user-highlight span {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .layout-user-highlight strong {
+    margin-top: 6px !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(1.8rem, 3vw, 3.1rem) !important;
+    line-height: 0.9 !important;
+    letter-spacing: -0.065em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+}
+
+/* neutraliza o modelo antigo de usuário pequeno, caso algum HTML antigo ainda tenha */
+.admin-shell .layout-current-user {
+    display: none !important;
+}
+
+/* Radial roxo: fundo do setor no modo escuro */
+body[data-theme="dark"] .admin-shell {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+body[data-theme="dark"] .admin-shell::after {
+    content: "" !important;
+    position: absolute !important;
+    top: -180px !important;
+    left: -40px !important;
+    width: 720px !important;
+    height: 520px !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+    background:
+        radial-gradient(circle at 28% 34%, rgba(168,85,247,0.28) 0%, rgba(147,51,234,0.16) 28%, rgba(147,51,234,0.06) 48%, transparent 70%) !important;
+    filter: blur(6px) !important;
+    opacity: 0.92 !important;
+}
+
+body[data-theme="dark"] .admin-shell .app-sidebar,
+body[data-theme="dark"] .admin-shell #main-content {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body[data-theme="dark"] .admin-shell .app-sidebar::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -120px !important;
+    left: -120px !important;
+    width: 340px !important;
+    height: 340px !important;
+    pointer-events: none !important;
+    background: radial-gradient(circle, rgba(168,85,247,0.24), transparent 66%) !important;
+    filter: blur(8px) !important;
+    opacity: 0.70 !important;
+}
+
+body[data-theme="dark"] .admin-shell .topbar-sector-context {
+    background:
+        radial-gradient(circle at 10% 18%, rgba(168,85,247,0.20), transparent 42%),
+        linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-work-header {
+    background:
+        radial-gradient(circle at 84% 16%, rgba(168,85,247,0.16), transparent 36%),
+        linear-gradient(145deg, rgba(16,18,17,0.985), rgba(7,8,8,0.985)) !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-user-highlight {
+    background:
+        radial-gradient(circle at 12% 18%, rgba(168,85,247,0.28), transparent 42%),
+        linear-gradient(145deg, rgba(24,26,25,0.98), rgba(10,12,11,0.98)) !important;
+    border-color: rgba(168,85,247,0.30) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 18px 40px rgba(168,85,247,0.10),
+        0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-user-highlight span {
+    color: #BFB5D4 !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-user-highlight strong {
+    color: #FFFFFF !important;
+}
+
+@media (max-width: 1180px) {
+    .admin-shell .layout-work-header {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-shell .layout-user-highlight {
+        min-width: 0 !important;
+        width: 100% !important;
+        align-items: flex-start !important;
+    }
+}
+
+/* =========================================================
+   AJUSTE FINAL — USUÁRIO SEM CAIXA + GRADIENTE NO FUNDO + KPI SELECIONÁVEL
+   ========================================================= */
+
+/* Usuário fora da caixa, maior e mais limpo */
+.admin-shell .layout-user-highlight {
+    min-width: auto !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+}
+
+.admin-shell .layout-user-highlight span {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.09em !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .layout-user-highlight strong {
+    margin-top: 8px !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(2.45rem, 4.5vw, 5rem) !important;
+    line-height: 0.82 !important;
+    letter-spacing: -0.08em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    text-shadow: none !important;
+}
+
+/* Remove gradientes roxos espalhados em caixas internas */
+body[data-theme="dark"] .admin-shell::after,
+body[data-theme="dark"] .admin-shell .app-sidebar::before {
+    content: none !important;
+    display: none !important;
+}
+
+body[data-theme="dark"] .admin-shell .topbar-sector-context,
+body[data-theme="dark"] .admin-shell .layout-work-header,
+body[data-theme="dark"] .admin-shell .layout-user-highlight {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-work-header {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(7,8,8,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .admin-shell .topbar-sector-context {
+    background: linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+    border-color: rgba(168,85,247,0.22) !important;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.28) !important;
+}
+
+/* Gradiente roxo somente no fundo, vindo do canto superior esquerdo */
+body[data-theme="dark"] {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(168,85,247,0.34) 0%, rgba(147,51,234,0.22) 16%, rgba(147,51,234,0.10) 31%, transparent 48%),
+        linear-gradient(135deg, #030404 0%, #060707 45%, #0A0C0B 100%) !important;
+}
+
+body[data-theme="dark"] .admin-shell {
+    position: relative !important;
+    overflow: hidden !important;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(168,85,247,0.22) 0%, rgba(147,51,234,0.12) 18%, rgba(147,51,234,0.05) 31%, transparent 46%),
+        linear-gradient(145deg, rgba(11,13,12,0.985), rgba(6,8,7,0.99)) !important;
+}
+
+body[data-theme="dark"] .admin-shell .app-sidebar,
+body[data-theme="dark"] .admin-shell #main-content {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* KPI selecionável: o destaque preto/branco acompanha o filtro escolhido */
+.admin-shell .kpi-content-line {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+.admin-shell .kpi-filter-card {
+    cursor: pointer !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+
+.admin-shell .kpi-filter-card:hover {
+    transform: translateY(-1px) !important;
+}
+
+.admin-shell .kpi-filter-card .kpi-icon {
+    background: rgba(255,255,255,0.62) !important;
+    color: var(--cor-texto-mutado) !important;
+}
+
+.admin-shell .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-icon,
+.admin-shell .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-val {
+    color: var(--cor-alerta) !important;
+}
+
+.admin-shell .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-icon,
+.admin-shell .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-val {
+    color: var(--cor-primaria) !important;
+}
+
+.admin-shell .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #0B0D0C, #020303) !important;
+    border-color: #0B0D0C !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 20px 42px rgba(0,0,0,0.28) !important;
+}
+
+.admin-shell .kpi-filter-card.is-selected .kpi-label,
+.admin-shell .kpi-filter-card.is-selected .kpi-val {
+    color: #FFFFFF !important;
+}
+
+.admin-shell .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(255,255,255,0.16) !important;
+    color: #FFFFFF !important;
+}
+
+/* Modo escuro: inverso do modo claro. Selecionado fica claro para destacar no preto. */
+body[data-theme="dark"] .admin-shell .kpi-filter-card {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(10,12,11,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-filter-card .kpi-icon {
+    background: rgba(255,255,255,0.08) !important;
+    color: #DDE4E1 !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #FFFFFF, #DDE4E1) !important;
+    border-color: rgba(255,255,255,0.38) !important;
+    color: #050606 !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.80),
+        0 18px 34px rgba(0,0,0,0.42) !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-filter-card.is-selected .kpi-label,
+body[data-theme="dark"] .admin-shell .kpi-filter-card.is-selected .kpi-val,
+body[data-theme="dark"] .admin-shell .kpi-filter-card.is-selected .kpi-icon,
+body[data-theme="dark"] .admin-shell .kpi-filter-card.is-selected i {
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(0,0,0,0.08) !important;
+}
+
+/* Responsivo: mantém usuário abaixo do título se faltar espaço */
+@media (max-width: 1180px) {
+    .admin-shell .layout-user-highlight {
+        align-items: flex-start !important;
+    }
+
+    .admin-shell .layout-user-highlight strong {
+        font-size: clamp(2.2rem, 9vw, 4rem) !important;
+    }
+}
+
+/* =========================================================
+   CORREÇÃO FINAL — KPI COM SELEÇÃO ÚNICA VISUAL
+   Regra: somente o KPI selecionado fica em destaque.
+   Os demais permanecem brancos no claro e escuros no dark.
+   ========================================================= */
+
+/* Remove o destaque fixo do primeiro card herdado do padrão global */
+.admin-shell .kpi-grid-cols .kpi-card,
+.admin-shell .kpi-grid-cols .kpi-card:first-child,
+.admin-shell .kpi-grid-cols .kpi-filter-card,
+.admin-shell .kpi-grid-cols .kpi-filter-card:first-child {
+    background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.48)) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    color: var(--cor-texto) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-label,
+.admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-val,
+.admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) i {
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-icon {
+    background: rgba(255,255,255,0.70) !important;
+    color: var(--cor-texto-mutado) !important;
+}
+
+/* Cores funcionais quando NÃO estiver selecionado */
+.admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-val,
+.admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-icon,
+.admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) i {
+    color: var(--cor-alerta) !important;
+}
+
+.admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-val,
+.admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-icon,
+.admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) i {
+    color: var(--cor-primaria) !important;
+}
+
+/* Somente o selecionado fica preto no modo claro */
+.admin-shell .kpi-grid-cols .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #0B0D0C, #020303) !important;
+    border-color: #0B0D0C !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 20px 42px rgba(0,0,0,0.28) !important;
+}
+
+.admin-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-label,
+.admin-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-val,
+.admin-shell .kpi-grid-cols .kpi-filter-card.is-selected i {
+    color: #FFFFFF !important;
+}
+
+.admin-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(255,255,255,0.16) !important;
+    color: #FFFFFF !important;
+}
+
+/* Dark mode: não selecionados ficam escuros, somente selecionado fica claro */
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-card,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-card:first-child,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card:first-child {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(10,12,11,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-label,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-val,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) i {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-icon {
+    background: rgba(255,255,255,0.08) !important;
+    color: #DDE4E1 !important;
+}
+
+/* Cores funcionais no dark quando NÃO estiver selecionado */
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-val,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-icon,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) i {
+    color: #F5A400 !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-val,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-icon,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) i {
+    color: var(--cor-primaria) !important;
+}
+
+/* Somente o selecionado fica claro no modo escuro */
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #FFFFFF, #DDE4E1) !important;
+    border-color: rgba(255,255,255,0.38) !important;
+    color: #050606 !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.80),
+        0 18px 34px rgba(0,0,0,0.42) !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-label,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-val,
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card.is-selected i {
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .admin-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(0,0,0,0.08) !important;
+    color: #050606 !important;
+}
+
+/* =========================================================
+   REFINO — RADIAL GRADIENT AMPLIADO NO DARK MODE
+   Objetivo: manter o preto profundo, mas trazer mais presença
+   do roxo do setor vindo do canto superior esquerdo.
+   ========================================================= */
+
+body[data-theme="dark"] {
+    background:
+        radial-gradient(circle at 0% 0%,
+            rgba(168, 85, 247, 0.62) 0%,
+            rgba(147, 51, 234, 0.42) 13%,
+            rgba(147, 51, 234, 0.25) 27%,
+            rgba(147, 51, 234, 0.12) 43%,
+            transparent 68%),
+        radial-gradient(circle at 18% 22%,
+            rgba(168, 85, 247, 0.24) 0%,
+            rgba(147, 51, 234, 0.12) 28%,
+            transparent 62%),
+        linear-gradient(135deg, #030404 0%, #060707 44%, #0A0C0B 100%) !important;
+}
+
+body[data-theme="dark"] .admin-shell {
+    position: relative !important;
+    isolation: isolate !important;
+    overflow: hidden !important;
+    background:
+        radial-gradient(circle at 0% 0%,
+            rgba(168, 85, 247, 0.46) 0%,
+            rgba(147, 51, 234, 0.30) 16%,
+            rgba(147, 51, 234, 0.16) 32%,
+            rgba(147, 51, 234, 0.07) 50%,
+            transparent 74%),
+        radial-gradient(circle at 22% 26%,
+            rgba(168, 85, 247, 0.18) 0%,
+            rgba(147, 51, 234, 0.08) 30%,
+            transparent 70%),
+        linear-gradient(145deg, rgba(9, 11, 10, 0.96), rgba(4, 5, 5, 0.98)) !important;
+}
+
+/* Camada de luz no fundo do app, sem afetar cliques nem layout */
+body[data-theme="dark"] .admin-shell::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    display: block !important;
+    background:
+        radial-gradient(900px 760px at -8% -6%,
+            rgba(168, 85, 247, 0.36) 0%,
+            rgba(147, 51, 234, 0.25) 23%,
+            rgba(147, 51, 234, 0.13) 42%,
+            transparent 72%),
+        radial-gradient(620px 520px at 18% 18%,
+            rgba(168, 85, 247, 0.18) 0%,
+            rgba(147, 51, 234, 0.08) 44%,
+            transparent 76%) !important;
+    opacity: 1 !important;
+}
+
+/* Mantém sidebar e conteúdo acima do efeito */
+body[data-theme="dark"] .admin-shell .app-sidebar,
+body[data-theme="dark"] .admin-shell #main-content {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Deixa a sidebar receber levemente o brilho do fundo sem perder contraste */
+body[data-theme="dark"] .admin-shell .app-sidebar {
+    background:
+        linear-gradient(180deg, rgba(20, 17, 25, 0.92), rgba(7, 9, 8, 0.96)) !important;
+    border-color: rgba(168, 85, 247, 0.18) !important;
+}
+
+/* Topbar e header ficam um pouco translúcidos para o radial aparecer suavemente */
+body[data-theme="dark"] .admin-shell .topbar,
+body[data-theme="dark"] .admin-shell .layout-work-header {
+    background:
+        linear-gradient(145deg, rgba(16, 18, 17, 0.90), rgba(7, 8, 8, 0.94)) !important;
+    border-color: rgba(168, 85, 247, 0.13) !important;
+    backdrop-filter: blur(22px) !important;
+}
+
+/* Cards principais continuam legíveis, mas com borda roxa sutil */
+body[data-theme="dark"] .admin-shell .list-row,
+body[data-theme="dark"] .admin-shell .filters,
+body[data-theme="dark"] .admin-shell .kpi-filter-card:not(.is-selected) {
+    background:
+        linear-gradient(145deg, rgba(16, 18, 17, 0.90), rgba(8, 10, 9, 0.94)) !important;
+    border-color: rgba(168, 85, 247, 0.10) !important;
+}
+
+/* =========================================================
+   CORREÇÃO — RELATÓRIOS / HALL DA FAMA
+   Corrige cards quebrados, avatar cortado e estatísticas sem
+   espaçamento no ranking de designers.
+   ========================================================= */
+
+.admin-shell #ranking-grid.report-card-grid,
+.admin-shell #ranking-grid.gamer-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(260px, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+}
+
+.admin-shell #ranking-grid .gamer-card {
+    position: relative !important;
+    min-height: 232px !important;
+    padding: 0 !important;
+    border-radius: 26px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.48)) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell #ranking-grid .gamer-card:nth-child(1) {
+    border-top: 5px solid var(--cor-alerta) !important;
+}
+
+.admin-shell #ranking-grid .gamer-card:nth-child(2) {
+    border-top: 5px solid var(--cor-primaria) !important;
+}
+
+.admin-shell #ranking-grid .gamer-card:nth-child(3) {
+    border-top: 5px solid var(--cor-info) !important;
+}
+
+.admin-shell #ranking-grid .gamer-header {
+    min-height: 84px !important;
+    padding: 18px 18px 12px !important;
+    display: grid !important;
+    grid-template-columns: 54px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    column-gap: 12px !important;
+    align-items: center !important;
+    color: var(--cor-texto) !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.46), rgba(255,255,255,0.18)) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.36) !important;
+}
+
+.admin-shell #ranking-grid .avatar-circle {
+    grid-row: 1 / 3 !important;
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    border-radius: 18px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: linear-gradient(145deg, var(--cor-primaria), #6D28D9) !important;
+    color: #FFFFFF !important;
+    font-size: 1.35rem !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    box-shadow: 0 12px 24px rgba(147,51,234,0.24) !important;
+    overflow: hidden !important;
+}
+
+.admin-shell #ranking-grid .gamer-header > div:not(.avatar-circle) {
+    min-width: 0 !important;
+    color: var(--cor-texto) !important;
+    line-height: 1.05 !important;
+}
+
+.admin-shell #ranking-grid .gamer-header > div:nth-child(2) {
+    font-size: 1.08rem !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.035em !important;
+    text-transform: capitalize !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell #ranking-grid .gamer-header > div:nth-child(3) {
+    margin-top: 5px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.74rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.045em !important;
+}
+
+.admin-shell #ranking-grid .gamer-body {
+    flex: 1 1 auto !important;
+    padding: 16px 18px 18px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell #ranking-grid .stat-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    min-height: 30px !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px dashed rgba(0,0,0,0.08) !important;
+}
+
+.admin-shell #ranking-grid .stat-row span:first-child {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.82rem !important;
+    font-weight: 850 !important;
+}
+
+.admin-shell #ranking-grid .stat-row span:last-child {
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell #ranking-grid .xp-bar-container {
+    width: 100% !important;
+    height: 9px !important;
+    border-radius: 999px !important;
+    background: rgba(0,0,0,0.08) !important;
+    overflow: hidden !important;
+    margin-top: 2px !important;
+}
+
+.admin-shell #ranking-grid .xp-bar-fill {
+    height: 100% !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-alerta)) !important;
+    box-shadow: 0 0 18px rgba(147,51,234,0.28) !important;
+}
+
+.admin-shell #ranking-grid .gamer-body .ph-trophy {
+    display: inline-grid !important;
+    place-items: center !important;
+    color: var(--cor-alerta) !important;
+    font-size: 1.6rem !important;
+    margin: 0 !important;
+}
+
+.admin-shell #ranking-grid .gamer-body > div[title="Mestre da Produtividade"] {
+    margin-top: 4px !important;
+    text-align: right !important;
+    font-size: 1.6rem !important;
+    line-height: 1 !important;
+}
+
+/* Impede que o card de Hall da Fama fique cortado dentro do painel */
+.admin-shell .report-panel:has(#ranking-grid) {
+    overflow: visible !important;
+}
+
+/* Dark mode do Hall da Fama */
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-card {
+    background: linear-gradient(145deg, rgba(16,18,17,0.94), rgba(8,10,9,0.96)) !important;
+    border-color: rgba(168,85,247,0.12) !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-header {
+    background: linear-gradient(145deg, rgba(168,85,247,0.10), rgba(255,255,255,0.025)) !important;
+    border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-header > div:not(.avatar-circle),
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-body,
+body[data-theme="dark"] .admin-shell #ranking-grid .stat-row span:last-child {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-header > div:nth-child(3),
+body[data-theme="dark"] .admin-shell #ranking-grid .stat-row span:first-child {
+    color: #AEB7B2 !important;
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .stat-row {
+    border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .xp-bar-container {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+@media (max-width: 1280px) {
+    .admin-shell #ranking-grid.report-card-grid,
+    .admin-shell #ranking-grid.gamer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    }
+}
+
+/* =========================================================
+   PONTUAÇÃO — SIDEBAR + TROFÉU MODERNO
+   ========================================================= */
+
+/* Card de pontuação na lateral */
+.admin-shell .sidebar-score-card {
+    width: 100% !important;
+    padding: 14px !important;
+    margin: 0 0 12px !important;
+    border-radius: 24px !important;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(168,85,247,0.20), transparent 38%),
+        linear-gradient(145deg, rgba(255,255,255,0.62), rgba(255,255,255,0.38)) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    box-shadow: var(--sombra-sm) !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .sidebar-score-top {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 12px !important;
+}
+
+.admin-shell .sidebar-score-orb {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 15px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(145deg, var(--cor-primaria), #6D28D9) !important;
+    box-shadow: 0 12px 28px rgba(147,51,234,0.24) !important;
+    animation: scoreOrbPulse 2.6s ease-in-out infinite !important;
+}
+
+.admin-shell .sidebar-score-top span {
+    display: block !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.66rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+}
+
+.admin-shell .sidebar-score-top strong {
+    display: block !important;
+    margin-top: 4px !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.96rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.035em !important;
+}
+
+.admin-shell .sidebar-score-main {
+    display: grid !important;
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: center !important;
+}
+
+.admin-shell .sidebar-score-ring {
+    --score-percent: 0;
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 50% !important;
+    display: grid !important;
+    place-items: center !important;
+    background:
+        conic-gradient(var(--cor-primaria) calc(var(--score-percent) * 1%), rgba(147,51,234,0.12) 0) !important;
+    box-shadow: 0 12px 28px rgba(147,51,234,0.18) !important;
+    position: relative !important;
+}
+
+.admin-shell .sidebar-score-ring::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: -4px !important;
+    border-radius: inherit !important;
+    border: 1px solid rgba(147,51,234,0.24) !important;
+    animation: scoreRingGlow 2.8s ease-in-out infinite !important;
+}
+
+.admin-shell .sidebar-score-ring-inner {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 50% !important;
+    display: grid !important;
+    place-items: center !important;
+    background: rgba(255,255,255,0.88) !important;
+    border: 1px solid rgba(255,255,255,0.62) !important;
+}
+
+.admin-shell .sidebar-score-ring-inner span {
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.04em !important;
+}
+
+.admin-shell .sidebar-score-info {
+    min-width: 0 !important;
+}
+
+.admin-shell .sidebar-score-info strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.96rem !important;
+    line-height: 1.05 !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .sidebar-score-info span,
+.admin-shell .sidebar-score-info small {
+    display: block !important;
+    margin-top: 5px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1.05 !important;
+    font-weight: 800 !important;
+}
+
+.admin-shell .sidebar-score-progress {
+    height: 8px !important;
+    margin-top: 12px !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    background: rgba(0,0,0,0.08) !important;
+}
+
+.admin-shell .sidebar-score-progress span {
+    display: block !important;
+    width: 0%;
+    height: 100% !important;
+    border-radius: inherit !important;
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-alerta)) !important;
+    box-shadow: 0 0 18px rgba(147,51,234,0.28) !important;
+    transition: width .5s ease !important;
+}
+
+.admin-shell .sidebar-score-caption {
+    margin-top: 8px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.68rem !important;
+    font-weight: 850 !important;
+    text-align: center !important;
+}
+
+/* Badge moderno no Hall da Fama */
+.admin-shell #ranking-grid .fame-card.is-champion {
+    overflow: hidden !important;
+}
+
+.admin-shell #ranking-grid .fame-card.is-champion::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 160px !important;
+    height: 160px !important;
+    right: -70px !important;
+    bottom: -75px !important;
+    border-radius: 50% !important;
+    background: radial-gradient(circle, rgba(245,158,11,0.25), transparent 68%) !important;
+    pointer-events: none !important;
+}
+
+.admin-shell #ranking-grid .modern-award-badge {
+    position: absolute !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 20px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(145deg, #F59E0B, #E66A00) !important;
+    box-shadow:
+        0 16px 34px rgba(245,158,11,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.28) !important;
+    overflow: hidden !important;
+    z-index: 3 !important;
+}
+
+.admin-shell #ranking-grid .modern-award-badge .award-glow {
+    position: absolute !important;
+    inset: -20px !important;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.42), transparent) !important;
+    animation: awardRotate 3.2s linear infinite !important;
+}
+
+.admin-shell #ranking-grid .modern-award-badge i {
+    position: relative !important;
+    z-index: 2 !important;
+    font-size: 1.55rem !important;
+    color: #FFFFFF !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.22)) !important;
+}
+
+.admin-shell #ranking-grid .modern-award-badge span {
+    position: absolute !important;
+    z-index: 2 !important;
+    bottom: 6px !important;
+    color: #FFFFFF !important;
+    font-size: 0.52rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.06em !important;
+}
+
+/* Esconde o troféu antigo caso algum cache ainda renderize o ícone anterior */
+.admin-shell #ranking-grid .ph-trophy {
+    display: none !important;
+}
+
+@keyframes awardRotate {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes scoreOrbPulse {
+    0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 12px 28px rgba(147,51,234,0.24); }
+    50% { transform: translateY(-1px) scale(1.03); box-shadow: 0 16px 38px rgba(147,51,234,0.36); }
+}
+
+@keyframes scoreRingGlow {
+    0%, 100% { opacity: .55; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+}
+
+/* Dark mode */
+body[data-theme="dark"] .admin-shell .sidebar-score-card {
+    background:
+        radial-gradient(circle at 18% 0%, rgba(168,85,247,0.24), transparent 44%),
+        linear-gradient(145deg, rgba(20,17,25,0.92), rgba(7,9,8,0.96)) !important;
+    border-color: rgba(168,85,247,0.18) !important;
+    box-shadow: 0 16px 34px rgba(0,0,0,0.34) !important;
+}
+
+body[data-theme="dark"] .admin-shell .sidebar-score-top strong,
+body[data-theme="dark"] .admin-shell .sidebar-score-info strong {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell .sidebar-score-ring-inner {
+    background: #090B0A !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .sidebar-score-ring-inner span {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell .sidebar-score-progress {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .modern-award-badge {
+    box-shadow:
+        0 16px 34px rgba(245,158,11,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.22) !important;
+}
+
+/* =========================================================
+   ABA RANKING — PÓDIO, TROFÉUS E ORIENTAÇÕES
+   ========================================================= */
+
+.admin-shell .ranking-workspace {
+    display: block;
+}
+
+.admin-shell .ranking-workspace.hidden {
+    display: none !important;
+}
+
+.admin-shell .ranking-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+    margin-bottom: 18px !important;
+}
+
+.admin-shell .ranking-layout-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.8fr) !important;
+    gap: 18px !important;
+    align-items: stretch !important;
+}
+
+.admin-shell .ranking-podium-panel,
+.admin-shell .ranking-list-panel {
+    grid-column: span 1 !important;
+}
+
+.admin-shell .ranking-podium {
+    min-height: 390px !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    align-items: end !important;
+    padding-top: 12px !important;
+}
+
+.admin-shell .podium-card {
+    min-height: 300px !important;
+    padding: 22px !important;
+    border-radius: 30px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    text-align: center !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.76), rgba(255,255,255,0.46)) !important;
+    border: 1px solid rgba(255,255,255,0.62) !important;
+    box-shadow: var(--sombra-md) !important;
+    animation: podiumIn .55s cubic-bezier(.2,.8,.2,1) both !important;
+}
+
+.admin-shell .podium-card.rank-1 {
+    min-height: 360px !important;
+    order: 2 !important;
+    border-color: rgba(245,158,11,0.36) !important;
+    box-shadow:
+        0 24px 58px rgba(245,158,11,0.16),
+        var(--sombra-md) !important;
+}
+
+.admin-shell .podium-card.rank-2 {
+    min-height: 320px !important;
+    order: 1 !important;
+    animation-delay: .08s !important;
+}
+
+.admin-shell .podium-card.rank-3 {
+    min-height: 300px !important;
+    order: 3 !important;
+    animation-delay: .16s !important;
+}
+
+.admin-shell .podium-card::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 190px !important;
+    height: 190px !important;
+    border-radius: 50% !important;
+    right: -80px !important;
+    top: -80px !important;
+    background: radial-gradient(circle, rgba(147,51,234,0.12), transparent 68%) !important;
+    pointer-events: none !important;
+}
+
+.admin-shell .podium-card.rank-1::after {
+    background: radial-gradient(circle, rgba(245,158,11,0.26), transparent 68%) !important;
+}
+
+.admin-shell .podium-trophy {
+    width: 92px !important;
+    height: 92px !important;
+    border-radius: 30px !important;
+    display: grid !important;
+    place-items: center !important;
+    position: absolute !important;
+    top: 22px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    color: #FFFFFF !important;
+    overflow: hidden !important;
+    box-shadow:
+        0 20px 42px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.28) !important;
+    animation: trophyFloat 2.8s ease-in-out infinite !important;
+}
+
+.admin-shell .podium-trophy.rank-1 {
+    background: linear-gradient(145deg, #FFD166, #F59E0B, #D97706) !important;
+}
+
+.admin-shell .podium-trophy.rank-2 {
+    background: linear-gradient(145deg, #F8FAFC, #AEB7C2, #6B7280) !important;
+}
+
+.admin-shell .podium-trophy.rank-3 {
+    background: linear-gradient(145deg, #FDBA74, #C76A24, #92400E) !important;
+}
+
+.admin-shell .podium-trophy i {
+    font-size: 2.35rem !important;
+    position: relative !important;
+    z-index: 2 !important;
+    color: #FFFFFF !important;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.24)) !important;
+    animation: trophyIconPop 1.8s ease-in-out infinite !important;
+}
+
+.admin-shell .podium-trophy span {
+    position: absolute !important;
+    bottom: 9px !important;
+    z-index: 2 !important;
+    color: #FFFFFF !important;
+    font-size: 0.7rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.02em !important;
+}
+
+.admin-shell .trophy-shine {
+    position: absolute !important;
+    inset: -30px !important;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.50), transparent) !important;
+    animation: trophyShine 3.2s linear infinite !important;
+    z-index: 1 !important;
+}
+
+.admin-shell .podium-position {
+    margin-top: 92px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+}
+
+.admin-shell .podium-card h3 {
+    margin: 8px 0 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(1.6rem, 2.5vw, 2.5rem) !important;
+    line-height: 0.92 !important;
+    letter-spacing: -0.06em !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .podium-level {
+    margin-top: 8px !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    color: var(--cor-primaria) !important;
+    background: var(--cor-primaria-soft-bg) !important;
+    font-size: 0.75rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .podium-stats {
+    width: 100% !important;
+    margin-top: 18px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+}
+
+.admin-shell .podium-stats div {
+    padding: 12px !important;
+    border-radius: 18px !important;
+    background: rgba(255,255,255,0.52) !important;
+    border: 1px solid rgba(255,255,255,0.56) !important;
+}
+
+.admin-shell .podium-stats strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 1.18rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .podium-stats span {
+    display: block !important;
+    margin-top: 3px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.68rem !important;
+    font-weight: 850 !important;
+}
+
+.admin-shell .podium-xp {
+    width: 100% !important;
+    height: 9px !important;
+    margin-top: 16px !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    background: rgba(0,0,0,0.08) !important;
+}
+
+.admin-shell .podium-xp span {
+    display: block !important;
+    height: 100% !important;
+    border-radius: inherit !important;
+    background: linear-gradient(90deg, var(--cor-primaria), #F59E0B) !important;
+    animation: podiumXpGrow .85s cubic-bezier(.2,.8,.2,1) both !important;
+}
+
+.admin-shell .podium-empty {
+    opacity: .64 !important;
+}
+
+.admin-shell .ranking-empty-state,
+.admin-shell .ranking-loading {
+    grid-column: 1 / -1 !important;
+    min-height: 220px !important;
+    display: grid !important;
+    place-items: center !important;
+    text-align: center !important;
+    color: var(--cor-texto-mutado) !important;
+    font-weight: 850 !important;
+}
+
+.admin-shell .ranking-empty-state i,
+.admin-shell .ranking-loading i {
+    font-size: 3rem !important;
+    color: var(--cor-primaria) !important;
+}
+
+.admin-shell .ranking-rules-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.admin-shell .ranking-rule-item {
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.54) !important;
+}
+
+.admin-shell .ranking-rule-item i {
+    width: 40px !important;
+    height: 40px !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 15px !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(145deg, var(--cor-primaria), #6D28D9) !important;
+}
+
+.admin-shell .ranking-rule-item strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.9rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .ranking-rule-item span {
+    display: block !important;
+    margin-top: 4px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.78rem !important;
+    line-height: 1.25 !important;
+    font-weight: 750 !important;
+}
+
+.admin-shell .ranking-full-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.admin-shell .ranking-row {
+    display: grid !important;
+    grid-template-columns: 64px minmax(0, 1fr) 110px 130px !important;
+    gap: 14px !important;
+    align-items: center !important;
+    padding: 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255,255,255,0.50) !important;
+    border: 1px solid rgba(255,255,255,0.54) !important;
+    animation: rankingRowIn .45s cubic-bezier(.2,.8,.2,1) both !important;
+}
+
+.admin-shell .ranking-row-position span {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 15px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: #0B0D0C !important;
+    color: #FFFFFF !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .ranking-row.rank-1 .ranking-row-position span { background: linear-gradient(145deg, #FFD166, #F59E0B) !important; }
+.admin-shell .ranking-row.rank-2 .ranking-row-position span { background: linear-gradient(145deg, #E5E7EB, #6B7280) !important; }
+.admin-shell .ranking-row.rank-3 .ranking-row-position span { background: linear-gradient(145deg, #FDBA74, #92400E) !important; }
+
+.admin-shell .ranking-row-user strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .ranking-row-user span,
+.admin-shell .ranking-row-metric span {
+    display: block !important;
+    margin-top: 3px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    font-weight: 850 !important;
+}
+
+.admin-shell .ranking-row-metric strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .ranking-meaning-panel p {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.55 !important;
+    font-weight: 750 !important;
+}
+
+.admin-shell .ranking-meaning-tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-top: 14px !important;
+}
+
+.admin-shell .ranking-meaning-tags span {
+    padding: 8px 10px !important;
+    border-radius: 999px !important;
+    background: var(--cor-primaria-soft-bg) !important;
+    color: var(--cor-primaria) !important;
+    font-size: 0.72rem !important;
+    font-weight: 950 !important;
+}
+
+/* Dark mode */
+body[data-theme="dark"] .admin-shell .podium-card,
+body[data-theme="dark"] .admin-shell .ranking-rule-item,
+body[data-theme="dark"] .admin-shell .ranking-row {
+    background: linear-gradient(145deg, rgba(16,18,17,0.94), rgba(8,10,9,0.96)) !important;
+    border-color: rgba(168,85,247,0.12) !important;
+}
+
+body[data-theme="dark"] .admin-shell .podium-stats div {
+    background: rgba(255,255,255,0.06) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .podium-card h3,
+body[data-theme="dark"] .admin-shell .podium-stats strong,
+body[data-theme="dark"] .admin-shell .ranking-rule-item strong,
+body[data-theme="dark"] .admin-shell .ranking-row-user strong,
+body[data-theme="dark"] .admin-shell .ranking-row-metric strong {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell .podium-xp {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+/* Keyframes */
+@keyframes podiumIn {
+    from { opacity: 0; transform: translateY(20px) scale(.96); filter: blur(8px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes trophyFloat {
+    0%, 100% { transform: translateX(-50%) translateY(0) rotate(-1deg); }
+    50% { transform: translateX(-50%) translateY(-8px) rotate(2deg); }
+}
+
+@keyframes trophyIconPop {
+    0%, 100% { transform: scale(1); }
+    45% { transform: scale(1.12); }
+}
+
+@keyframes trophyShine {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes podiumXpGrow {
+    from { width: 0; }
+}
+
+@keyframes rankingRowIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsivo */
+@media (max-width: 1180px) {
+    .admin-shell .ranking-layout-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-shell .ranking-podium {
+        grid-template-columns: 1fr !important;
+        align-items: stretch !important;
+    }
+
+    .admin-shell .podium-card,
+    .admin-shell .podium-card.rank-1,
+    .admin-shell .podium-card.rank-2,
+    .admin-shell .podium-card.rank-3 {
+        min-height: 300px !important;
+        order: initial !important;
+    }
+
+    .admin-shell .ranking-row {
+        grid-template-columns: 52px minmax(0, 1fr) !important;
+    }
+
+    .admin-shell .ranking-row-metric {
+        grid-column: 2 !important;
+    }
+}
+
+/* =========================================================
+   RELATÓRIOS — PRIMEIRA REORGANIZAÇÃO DE ESPAÇO
+   Objetivo: retirar bloco duplicado e aproveitar melhor a linha
+   de "Total finalizado por designer".
+   ========================================================= */
+
+/* A página já tem o header "Relatórios"; este bloco interno fica redundante */
+.admin-shell #view-reports .report-view-intro {
+    display: none !important;
+}
+
+/* Grid mais inteligente para relatórios */
+.admin-shell #view-reports .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+/* Remove regra global de full-width nos relatórios */
+.admin-shell #view-reports .report-panel-full,
+.admin-shell #view-reports .report-panel {
+    grid-column: auto !important;
+}
+
+/* Primeira linha: distribuição compacta + funil ocupando o restante */
+.admin-shell #view-reports .report-panel-distribution {
+    grid-column: span 4 !important;
+    min-height: 168px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel {
+    grid-column: span 8 !important;
+    min-height: 168px !important;
+}
+
+/* Segunda linha: projetos e ranking/hall aproveitando lado a lado */
+.admin-shell #view-reports .report-panel-active {
+    grid-column: span 7 !important;
+}
+
+.admin-shell #view-reports .report-panel-fame {
+    grid-column: span 5 !important;
+}
+
+/* Gargalos e prazo extra dividem a linha */
+.admin-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+    grid-column: span 6 !important;
+}
+
+/* Cards mais baixos, sem sensação de linha desperdiçada */
+.admin-shell #view-reports .report-panel {
+    min-height: 150px !important;
+    padding: 18px !important;
+}
+
+.admin-shell #view-reports .report-panel-head {
+    padding-bottom: 10px !important;
+    margin-bottom: 12px !important;
+}
+
+.admin-shell #view-reports .report-panel-head h3 {
+    font-size: clamp(1.05rem, 1.35vw, 1.35rem) !important;
+    letter-spacing: -0.05em !important;
+}
+
+/* Distribuição: compacta e útil */
+.admin-shell #view-reports .designer-distribution-panel {
+    min-height: 72px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-content: flex-start !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.admin-shell #view-reports .designer-pill {
+    min-height: 38px !important;
+    padding: 8px 10px 8px 12px !important;
+    gap: 7px !important;
+    font-size: 0.82rem !important;
+    box-shadow: none !important;
+}
+
+.admin-shell #view-reports .designer-count {
+    min-width: 25px !important;
+    height: 25px !important;
+    font-size: 0.72rem !important;
+}
+
+/* Funil: usa bem o espaço horizontal ao lado */
+.admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.admin-shell #view-reports #micro-funnel-grid > div {
+    min-height: 110px !important;
+    padding: 14px !important;
+}
+
+/* Projetos ativos e Hall da Fama não devem "estourar" a largura */
+.admin-shell #view-reports .report-card-grid,
+.admin-shell #view-reports .gamer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)) !important;
+    gap: 12px !important;
+}
+
+.admin-shell #view-reports .report-panel-fame .gamer-grid {
+    grid-template-columns: 1fr !important;
+}
+
+.admin-shell #view-reports .report-panel-fame .gamer-card {
+    min-height: 128px !important;
+}
+
+/* Ajuste de scroll visual do relatório */
+.admin-shell #view-reports {
+    padding-top: 0 !important;
+}
+
+/* Dark mode mantém a organização sem pesar */
+body[data-theme="dark"] .admin-shell #view-reports .report-panel {
+    background: linear-gradient(145deg, rgba(16,18,17,0.94), rgba(8,10,9,0.96)) !important;
+    border-color: rgba(168,85,247,0.10) !important;
+}
+
+/* Responsivo */
+@media (max-width: 1380px) {
+    .admin-shell #view-reports .report-panel-distribution,
+    .admin-shell #view-reports .report-panel-funnel,
+    .admin-shell #view-reports .report-panel-active,
+    .admin-shell #view-reports .report-panel-fame,
+    .admin-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+        grid-column: span 12 !important;
+    }
+
+    .admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* =========================================================
+   RELATÓRIOS — AJUSTE FINO DE TAMANHO DOS CARDS
+   Objetivo: dar mais espaço para os blocos mais densos e
+   compactar os blocos mais simples, conforme o layout aprovado.
+   ========================================================= */
+
+/* Primeira linha: distribuição menor, funil com mais área útil */
+.admin-shell #view-reports .report-panel-distribution {
+    grid-column: span 3 !important;
+    min-height: 146px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel {
+    grid-column: span 9 !important;
+    min-height: 146px !important;
+}
+
+/* Segunda linha: projetos ativos precisa de mais espaço */
+.admin-shell #view-reports .report-panel-active {
+    grid-column: span 8 !important;
+    min-height: 320px !important;
+}
+
+.admin-shell #view-reports .report-panel-fame {
+    grid-column: span 4 !important;
+    min-height: 320px !important;
+}
+
+/* Linha inferior permanece equilibrada */
+.admin-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+    grid-column: span 6 !important;
+    min-height: 240px !important;
+}
+
+/* distribuição compacta: cabeçalhos e pills mais econômicos */
+.admin-shell #view-reports .report-panel-distribution .report-panel-head {
+    margin-bottom: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.admin-shell #view-reports .report-panel-distribution .designer-distribution-panel {
+    min-height: auto !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.admin-shell #view-reports .report-panel-distribution .designer-pill {
+    min-height: 40px !important;
+    padding: 10px 14px !important;
+    font-size: 0.88rem !important;
+}
+
+/* funil ocupa horizontal melhor */
+.admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel #micro-funnel-grid > div {
+    min-height: 112px !important;
+}
+
+/* Projetos ativos: 3 colunas confortáveis */
+.admin-shell #view-reports .report-panel-active .report-card-grid,
+.admin-shell #view-reports .report-panel-active .gamer-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.admin-shell #view-reports .report-panel-active .gamer-card {
+    min-height: 250px !important;
+}
+
+/* Hall da fama: card único mais elegante e espaçoso */
+.admin-shell #view-reports .report-panel-fame .gamer-grid {
+    grid-template-columns: 1fr !important;
+}
+
+.admin-shell #view-reports .report-panel-fame .gamer-card {
+    min-height: 250px !important;
+}
+
+/* Ajuste de títulos para não desperdiçar altura */
+.admin-shell #view-reports .report-panel-fame .report-panel-head,
+.admin-shell #view-reports .report-panel-active .report-panel-head {
+    margin-bottom: 12px !important;
+}
+
+/* quebra progressiva em telas médias */
+@media (max-width: 1480px) {
+    .admin-shell #view-reports .report-panel-distribution {
+        grid-column: span 4 !important;
+    }
+
+    .admin-shell #view-reports .report-panel-funnel {
+        grid-column: span 8 !important;
+    }
+
+    .admin-shell #view-reports .report-panel-active {
+        grid-column: span 12 !important;
+    }
+
+    .admin-shell #view-reports .report-panel-fame {
+        grid-column: span 12 !important;
+    }
+
+    .admin-shell #view-reports .report-panel-active .report-card-grid,
+    .admin-shell #view-reports .report-panel-active .gamer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 1120px) {
+    .admin-shell #view-reports .report-panel-distribution,
+    .admin-shell #view-reports .report-panel-funnel,
+    .admin-shell #view-reports .report-panel-active,
+    .admin-shell #view-reports .report-panel-fame,
+    .admin-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+        grid-column: span 12 !important;
+    }
+}
+
+
+/* =========================================================
+   HALL DA FAMA — TROFÉU E POSIÇÃO POR USUÁRIO
+   Exibe 1º, 2º e 3º lugar ao lado do nome sem cobrir os números.
+   ========================================================= */
+.admin-shell #ranking-grid .gamer-header {
+    grid-template-columns: 54px minmax(0, 1fr) auto !important;
+    grid-template-rows: auto auto !important;
+    min-height: 94px !important;
+}
+
+.admin-shell #ranking-grid .fame-user-name {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    font-size: 1.08rem !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.035em !important;
+    text-transform: capitalize !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell #ranking-grid .fame-level {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    margin-top: 5px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.74rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.045em !important;
+}
+
+.admin-shell #ranking-grid .gamer-rank-badge {
+    grid-column: 3 !important;
+    grid-row: 1 / 3 !important;
+    align-self: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    background: rgba(255,255,255,0.72) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+    min-width: 122px !important;
+}
+
+.admin-shell #ranking-grid .gamer-rank-badge i {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+}
+
+.admin-shell #ranking-grid .gamer-rank-meta {
+    display: flex !important;
+    flex-direction: column !important;
+    line-height: 1.05 !important;
+}
+
+.admin-shell #ranking-grid .gamer-rank-meta strong {
+    font-size: 0.82rem !important;
+    font-weight: 900 !important;
+    color: var(--cor-texto) !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell #ranking-grid .gamer-rank-meta span {
+    font-size: 0.62rem !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    color: var(--cor-texto-mutado) !important;
+}
+
+.admin-shell #ranking-grid .gamer-rank-badge.rank-1 {
+    background: linear-gradient(145deg, rgba(255,245,214,0.98), rgba(255,233,170,0.88)) !important;
+    border-color: rgba(245, 158, 11, 0.35) !important;
+}
+.admin-shell #ranking-grid .gamer-rank-badge.rank-1 i { color: #D97706 !important; }
+
+.admin-shell #ranking-grid .gamer-rank-badge.rank-2 {
+    background: linear-gradient(145deg, rgba(246,248,252,0.98), rgba(226,232,240,0.92)) !important;
+    border-color: rgba(148, 163, 184, 0.45) !important;
+}
+.admin-shell #ranking-grid .gamer-rank-badge.rank-2 i { color: #64748B !important; }
+
+.admin-shell #ranking-grid .gamer-rank-badge.rank-3 {
+    background: linear-gradient(145deg, rgba(255,241,233,0.98), rgba(251, 191, 142, 0.78)) !important;
+    border-color: rgba(234, 88, 12, 0.26) !important;
+}
+.admin-shell #ranking-grid .gamer-rank-badge.rank-3 i { color: #0284C7 !important; }
+
+/* remove o badge antigo no rodapé do card */
+.admin-shell #ranking-grid .modern-award-badge {
+    display: none !important;
+}
+
+/* evita que o selo cubra dados em telas menores */
+@media (max-width: 640px) {
+    .admin-shell #ranking-grid .gamer-header {
+        grid-template-columns: 54px minmax(0, 1fr) !important;
+    }
+
+    .admin-shell #ranking-grid .gamer-rank-badge {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 !important;
+        margin-top: 10px !important;
+        width: fit-content !important;
+    }
+
+    .admin-shell #ranking-grid .gamer-header {
+        min-height: 124px !important;
+    }
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-rank-badge {
+    background: rgba(17, 21, 27, 0.9) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.28) !important;
+}
+
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-rank-meta strong {
+    color: #FFFFFF !important;
+}
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-rank-meta span {
+    color: rgba(255,255,255,0.72) !important;
+}
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-rank-badge.rank-1 {
+    background: linear-gradient(145deg, rgba(92,63,4,0.92), rgba(181,111,10,0.38)) !important;
+    border-color: rgba(245, 158, 11, 0.25) !important;
+}
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-rank-badge.rank-2 {
+    background: linear-gradient(145deg, rgba(39,45,56,0.95), rgba(95,111,133,0.28)) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
+}
+body[data-theme="dark"] .admin-shell #ranking-grid .gamer-rank-badge.rank-3 {
+    background: linear-gradient(145deg, rgba(74,40,16,0.95), rgba(194,65,12,0.22)) !important;
+    border-color: rgba(234, 88, 12, 0.18) !important;
+}
+
+
+/* =========================================================
+   ADMIN — AJUSTES ESPECÍFICOS DO SETOR
+   ========================================================= */
+
+.admin-shell .brand-wordmark span,
+.admin-shell .sector-dot,
+.admin-shell .page-overline i,
+.admin-shell .view-eyebrow i,
+.admin-shell .view-chip i,
+.admin-shell .status-badge-top.online i {
+    color: var(--cor-primaria) !important;
+}
+
+.admin-shell .sector-dot {
+    background: var(--cor-primaria) !important;
+    box-shadow: 0 0 0 6px var(--cor-primaria-soft-bg) !important;
+}
+
+.admin-shell .admin-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+.admin-shell .kpi-grid-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.admin-shell .list-row.is-retorno {
+    border-left-color: var(--cor-erro) !important;
+}
+
+.admin-shell .row-header {
+    grid-template-columns: minmax(280px, 1.1fr) minmax(360px, 1.3fr) minmax(280px, auto) !important;
+}
+
+.admin-shell .col-id {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.admin-shell .col-client {
+    min-width: 0 !important;
+}
+
+.admin-shell .tag-retorno,
+.admin-shell .tag-urgente,
+.admin-shell .tag-homologado,
+.admin-shell .tag-projeto,
+.admin-shell .tag-normal {
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.admin-shell .tag-normal { background: rgba(59,130,246,.12); color: #2563EB; }
+.admin-shell .tag-projeto { background: rgba(147,51,234,.14); color: #9333EA; }
+.admin-shell .tag-urgente { background: rgba(239,68,68,.14); color: var(--cor-erro); }
+.admin-shell .tag-homologado { background: rgba(245,158,11,.16); color: var(--cor-alerta); }
+.admin-shell .tag-retorno { background: rgba(239,68,68,.14); color: var(--cor-erro); }
+
+.admin-shell .obs-block,
+.admin-shell .obs-comercial,
+.admin-shell .obs-layout,
+.admin-shell .obs-admin {
+    border-radius: 20px;
+}
+
+/* Relatórios ADMIN */
+.admin-shell #view-reports .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+.admin-shell #view-reports .report-panel-distribution {
+    grid-column: span 3 !important;
+    min-height: 146px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel {
+    grid-column: span 9 !important;
+    min-height: 146px !important;
+}
+
+.admin-shell #view-reports .report-panel-active {
+    grid-column: span 8 !important;
+    min-height: 300px !important;
+}
+
+.admin-shell #view-reports .report-panel-fame {
+    grid-column: span 4 !important;
+    min-height: 300px !important;
+}
+
+.admin-shell #view-reports .report-panel-full {
+    grid-column: span 12 !important;
+}
+
+.admin-shell #view-reports .designer-distribution-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.admin-shell #view-reports .designer-pill {
+    min-height: 40px !important;
+    padding: 10px 14px !important;
+}
+
+.admin-shell #view-reports #micro-funnel-grid > div {
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 112px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+/* Modal de arquivos maior e centralizado no padrão atual */
+.admin-shell ~ .modal-overlay,
+.modal-overlay {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#filesModal .modal-card-lg {
+    width: min(92vw, 1280px) !important;
+    height: min(82vh, 820px) !important;
+    max-width: 1280px !important;
+}
+
+#filesModal .file-browser {
+    height: calc(82vh - 82px) !important;
+    max-height: 740px !important;
+}
+
+@media (max-width: 1360px) {
+    .admin-shell #view-reports .report-panel-distribution,
+    .admin-shell #view-reports .report-panel-funnel,
+    .admin-shell #view-reports .report-panel-active,
+    .admin-shell #view-reports .report-panel-fame,
+    .admin-shell #view-reports .report-panel-full {
+        grid-column: span 12 !important;
+    }
+
+    .admin-shell .kpi-grid-cols {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+body[data-theme="dark"] .admin-shell {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(251,146,60,0.24), transparent 36%),
+        radial-gradient(circle at 12% 12%, rgba(234,88,12,0.14), transparent 30%),
+        #030504 !important;
+}
+
+
+/* =========================================================
+   ADMIN — AJUSTES ESPECÍFICOS DO SETOR
+   ========================================================= */
+
+.admin-shell .brand-wordmark span,
+.admin-shell .sector-dot,
+.admin-shell .page-overline i,
+.admin-shell .view-eyebrow i,
+.admin-shell .view-chip i,
+.admin-shell .status-badge-top.online i {
+    color: var(--cor-primaria) !important;
+}
+
+.admin-shell .sector-dot {
+    background: var(--cor-primaria) !important;
+    box-shadow: 0 0 0 6px var(--cor-primaria-soft-bg) !important;
+}
+
+.admin-shell .admin-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+.admin-shell .kpi-grid-cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.admin-shell .list-row.is-retorno {
+    border-left-color: var(--cor-erro) !important;
+}
+
+.admin-shell .row-header {
+    grid-template-columns: minmax(150px, .7fr) minmax(270px, 1.15fr) minmax(420px, 1.55fr) minmax(260px, auto) !important;
+}
+
+.admin-shell .col-id {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.admin-shell .col-client,
+.admin-shell .col-stepper {
+    min-width: 0 !important;
+}
+
+.admin-shell .tag-retorno,
+.admin-shell .tag-urgente,
+.admin-shell .tag-homologado,
+.admin-shell .tag-projeto,
+.admin-shell .tag-normal {
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.admin-shell .tag-normal { background: rgba(59,130,246,.12); color: #2563EB; }
+.admin-shell .tag-projeto { background: rgba(147,51,234,.14); color: #9333EA; }
+.admin-shell .tag-urgente { background: rgba(239,68,68,.14); color: var(--cor-erro); }
+.admin-shell .tag-homologado { background: rgba(245,158,11,.16); color: var(--cor-alerta); }
+.admin-shell .tag-retorno { background: rgba(239,68,68,.14); color: var(--cor-erro); }
+
+.admin-shell .obs-block,
+.admin-shell .obs-comercial,
+.admin-shell .obs-layout,
+.admin-shell .obs-pcp,
+.admin-shell .obs-admin {
+    border-radius: 20px;
+}
+
+/* Relatórios Administração */
+.admin-shell #view-reports .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+.admin-shell #view-reports .report-panel-distribution {
+    grid-column: span 3 !important;
+    min-height: 146px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel {
+    grid-column: span 9 !important;
+    min-height: 146px !important;
+}
+
+.admin-shell #view-reports .report-panel-active {
+    grid-column: span 8 !important;
+    min-height: 320px !important;
+}
+
+.admin-shell #view-reports .report-panel-fame {
+    grid-column: span 4 !important;
+    min-height: 320px !important;
+}
+
+.admin-shell #view-reports .report-panel-production-return,
+.admin-shell #view-reports .report-panel-production-delay,
+.admin-shell #view-reports .report-panel-production-orders {
+    grid-column: span 4 !important;
+    min-height: 240px !important;
+}
+
+.admin-shell #view-reports .designer-distribution-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.admin-shell #view-reports .designer-pill {
+    min-height: 40px !important;
+    padding: 10px 14px !important;
+}
+
+.admin-shell #view-reports #micro-funnel-grid > div {
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 112px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+/* Modal de arquivos maior e centralizado no padrão atual */
+.admin-shell ~ .modal-overlay,
+.modal-overlay {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#filesModal .modal-card-lg {
+    width: min(92vw, 1280px) !important;
+    height: min(82vh, 820px) !important;
+    max-width: 1280px !important;
+}
+
+#filesModal .file-browser {
+    height: calc(82vh - 82px) !important;
+    max-height: 740px !important;
+}
+
+body[data-theme="dark"] .admin-shell {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.28), transparent 42%),
+        radial-gradient(circle at 12% 12%, rgba(14, 165, 233, 0.18), transparent 34%),
+        #030608 !important;
+}
+
+@media (max-width: 1480px) {
+    .admin-shell .row-header {
+        grid-template-columns: minmax(260px, 1.1fr) minmax(360px, 1.3fr) minmax(280px, auto) !important;
+    }
+    .admin-shell .col-stepper {
+        grid-column: 1 / -1 !important;
+    }
+    .admin-shell #view-reports .report-panel-distribution,
+    .admin-shell #view-reports .report-panel-funnel,
+    .admin-shell #view-reports .report-panel-active,
+    .admin-shell #view-reports .report-panel-fame,
+    .admin-shell #view-reports .report-panel-production-return,
+    .admin-shell #view-reports .report-panel-production-delay,
+    .admin-shell #view-reports .report-panel-production-orders {
+        grid-column: span 12 !important;
+    }
+}
+
+@media (max-width: 1360px) {
+    .admin-shell .kpi-grid-cols {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =========================================================
+   ADMIN — RELATÓRIOS ORGANIZADOS
+   Objetivo: deixar a aba clara, objetiva e sem espaços vazios.
+   ========================================================= */
+
+.admin-shell #view-reports.report-workspace {
+    padding-bottom: 34px !important;
+}
+
+.admin-shell #view-reports .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+/* Remove "full width" antigo para permitir composição por área */
+.admin-shell #view-reports .report-panel,
+.admin-shell #view-reports .report-panel-full {
+    grid-column: auto !important;
+}
+
+.admin-shell #view-reports .report-panel {
+    min-height: auto !important;
+    padding: 18px !important;
+    border-radius: 26px !important;
+}
+
+/* 1ª linha: resumo operacional largo + equipe compacta */
+.admin-shell #view-reports .report-panel-funnel {
+    grid-column: span 8 !important;
+    min-height: 176px !important;
+    order: 1 !important;
+}
+
+.admin-shell #view-reports .report-panel-distribution {
+    grid-column: span 4 !important;
+    min-height: 176px !important;
+    order: 2 !important;
+}
+
+/* 2ª linha: tempo real maior + ranking ao lado */
+.admin-shell #view-reports .report-panel-active {
+    grid-column: span 8 !important;
+    min-height: 285px !important;
+    order: 3 !important;
+}
+
+.admin-shell #view-reports .report-panel-fame {
+    grid-column: span 4 !important;
+    min-height: 285px !important;
+    order: 4 !important;
+}
+
+/* 3ª linha: diagnóstico em três cards */
+.admin-shell #view-reports .report-panel-production-return,
+.admin-shell #view-reports .report-panel-production-delay,
+.admin-shell #view-reports .report-panel-production-orders {
+    grid-column: span 4 !important;
+    min-height: 250px !important;
+    order: 5 !important;
+}
+
+.admin-shell #view-reports .report-panel-head {
+    margin-bottom: 12px !important;
+    padding-bottom: 12px !important;
+}
+
+.admin-shell #view-reports .report-panel-head h3 {
+    font-size: clamp(1.05rem, 1.25vw, 1.32rem) !important;
+}
+
+/* Resumo operacional: 3 métricas em uma linha */
+.admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel #micro-funnel-grid > div {
+    min-height: 112px !important;
+    padding: 15px !important;
+}
+
+/* Equipe em admin: pílulas compactas */
+.admin-shell #view-reports .designer-distribution-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-content: flex-start !important;
+    gap: 10px !important;
+    min-height: 88px !important;
+}
+
+.admin-shell #view-reports .designer-pill {
+    min-height: 38px !important;
+    padding: 9px 12px !important;
+    font-size: 0.82rem !important;
+    box-shadow: none !important;
+}
+
+/* Administração em tempo real: linhas operacionais ao invés de cards enormes vazios */
+.admin-shell #view-reports #active-projects-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.admin-shell .production-live-row {
+    display: grid !important;
+    grid-template-columns: 96px minmax(0, 1fr) 150px !important;
+    gap: 14px !important;
+    align-items: center !important;
+    min-height: 78px !important;
+    padding: 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.50) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .production-live-id {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+.admin-shell .production-live-id span {
+    width: fit-content !important;
+    padding: 7px 10px !important;
+    border-radius: 999px !important;
+    background: #0B0D0C !important;
+    color: #FFFFFF !important;
+    font-size: 0.82rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .production-live-id small {
+    margin-top: 5px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.68rem !important;
+    font-weight: 850 !important;
+    text-transform: uppercase !important;
+}
+
+.admin-shell .production-live-main {
+    min-width: 0 !important;
+}
+
+.admin-shell .production-live-main strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.95rem !important;
+    line-height: 1.12 !important;
+    font-weight: 950 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell .production-live-main span {
+    display: block !important;
+    margin-top: 6px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.75rem !important;
+    font-weight: 800 !important;
+}
+
+.admin-shell .production-live-time {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    justify-content: flex-end !important;
+    padding: 10px 12px !important;
+    border-radius: 18px !important;
+    background: var(--cor-primaria-soft-bg) !important;
+    color: var(--cor-primaria) !important;
+}
+
+.admin-shell .production-live-time i {
+    font-size: 1.05rem !important;
+}
+
+.admin-shell .production-live-time strong {
+    display: block !important;
+    color: var(--cor-primaria) !important;
+    font-size: 0.95rem !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+}
+
+.admin-shell .production-live-time span {
+    display: block !important;
+    margin-top: 4px !important;
+    color: var(--cor-primaria) !important;
+    font-size: 0.62rem !important;
+    font-weight: 850 !important;
+    opacity: .82 !important;
+    text-transform: uppercase !important;
+}
+
+.admin-shell .production-empty-state {
+    min-height: 150px !important;
+    display: grid !important;
+    place-items: center !important;
+    text-align: center !important;
+    padding: 22px !important;
+    border-radius: 22px !important;
+    background: rgba(255,255,255,0.45) !important;
+    border: 1px dashed rgba(255,255,255,0.58) !important;
+    color: var(--cor-texto-mutado) !important;
+}
+
+.admin-shell .production-empty-state i {
+    color: var(--cor-sucesso) !important;
+    font-size: 2.2rem !important;
+}
+
+.admin-shell .production-empty-state strong {
+    display: block !important;
+    margin-top: 8px !important;
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .production-empty-state span {
+    display: block !important;
+    max-width: 410px !important;
+    margin-top: 6px !important;
+    font-size: 0.82rem !important;
+    font-weight: 750 !important;
+}
+
+/* Ranking lateral: mais compacto */
+.admin-shell #view-reports .report-panel-fame .gamer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+}
+
+.admin-shell #view-reports .report-panel-fame .gamer-card {
+    min-height: 118px !important;
+}
+
+/* Listas diagnósticas */
+.admin-shell #view-reports .report-list-stack {
+    max-height: 320px !important;
+    overflow: auto !important;
+    padding-right: 4px !important;
+}
+
+.admin-shell #view-reports #sectors-container .gamer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 14px !important;
+}
+
+/* Dark mode */
+body[data-theme="dark"] .admin-shell .production-live-row,
+body[data-theme="dark"] .admin-shell .production-empty-state {
+    background: linear-gradient(145deg, rgba(16,18,17,0.92), rgba(8,10,9,0.96)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .admin-shell .production-live-id span {
+    background: #FFFFFF !important;
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .admin-shell .production-live-main strong,
+body[data-theme="dark"] .admin-shell .production-empty-state strong {
+    color: #FFFFFF !important;
+}
+
+/* Responsivo */
+@media (max-width: 1380px) {
+    .admin-shell #view-reports .report-panel-funnel,
+    .admin-shell #view-reports .report-panel-distribution,
+    .admin-shell #view-reports .report-panel-active,
+    .admin-shell #view-reports .report-panel-fame,
+    .admin-shell #view-reports .report-panel-production-return,
+    .admin-shell #view-reports .report-panel-production-delay,
+    .admin-shell #view-reports .report-panel-production-orders {
+        grid-column: span 12 !important;
+    }
+
+    .admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 820px) {
+    .admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-shell .production-live-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-shell .production-live-time {
+        justify-content: flex-start !important;
+    }
+}
+
+/* =========================================================
+   ADMIN — AJUSTES DO SETOR NO PADRÃO SINALIZAFLOW
+   ========================================================= */
+
+.admin-shell .brand-wordmark span {
+    color: var(--cor-primaria) !important;
+}
+
+.admin-shell .page-header::after {
+    content: "Painel master • ADMIN J7S" !important;
+}
+
+.admin-shell .admin-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+.admin-shell .kpi-grid-cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+/* Botões de ação do admin */
+.admin-shell .btn-success {
+    background: linear-gradient(145deg, #10B981, #059669) !important;
+}
+
+.admin-shell .btn-warning {
+    background: linear-gradient(145deg, #F59E0B, #D97706) !important;
+    color: #fff !important;
+}
+
+.admin-shell .btn-danger {
+    background: linear-gradient(145deg, #EF4444, #DC2626) !important;
+    color: #fff !important;
+}
+
+/* Relatórios do admin */
+.admin-shell #view-reports.report-workspace {
+    padding-bottom: 34px !important;
+}
+
+.admin-shell #view-reports .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+.admin-shell #view-reports .report-panel,
+.admin-shell #view-reports .report-panel-full {
+    grid-column: auto !important;
+}
+
+.admin-shell #view-reports .report-panel {
+    min-height: auto !important;
+    padding: 18px !important;
+    border-radius: 26px !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel {
+    grid-column: span 8 !important;
+    order: 1 !important;
+}
+
+.admin-shell #view-reports .report-panel-distribution {
+    grid-column: span 4 !important;
+    order: 2 !important;
+}
+
+.admin-shell #view-reports .report-panel-fame {
+    grid-column: span 4 !important;
+    order: 3 !important;
+}
+
+.admin-shell #view-reports .report-panel-production-delay {
+    grid-column: span 4 !important;
+    order: 4 !important;
+}
+
+.admin-shell #view-reports .report-panel-production-return {
+    grid-column: span 4 !important;
+    order: 5 !important;
+}
+
+.admin-shell #view-reports .report-panel-head {
+    margin-bottom: 12px !important;
+    padding-bottom: 12px !important;
+}
+
+.admin-shell #view-reports .report-panel-head h3 {
+    font-size: clamp(1.05rem, 1.25vw, 1.32rem) !important;
+}
+
+.admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+}
+
+.admin-shell #view-reports .designer-distribution-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-content: flex-start !important;
+    gap: 10px !important;
+}
+
+.admin-shell #view-reports .designer-pill {
+    min-height: 38px !important;
+    padding: 9px 12px !important;
+    font-size: 0.82rem !important;
+    box-shadow: none !important;
+}
+
+.admin-shell #view-reports .report-panel-fame .gamer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+}
+
+.admin-shell #view-reports .report-list-stack {
+    max-height: 320px !important;
+    overflow: auto !important;
+    padding-right: 4px !important;
+}
+
+/* Modais centralizados e visualização de arquivos maior */
+#filesModal .file-browser {
+    grid-template-columns: 330px minmax(0, 1fr) !important;
+}
+
+#filesModal > .modal-card-lg {
+    width: min(1500px, calc(100vw - 44px)) !important;
+    height: min(900px, calc(100vh - 44px)) !important;
+}
+
+/* Dark mode com radial gradient verde do canto superior esquerdo */
+body[data-theme="dark"] {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.22), transparent 34%),
+        radial-gradient(circle at 100% 14%, rgba(52, 211, 153, 0.10), transparent 30%),
+        #030504 !important;
+}
+
+body[data-theme="dark"] .admin-shell .page-header,
+body[data-theme="dark"] .admin-shell .view-intro,
+body[data-theme="dark"] .admin-shell .report-panel,
+body[data-theme="dark"] .admin-shell .kpi-card,
+body[data-theme="dark"] .admin-shell .list-row {
+    background: linear-gradient(145deg, rgba(13,17,15,0.94), rgba(5,8,7,0.98)) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .btn-success {
+    background: linear-gradient(145deg, #10B981, #047857) !important;
+    color: #fff !important;
+}
+
+@media (max-width: 1380px) {
+    .admin-shell #view-reports .report-panel-funnel,
+    .admin-shell #view-reports .report-panel-distribution,
+    .admin-shell #view-reports .report-panel-fame,
+    .admin-shell #view-reports .report-panel-production-delay,
+    .admin-shell #view-reports .report-panel-production-return {
+        grid-column: span 12 !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-shell .kpi-grid-cols,
+    .admin-shell #view-reports .report-panel-funnel .report-metric-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =========================================================
+   ADMIN — PADRÃO SINALIZAFLOW MASTER
+   ========================================================= */
+
+.admin-shell .brand-wordmark span {
+    color: #111827 !important;
+}
+
+.admin-shell .logo-icon,
+.admin-shell .nav-btn.active,
+.admin-shell .kpi-card.is-selected,
+.admin-shell .btn-primary {
+    background: #0B0D0C !important;
+    color: #fff !important;
+}
+
+.admin-shell .page-header::after {
+    content: "Painel master • ADMIN J7S" !important;
+}
+
+.admin-shell .admin-view-intro {
+    border-left: 7px solid #0B0D0C !important;
+}
+
+.admin-shell .page-overline i,
+.admin-shell .view-eyebrow i,
+.admin-shell .view-chip i,
+.admin-shell .status-badge-top.online i,
+.admin-shell .sector-dot {
+    color: #111827 !important;
+}
+
+.admin-shell .sector-dot {
+    background: #111827 !important;
+}
+
+.admin-shell .kpi-grid,
+.admin-shell .sales-kpi-row {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin-bottom: 18px !important;
+}
+
+.admin-shell .kpi-card {
+    min-height: 116px !important;
+    border-radius: 24px !important;
+    padding: 20px !important;
+}
+
+.admin-shell .filters,
+.admin-shell .sales-toolbar {
+    margin: 0 0 18px !important;
+    padding: 14px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    background: var(--cor-card-bg) !important;
+    border: 1px solid var(--cor-borda) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .filters .search-field,
+.admin-shell .filters > div:first-child,
+.admin-shell .sales-toolbar > div:first-child {
+    flex: 1 1 360px !important;
+}
+
+.admin-shell .filters .input-box,
+.admin-shell .sales-toolbar .input-box,
+.admin-shell .filters .btn,
+.admin-shell .sales-toolbar .btn {
+    min-height: 48px !important;
+    border-radius: 16px !important;
+}
+
+.admin-shell .orders-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.admin-shell .list-row {
+    border-radius: 24px !important;
+    padding: 18px 20px !important;
+    background: var(--cor-card-bg) !important;
+    border: 1px solid var(--cor-borda) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .list-row,
+.admin-shell .list-col-info,
+.admin-shell .list-col-actions,
+.admin-shell .action-buttons {
+    align-items: center !important;
+}
+
+.admin-shell .client-name {
+    font-size: clamp(1.05rem, 1.25vw, 1.35rem) !important;
+    font-weight: 950 !important;
+    color: var(--cor-texto) !important;
+    letter-spacing: -0.05em !important;
+}
+
+.admin-shell .id-badge,
+.admin-shell .row-id {
+    background: #0B0D0C !important;
+    color: #fff !important;
+    border-radius: 999px !important;
+    padding: 7px 10px !important;
+}
+
+.admin-shell .btn-act,
+.admin-shell .btn-nav {
+    border-radius: 14px !important;
+    border: 1px solid var(--cor-borda) !important;
+    min-height: 42px !important;
+}
+
+.admin-shell .btn-nav {
+    background: #0B0D0C !important;
+    color: #fff !important;
+    padding: 0 16px !important;
+    font-weight: 900 !important;
+}
+
+/* Views internas do admin */
+.admin-shell .admin-workspace {
+    padding-bottom: 34px !important;
+}
+
+.admin-shell .chart-card,
+.admin-shell .config-panel,
+.admin-shell .table-responsive-container {
+    background: var(--cor-card-bg) !important;
+    border: 1px solid var(--cor-borda) !important;
+    border-radius: 26px !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .chart-card,
+.admin-shell .config-panel {
+    padding: 18px !important;
+}
+
+.admin-shell .chart-title {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 12px !important;
+    border-bottom: 1px solid var(--cor-borda) !important;
+    font-weight: 950 !important;
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell table,
+.admin-shell .report-table,
+.admin-shell .config-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell th {
+    color: var(--cor-texto-mutado) !important;
+    text-transform: uppercase !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.06em !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell td,
+.admin-shell th {
+    padding: 13px 12px !important;
+    border-bottom: 1px dashed var(--cor-borda) !important;
+}
+
+.admin-shell .config-input,
+.admin-shell .input-box,
+.admin-shell textarea,
+.admin-shell select {
+    background: var(--cor-card-bg) !important;
+    color: var(--cor-texto) !important;
+    border: 1px solid var(--cor-borda) !important;
+    border-radius: 16px !important;
+}
+
+.admin-shell #view-users > div:first-child,
+.admin-shell #view-conf > div:first-child {
+    background: var(--cor-card-bg) !important;
+    border: 1px solid var(--cor-borda) !important;
+    border-radius: 24px !important;
+    padding: 18px 20px !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell #view-users .user-name-cell {
+    color: var(--cor-texto) !important;
+    font-size: 0.95rem !important;
+    font-weight: 900 !important;
+    text-transform: none !important;
+}
+
+.admin-shell #view-users .user-password-cell {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+}
+
+.admin-shell #view-users .user-password-toggle {
+    width: 28px !important;
+    height: 28px !important;
+    padding: 0 !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    color: var(--cor-texto-mutado) !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    cursor: pointer !important;
+}
+
+.admin-shell #view-users .user-password-toggle:hover {
+    color: var(--cor-texto) !important;
+    background: rgba(255,255,255,0.58) !important;
+}
+
+.admin-shell #view-users .user-password-toggle i {
+    font-size: 1.05rem !important;
+}
+
+.admin-shell #view-users .user-role-badge {
+    min-height: 30px !important;
+    padding: 6px 12px !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+}
+
+.admin-shell #view-users .user-actions-cell {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 7px !important;
+}
+
+#bulk-actions-bar {
+    border-radius: 999px !important;
+    background: rgba(11, 13, 12, 0.92) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.24) !important;
+}
+
+/* Modais */
+.modal-overlay {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.modal-card,
+.modal-card-lg {
+    border-radius: 28px !important;
+    background: var(--cor-card-bg) !important;
+    color: var(--cor-texto) !important;
+    border: 1px solid var(--cor-borda) !important;
+    box-shadow: 0 28px 90px rgba(0,0,0,0.24) !important;
+}
+
+#filesModal .modal-card-lg,
+#filesModal > .modal-card-lg {
+    width: min(1500px, calc(100vw - 44px)) !important;
+    height: min(900px, calc(100vh - 44px)) !important;
+}
+
+#filesModal .file-browser {
+    grid-template-columns: 330px minmax(0, 1fr) !important;
+}
+
+/* Dark mode admin */
+body[data-theme="dark"] {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.20), transparent 38%),
+        radial-gradient(circle at 22% 0%, rgba(255, 255, 255, 0.06), transparent 28%),
+        #020403 !important;
+}
+
+body[data-theme="dark"] .admin-shell .brand-wordmark span,
+body[data-theme="dark"] .admin-shell .page-overline i,
+body[data-theme="dark"] .admin-shell .view-eyebrow i,
+body[data-theme="dark"] .admin-shell .view-chip i,
+body[data-theme="dark"] .admin-shell .status-badge-top.online i {
+    color: #F8FAFC !important;
+}
+
+body[data-theme="dark"] .admin-shell .sector-dot {
+    background: #F8FAFC !important;
+}
+
+body[data-theme="dark"] .admin-shell .page-header,
+body[data-theme="dark"] .admin-shell .view-intro,
+body[data-theme="dark"] .admin-shell .kpi-card,
+body[data-theme="dark"] .admin-shell .list-row,
+body[data-theme="dark"] .admin-shell .chart-card,
+body[data-theme="dark"] .admin-shell .config-panel,
+body[data-theme="dark"] .admin-shell .table-responsive-container,
+body[data-theme="dark"] .admin-shell .filters,
+body[data-theme="dark"] .admin-shell .sales-toolbar {
+    background: linear-gradient(145deg, rgba(13,16,15,0.96), rgba(4,6,5,0.98)) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .layout-user-highlight strong,
+body[data-theme="dark"] .admin-shell #page-title,
+body[data-theme="dark"] .admin-shell h1,
+body[data-theme="dark"] .admin-shell h2,
+body[data-theme="dark"] .admin-shell h3,
+body[data-theme="dark"] .admin-shell .client-name,
+body[data-theme="dark"] .admin-shell td,
+body[data-theme="dark"] .admin-shell .kpi-val {
+    color: #fff !important;
+}
+
+body[data-theme="dark"] .admin-shell .btn-primary,
+body[data-theme="dark"] .admin-shell .nav-btn.active,
+body[data-theme="dark"] .admin-shell .btn-nav,
+body[data-theme="dark"] .admin-shell .id-badge {
+    background: #F8FAFC !important;
+    color: #020403 !important;
+}
+
+@media (max-width: 1380px) {
+    .admin-shell .kpi-grid,
+    .admin-shell .sales-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-shell .kpi-grid,
+    .admin-shell .sales-kpi-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =========================================================
+   ADMIN — FINALIZAÇÃO VISUAL E NAVEGAÇÃO PRESERVADA
+   Mantém as views internas e adiciona atalhos externos sem alterar a lógica.
+   ========================================================= */
+
+.commercial-shell.admin-shell {
+    grid-template-columns: 292px minmax(0, 1fr) !important;
+    gap: 22px !important;
+}
+
+.admin-shell .app-sidebar {
+    padding: 24px 18px !important;
+    border-radius: 34px !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .logo-area {
+    min-height: 62px !important;
+    margin-bottom: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+}
+
+.admin-shell .brand-wordmark {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    clip: auto !important;
+    color: var(--cor-texto) !important;
+    font-size: 1.24rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.045em !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell .brand-wordmark span {
+    color: #111827 !important;
+}
+
+.admin-shell .admin-nav {
+    padding: 0 4px 6px 0 !important;
+}
+
+.admin-shell .menu-label {
+    height: auto !important;
+    margin: 16px 0 9px !important;
+    padding-left: 10px !important;
+    border-top: 0 !important;
+    color: var(--cor-texto-fraco) !important;
+    font-size: 0.66rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+}
+
+.admin-shell .nav-btn,
+.admin-shell .sidebar-footer .nav-btn,
+.admin-shell .logout-btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    margin: 0 0 9px !important;
+    padding: 0 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 11px !important;
+    border-radius: 18px !important;
+    font-size: 0.86rem !important;
+    line-height: 1.1 !important;
+    text-align: left !important;
+    letter-spacing: 0 !important;
+}
+
+.admin-shell .nav-btn i,
+.admin-shell .logout-btn i {
+    width: 24px !important;
+    min-width: 24px !important;
+    font-size: 1.2rem !important;
+}
+
+.admin-shell .nav-btn span,
+.admin-shell .logout-btn span {
+    display: inline !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell .nav-btn.active::before {
+    left: -8px !important;
+}
+
+.admin-shell .nav-btn-external {
+    color: var(--cor-texto-mutado) !important;
+}
+
+.admin-shell .nav-btn-external:hover {
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell .sidebar-footer {
+    padding-top: 14px !important;
+}
+
+.admin-shell .topbar {
+    justify-content: space-between !important;
+}
+
+.admin-shell .topbar-actions {
+    margin-left: auto !important;
+}
+
+.admin-shell .admin-topbar-user,
+.admin-shell .topbar-user.admin-topbar-user {
+    display: flex !important;
+}
+
+.admin-shell .admin-topbar-user strong {
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell .admin-topbar-user span {
+    color: var(--cor-texto-mutado) !important;
+}
+
+.modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 22px !important;
+}
+
+.modal-card,
+.modal-card-lg {
+    max-height: calc(100vh - 44px) !important;
+    overflow: auto !important;
+}
+
+body[data-theme="dark"] .admin-shell .brand-wordmark,
+body[data-theme="dark"] .admin-shell .brand-wordmark span {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell .nav-btn-external {
+    color: #DCE4E0 !important;
+}
+
+body[data-theme="dark"] .admin-shell .admin-topbar-user strong,
+body[data-theme="dark"] .admin-shell .admin-topbar-user span {
+    color: #FFFFFF !important;
+}
+
+@media (max-width: 1180px) {
+    .commercial-shell.admin-shell {
+        grid-template-columns: 92px minmax(0, 1fr) !important;
+        gap: 14px !important;
+        padding: 18px !important;
+    }
+
+    .admin-shell .app-sidebar {
+        padding: 18px 10px !important;
+    }
+
+    .admin-shell .logo-area {
+        justify-content: center !important;
+    }
+
+    .admin-shell .brand-wordmark,
+    .admin-shell .nav-btn span,
+    .admin-shell .logout-btn span,
+    .admin-shell .menu-label {
+        display: none !important;
+    }
+
+    .admin-shell .nav-btn,
+    .admin-shell .sidebar-footer .nav-btn,
+    .admin-shell .logout-btn {
+        width: 58px !important;
+        min-height: 54px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 0 !important;
+        justify-content: center !important;
+    }
+}
+
+@media (max-width: 760px) {
+    body {
+        overflow: auto !important;
+        display: block !important;
+    }
+
+    .commercial-shell.admin-shell {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        grid-template-columns: 1fr !important;
+        padding: 14px !important;
+    }
+
+    .admin-shell .app-sidebar {
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .admin-shell .admin-nav,
+    .admin-shell .sidebar-footer {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .admin-shell .logo-area,
+    .admin-shell .topbar,
+    .admin-shell .admin-work-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .admin-shell .brand-wordmark,
+    .admin-shell .nav-btn span,
+    .admin-shell .logout-btn span,
+    .admin-shell .menu-label {
+        display: inline !important;
+    }
+
+    .admin-shell .nav-btn,
+    .admin-shell .sidebar-footer .nav-btn,
+    .admin-shell .logout-btn {
+        width: 100% !important;
+        padding: 0 12px !important;
+        justify-content: flex-start !important;
+    }
+}
+
+/* =========================================================
+   ADMIN - NAVEGACAO UNIFICADA E VIEW DE GARGALOS
+   ========================================================= */
+
+.admin-shell .legacy-page-links,
+.admin-shell .admin-nav .menu-label:nth-of-type(2) {
+    display: none !important;
+}
+
+.admin-shell .admin-bottlenecks-workspace {
+    padding-bottom: 34px !important;
+}
+
+.admin-shell .bottleneck-filters {
+    margin-bottom: 18px !important;
+}
+
+.admin-shell .admin-bottleneck-row.has-error {
+    border-left-color: var(--cor-erro) !important;
+}
+
+.admin-shell .admin-bottleneck-row.no-error {
+    border-left-color: var(--cor-sucesso) !important;
+}
+
+.admin-shell .admin-bottleneck-row {
+    min-height: 0 !important;
+    padding: 12px 16px !important;
+    border-radius: 20px !important;
+}
+
+.admin-shell .admin-bottleneck-row .row-header {
+    cursor: pointer !important;
+    min-height: 74px !important;
+    padding: 8px 10px !important;
+    grid-template-columns: minmax(240px, 1.15fr) minmax(300px, 1fr) minmax(120px, auto) !important;
+    gap: 14px !important;
+}
+
+.admin-shell .admin-bottleneck-row .row-id {
+    min-height: 24px !important;
+    padding: 5px 9px !important;
+    font-size: 0.7rem !important;
+}
+
+.admin-shell .admin-bottleneck-row .row-client {
+    font-size: clamp(0.98rem, 1.05vw, 1.2rem) !important;
+}
+
+.admin-shell .admin-bottleneck-row .info-praz {
+    font-size: 0.76rem !important;
+}
+
+.admin-shell .admin-bottleneck-summary {
+    min-width: 260px !important;
+    display: flex !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+}
+
+.admin-shell .admin-bottleneck-summary span {
+    min-height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    padding: 6px 10px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,0.52) !important;
+    border: 1px solid rgba(255,255,255,0.52) !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.74rem !important;
+    font-weight: 900 !important;
+}
+
+.admin-shell .admin-bottleneck-summary .is-danger {
+    color: var(--cor-erro) !important;
+    background: var(--danger-bg) !important;
+}
+
+.admin-shell .admin-bottleneck-row .btn {
+    min-height: 36px !important;
+    height: 36px !important;
+    padding: 0 14px !important;
+    border-radius: 14px !important;
+}
+
+.admin-shell .admin-sector-timeline {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+}
+
+.admin-shell .admin-sector-step {
+    min-height: 120px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 16px !important;
+    border-radius: 22px !important;
+    background: rgba(255,255,255,0.46) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .admin-sector-step strong {
+    color: var(--cor-texto) !important;
+    font-size: 0.82rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+}
+
+.admin-shell .admin-sector-step span {
+    color: var(--cor-texto) !important;
+    font-size: 1.45rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .admin-sector-step small {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.78rem !important;
+    line-height: 1.25 !important;
+    font-weight: 750 !important;
+}
+
+.admin-shell .admin-error-block {
+    margin-top: 14px !important;
+    padding: 16px !important;
+    border-radius: 22px !important;
+    background: var(--danger-bg) !important;
+    border: 1px solid rgba(239,68,68,0.22) !important;
+}
+
+.admin-shell .admin-error-title {
+    margin-bottom: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--cor-erro) !important;
+    font-size: 0.82rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+}
+
+.admin-shell .admin-error-item {
+    display: grid !important;
+    gap: 4px !important;
+    padding: 10px 0 !important;
+    border-top: 1px dashed rgba(239,68,68,0.26) !important;
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell .admin-error-item span,
+.admin-shell .admin-error-item small {
+    color: var(--cor-texto-mutado) !important;
+}
+
+body[data-theme="dark"] .admin-shell .admin-bottleneck-summary span,
+body[data-theme="dark"] .admin-shell .admin-sector-step {
+    background: linear-gradient(145deg, rgba(18,21,20,0.96), rgba(7,9,8,0.98)) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .admin-error-block {
+    background: rgba(127, 29, 29, 0.18) !important;
+    border-color: rgba(248,113,113,0.18) !important;
+}
+
+@media (max-width: 1180px) {
+    .admin-shell .admin-sector-timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .admin-shell .admin-sector-timeline {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-shell .admin-bottleneck-summary {
+        justify-content: flex-start !important;
+    }
+}
+
+/* =========================================================
+   ADMIN - GARGALOS VISUAIS POR SETOR, MOTIVO E AUTOR
+   ========================================================= */
+
+.admin-shell .bottleneck-insights-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.9fr) minmax(300px, 0.75fr) !important;
+    gap: 16px !important;
+    margin: 0 0 18px !important;
+    align-items: stretch !important;
+}
+
+.admin-shell .bottleneck-panel {
+    min-height: 250px !important;
+    padding: 18px !important;
+    border-radius: 26px !important;
+    background: var(--cor-card-bg) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    box-shadow: var(--sombra-sm) !important;
+    backdrop-filter: blur(18px) !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .bottleneck-panel-title {
+    min-height: 34px !important;
+    margin-bottom: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    color: var(--cor-texto) !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .bottleneck-panel-title i {
+    width: 34px !important;
+    height: 34px !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,0.58) !important;
+    color: var(--cor-erro) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .bottleneck-panel-title span {
+    flex: 1 !important;
+    min-width: 0 !important;
+    font-size: 0.92rem !important;
+}
+
+.admin-shell .bottleneck-panel-title b {
+    padding: 6px 10px !important;
+    border-radius: 999px !important;
+    background: var(--danger-bg) !important;
+    color: var(--cor-erro) !important;
+    font-size: 0.72rem !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell .bottleneck-sector-grid,
+.admin-shell .bottleneck-person-list,
+.admin-shell .bottleneck-reason-list {
+    display: grid !important;
+    gap: 10px !important;
+}
+
+.admin-shell .bottleneck-sector-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.admin-shell .bottleneck-sector-card,
+.admin-shell .bottleneck-person-row,
+.admin-shell .bottleneck-reason-chip {
+    padding: 13px !important;
+    border-radius: 18px !important;
+    background: rgba(255,255,255,0.46) !important;
+    border: 1px solid rgba(255,255,255,0.50) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.admin-shell .bottleneck-sector-head {
+    display: grid !important;
+    grid-template-columns: 36px minmax(0, 1fr) auto !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.admin-shell .bottleneck-sector-head i {
+    width: 36px !important;
+    height: 36px !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,0.62) !important;
+}
+
+.admin-shell .bottleneck-sector-head strong,
+.admin-shell .bottleneck-person-main strong,
+.admin-shell .bottleneck-reason-chip strong {
+    display: block !important;
+    min-width: 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.84rem !important;
+    font-weight: 950 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-shell .bottleneck-sector-head span,
+.admin-shell .bottleneck-person-main span,
+.admin-shell .bottleneck-person-main small,
+.admin-shell .bottleneck-sector-card small,
+.admin-shell .bottleneck-reason-chip small {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+}
+
+.admin-shell .bottleneck-sector-head b {
+    color: var(--cor-erro) !important;
+    font-size: 1.35rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .bottleneck-bar,
+.admin-shell .bottleneck-rate {
+    height: 8px !important;
+    margin: 11px 0 8px !important;
+    border-radius: 999px !important;
+    background: rgba(0,0,0,0.08) !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .bottleneck-bar span,
+.admin-shell .bottleneck-rate span {
+    display: block !important;
+    height: 100% !important;
+    border-radius: inherit !important;
+}
+
+.admin-shell .bottleneck-rate span {
+    background: linear-gradient(90deg, var(--cor-alerta), var(--cor-erro)) !important;
+}
+
+.admin-shell .bottleneck-person-row {
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) 48px !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.admin-shell .bottleneck-rank {
+    width: 34px !important;
+    height: 34px !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 13px !important;
+    background: #0B0D0C !important;
+    color: #FFFFFF !important;
+    font-size: 0.82rem !important;
+    font-weight: 950 !important;
+}
+
+.admin-shell .bottleneck-person-row > b {
+    color: var(--cor-erro) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+    text-align: right !important;
+}
+
+.admin-shell .bottleneck-reason-chip {
+    display: grid !important;
+    grid-template-columns: 8px minmax(0, 1fr) auto !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.admin-shell .bottleneck-reason-chip > span {
+    width: 8px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+}
+
+.admin-shell .bottleneck-empty {
+    min-height: 150px !important;
+    display: grid !important;
+    place-items: center !important;
+    text-align: center !important;
+    color: var(--cor-texto-mutado) !important;
+    font-weight: 850 !important;
+}
+
+.admin-shell .admin-bottleneck-row .row-header {
+    cursor: default !important;
+}
+
+.admin-shell .admin-bottleneck-row.is-expanded .col-actions .ph-caret-down {
+    transform: rotate(180deg) !important;
+}
+
+.admin-shell .admin-sector-step {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.admin-shell .admin-sector-step::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 auto 0 0 !important;
+    width: 6px !important;
+    border-radius: 999px !important;
+    background: var(--cor-texto-mutado) !important;
+}
+
+.admin-shell .admin-sector-step.sector-layout::before { background: var(--cor-primaria) !important; }
+.admin-shell .admin-sector-step.sector-pcp::before { background: var(--cor-alerta) !important; }
+.admin-shell .admin-sector-step.sector-producao::before { background: var(--cor-info) !important; }
+.admin-shell .admin-sector-step.sector-fat::before { background: var(--cor-sucesso) !important; }
+
+.admin-shell .visual-error-item {
+    grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.admin-shell .visual-error-item small {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+}
+
+body[data-theme="dark"] .admin-shell .bottleneck-panel,
+body[data-theme="dark"] .admin-shell .bottleneck-sector-card,
+body[data-theme="dark"] .admin-shell .bottleneck-person-row,
+body[data-theme="dark"] .admin-shell .bottleneck-reason-chip {
+    background: linear-gradient(145deg, rgba(18,21,20,0.96), rgba(7,9,8,0.98)) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .bottleneck-panel-title i,
+body[data-theme="dark"] .admin-shell .bottleneck-sector-head i {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .bottleneck-bar,
+body[data-theme="dark"] .admin-shell .bottleneck-rate {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+@media (max-width: 1280px) {
+    .admin-shell .bottleneck-insights-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-shell .bottleneck-sector-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .admin-shell .bottleneck-sector-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =========================================================
+   ADMIN - KPIs DA VISAO GERAL EM LINHA UNICA
+   ========================================================= */
+
+.admin-shell #view-dash #kpi-container.kpi-grid {
+    display: flex !important;
+    align-items: stretch !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    margin-bottom: 18px !important;
+    overflow-x: auto !important;
+    overscroll-behavior-x: contain !important;
+    padding-bottom: 6px !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-card {
+    --sector-rgb: 37, 99, 235;
+    flex: 1 0 132px !important;
+    min-width: 132px !important;
+    min-height: 116px !important;
+    padding: 18px 16px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    background:
+        linear-gradient(135deg, rgba(var(--sector-rgb), 0.11), rgba(var(--sector-rgb), 0.025) 42%, rgba(255,255,255,0) 72%),
+        linear-gradient(145deg, rgba(255,255,255,0.74), rgba(255,255,255,0.50)) !important;
+    border-color: rgba(var(--sector-rgb), 0.22) !important;
+    box-shadow:
+        inset 4px 0 0 rgba(var(--sector-rgb), 0.54),
+        var(--sombra-sm) !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-card::after {
+    background: rgba(var(--sector-rgb), 0.08) !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-card:first-child {
+    color: var(--cor-texto) !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-card:first-child .kpi-label,
+.admin-shell #view-dash #kpi-container .kpi-card:first-child .kpi-val,
+.admin-shell #view-dash #kpi-container .kpi-card:first-child .kpi-icon,
+.admin-shell #view-dash #kpi-container .kpi-card:first-child * {
+    color: inherit !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-card:nth-child(1) { --sector-rgb: 37, 99, 235; }
+.admin-shell #view-dash #kpi-container .kpi-card:nth-child(2) { --sector-rgb: 14, 165, 233; }
+.admin-shell #view-dash #kpi-container .kpi-card:nth-child(3) { --sector-rgb: 139, 92, 246; }
+.admin-shell #view-dash #kpi-container .kpi-card:nth-child(4) { --sector-rgb: 217, 119, 6; }
+.admin-shell #view-dash #kpi-container .kpi-card:nth-child(5) { --sector-rgb: 239, 68, 68; }
+.admin-shell #view-dash #kpi-container .kpi-card:nth-child(6) { --sector-rgb: 16, 185, 129; }
+.admin-shell #view-dash #kpi-container .kpi-card:nth-child(7) { --sector-rgb: 5, 150, 105; }
+
+.admin-shell #view-dash #kpi-container .kpi-label {
+    font-size: 0.66rem !important;
+    line-height: 1.15 !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-val {
+    font-size: clamp(1.9rem, 2.35vw, 2.75rem) !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    background: rgba(var(--sector-rgb), 0.13) !important;
+    color: rgb(var(--sector-rgb)) !important;
+}
+
+.admin-shell #view-dash #kpi-container .kpi-card:first-child .kpi-icon,
+.admin-shell #view-dash #kpi-container .kpi-card:first-child .kpi-icon * {
+    color: rgb(var(--sector-rgb)) !important;
+}
+
+body[data-theme="dark"] .admin-shell #view-dash #kpi-container .kpi-card {
+    background:
+        linear-gradient(135deg, rgba(var(--sector-rgb), 0.18), rgba(var(--sector-rgb), 0.04) 44%, rgba(255,255,255,0) 72%),
+        linear-gradient(145deg, rgba(13,16,15,0.96), rgba(4,6,5,0.98)) !important;
+    border-color: rgba(var(--sector-rgb), 0.28) !important;
+    box-shadow:
+        inset 4px 0 0 rgba(var(--sector-rgb), 0.58),
+        0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .admin-shell #view-dash #kpi-container .kpi-card:first-child,
+body[data-theme="dark"] .admin-shell #view-dash #kpi-container .kpi-card:first-child * {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .admin-shell #view-dash #kpi-container .kpi-icon {
+    background: rgba(var(--sector-rgb), 0.16) !important;
+    color: rgb(var(--sector-rgb)) !important;
+}
+
+body[data-theme="dark"] .admin-shell #view-dash #kpi-container .kpi-card:first-child .kpi-icon,
+body[data-theme="dark"] .admin-shell #view-dash #kpi-container .kpi-card:first-child .kpi-icon * {
+    color: rgb(var(--sector-rgb)) !important;
+}
+
+@media (max-width: 1380px) {
+    .admin-shell #view-dash #kpi-container .kpi-card {
+        flex-basis: 142px !important;
+    }
+}
+
+/* =========================================================
+   ADMIN - CARDS DE PEDIDO NA DISPOSICAO DO LAYOUT
+   ========================================================= */
+
+.admin-shell #orders-container .list-row {
+    min-height: 112px !important;
+    padding: 20px 22px !important;
+    display: grid !important;
+    grid-template-columns: minmax(280px, 1.2fr) minmax(390px, 1.45fr) minmax(380px, auto) !important;
+    align-items: center !important;
+    gap: 22px !important;
+    overflow: visible !important;
+    border-left: 6px solid transparent !important;
+}
+
+.admin-shell #orders-container .list-row.late {
+    border-left-color: var(--cor-erro) !important;
+}
+
+.admin-shell #orders-container .list-row::before {
+    display: none !important;
+}
+
+.admin-shell #orders-container .list-col-info,
+.admin-shell #orders-container .list-col-stepper,
+.admin-shell #orders-container .list-col-actions {
+    min-width: 0 !important;
+}
+
+.admin-shell #orders-container .list-col-info {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 7px !important;
+}
+
+.admin-shell #orders-container .info-top,
+.admin-shell #orders-container .info-bottom {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.admin-shell #orders-container .info-bottom {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.78rem !important;
+    font-weight: 800 !important;
+}
+
+.admin-shell #orders-container .info-bottom span {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    text-transform: none !important;
+    font-weight: inherit !important;
+}
+
+.admin-shell #orders-container .date-val {
+    padding: 0 !important;
+}
+
+.admin-shell #orders-container .client-name {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(1.05rem, 1.25vw, 1.32rem) !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-shell #orders-container .list-col-stepper {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+}
+
+.admin-shell #orders-container .stepper-wrapper {
+    width: 100% !important;
+    max-width: 520px !important;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)) !important;
+}
+
+.admin-shell #orders-container .list-col-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    gap: 9px !important;
+}
+
+.admin-shell #orders-container .status-badge {
+    margin: 0 !important;
+}
+
+.admin-shell #orders-container .action-buttons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.admin-shell #orders-container .btn-act {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+}
+
+.admin-shell #orders-container .btn-nav {
+    height: 42px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 1220px) {
+    .admin-shell #orders-container .list-row {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .admin-shell #orders-container .list-col-stepper {
+        justify-content: stretch !important;
+    }
+
+    .admin-shell #orders-container .stepper-wrapper {
+        max-width: none !important;
+    }
+
+    .admin-shell #orders-container .list-col-actions {
+        align-items: stretch !important;
+    }
+
+    .admin-shell #orders-container .action-buttons {
+        justify-content: flex-start !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .admin-shell #orders-container .list-row {
+        padding: 18px 16px !important;
+        border-radius: 20px !important;
+    }
+
+    .admin-shell #orders-container .client-name {
+        white-space: normal !important;
+    }
+
+    .admin-shell #orders-container .action-buttons .btn-nav {
+        flex: 1 1 100% !important;
+    }
+}
+
+/* Ajuste solicitado: remove o card "Central Administrativa" e alinha a jornada. */
+.admin-shell #view-dash > .admin-view-intro {
+    display: none !important;
+}
+
+.admin-shell #orders-container .stepper-wrapper {
+    align-items: start !important;
+}
+
+.admin-shell #orders-container .stepper-item {
+    position: relative !important;
+    grid-template-rows: 16px 25px 14px !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+.admin-shell #orders-container .stepper-date {
+    min-height: 16px !important;
+    line-height: 16px !important;
+    display: block !important;
+}
+
+.admin-shell #orders-container .stepper-circle {
+    z-index: 1 !important;
+}
+
+.admin-shell #orders-container .stepper-label {
+    min-height: 14px !important;
+    line-height: 14px !important;
+}
+
+.admin-shell #orders-container .stepper-line {
+    position: absolute !important;
+    top: 28.5px !important;
+    left: calc(50% + 14px) !important;
+    width: calc(100% - 20px) !important;
+    height: 2px !important;
+    margin: 0 !important;
+    transform: translateY(-50%) !important;
+    z-index: 0 !important;
+}
+
+/* =========================================================
+   ADMIN - APROVEITAMENTO DE TELA
+   ========================================================= */
+
+.commercial-shell.admin-shell {
+    width: min(98.5vw, 1880px) !important;
+    height: min(96vh, 1040px) !important;
+    min-height: min(900px, calc(100vh - 28px)) !important;
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    gap: 16px !important;
+    padding: 14px 16px !important;
+}
+
+.admin-shell .app-sidebar {
+    padding: 20px 16px !important;
+}
+
+.admin-shell .nav-btn,
+.admin-shell .sidebar-footer .nav-btn,
+.admin-shell .logout-btn {
+    min-height: 52px !important;
+}
+
+.admin-shell #main-content {
+    padding-right: 0 !important;
+}
+
+.admin-shell .topbar {
+    min-height: 58px !important;
+    margin-bottom: 14px !important;
+    padding: 8px !important;
+}
+
+.admin-shell .page-header,
+.admin-shell .dashboard-header {
+    min-height: 136px !important;
+    margin-bottom: 14px !important;
+    padding: 24px 28px !important;
+    border-radius: 28px !important;
+}
+
+.admin-shell .page-user-identity {
+    max-width: min(900px, 72vw) !important;
+}
+
+.admin-shell .layout-user-highlight strong {
+    font-size: clamp(3.6rem, 5.1vw, 5.3rem) !important;
+    line-height: 0.9 !important;
+}
+
+.admin-shell .sales-toolbar {
+    margin-bottom: 16px !important;
+    padding: 14px 16px !important;
+}
+
+.admin-shell #view-sales .sales-kpi-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin-bottom: 16px !important;
+}
+
+.admin-shell #view-sales .sales-kpi-row .kpi-card {
+    min-height: 162px !important;
+    padding: 22px 20px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+}
+
+.admin-shell #view-sales .sales-kpi-row .kpi-val {
+    font-size: clamp(2.15rem, 3.2vw, 3.55rem) !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell #view-sales .sales-kpi-row .kpi-icon {
+    flex: 0 0 auto !important;
+}
+
+.admin-shell #view-sales .sales-charts-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin-bottom: 16px !important;
+}
+
+.admin-shell #view-sales .chart-card,
+.admin-shell #view-sales .config-panel {
+    padding: 16px 18px !important;
+    border-radius: 24px !important;
+}
+
+.admin-shell #view-sales .chart-title {
+    margin-bottom: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+@media (max-width: 1380px) {
+    .admin-shell #view-sales .sales-kpi-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 1180px) {
+    .commercial-shell.admin-shell {
+        grid-template-columns: 92px minmax(0, 1fr) !important;
+        gap: 14px !important;
+        padding: 18px !important;
+    }
+
+    .admin-shell #view-sales .sales-kpi-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-shell #view-sales .sales-charts-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =========================================================
+   ADMIN - BASE GLOBAL DE PEDIDOS
+   ========================================================= */
+
+.admin-shell .admin-orders-base-workspace {
+    padding-bottom: 34px !important;
+}
+
+.admin-shell .admin-orders-base-intro {
+    border-left: 7px solid var(--cor-alerta) !important;
+}
+
+.admin-shell .admin-orders-toolbar {
+    margin-bottom: 16px !important;
+    padding: 14px 16px !important;
+    display: grid !important;
+    grid-template-columns: minmax(280px, 1fr) minmax(180px, 220px) minmax(180px, 220px) auto !important;
+    gap: 12px !important;
+    align-items: center !important;
+    background: var(--cor-card-bg) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--sombra-sm) !important;
+    backdrop-filter: blur(18px) !important;
+}
+
+.admin-shell .admin-orders-search-wrap {
+    position: relative !important;
+    min-width: 0 !important;
+}
+
+.admin-shell .admin-orders-search-wrap i {
+    position: absolute !important;
+    left: 14px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 1.1rem !important;
+    pointer-events: none !important;
+}
+
+.admin-shell .admin-orders-search-wrap .input-box {
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 42px !important;
+}
+
+.admin-shell .admin-orders-toolbar .input-box,
+.admin-shell .admin-orders-toolbar .btn {
+    min-height: 46px !important;
+    margin: 0 !important;
+}
+
+.admin-shell .admin-orders-base-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.admin-shell .admin-order-base-card {
+    --order-rgb: 37, 99, 235;
+    min-height: 112px !important;
+    padding: 18px 20px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 18px !important;
+    align-items: center !important;
+    background:
+        linear-gradient(135deg, rgba(var(--order-rgb), 0.11), rgba(var(--order-rgb), 0.02) 46%, rgba(255,255,255,0) 74%),
+        linear-gradient(145deg, rgba(255,255,255,0.74), rgba(255,255,255,0.50)) !important;
+    border: 1px solid rgba(var(--order-rgb), 0.20) !important;
+    border-left: 6px solid rgba(var(--order-rgb), 0.70) !important;
+    border-radius: 22px !important;
+    box-shadow: var(--sombra-sm) !important;
+    backdrop-filter: blur(18px) !important;
+}
+
+.admin-shell .admin-order-base-card.is-late {
+    --order-rgb: 239, 68, 68;
+}
+
+.admin-shell .admin-order-base-card.is-done {
+    --order-rgb: 16, 185, 129;
+}
+
+.admin-shell .admin-order-base-main {
+    min-width: 0 !important;
+    display: grid !important;
+    gap: 8px !important;
+}
+
+.admin-shell .admin-order-base-titleline,
+.admin-shell .admin-order-base-meta,
+.admin-shell .admin-order-base-actions {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.admin-shell .admin-order-base-card h3 {
+    margin: 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(1.04rem, 1.2vw, 1.28rem) !important;
+    line-height: 1.08 !important;
+    font-weight: 950 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell .admin-order-status-pill,
+.admin-shell .admin-order-final-pill {
+    min-height: 28px !important;
+    padding: 6px 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,0.56) !important;
+    border: 1px solid rgba(255,255,255,0.52) !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.68rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+}
+
+.admin-shell .admin-order-final-pill {
+    background: var(--success-bg) !important;
+    color: var(--cor-sucesso) !important;
+}
+
+.admin-shell .admin-order-base-meta {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.76rem !important;
+    font-weight: 800 !important;
+}
+
+.admin-shell .admin-order-base-meta span {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    max-width: 260px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell .admin-order-base-actions {
+    justify-content: flex-end !important;
+}
+
+.admin-shell .admin-order-base-actions .btn {
+    min-height: 38px !important;
+    padding: 0 13px !important;
+    border-radius: 14px !important;
+    white-space: nowrap !important;
+}
+
+.admin-shell .admin-reopen-btn {
+    color: #7C2D12 !important;
+    background: linear-gradient(145deg, rgba(251,146,60,0.26), rgba(239,68,68,0.16)) !important;
+    border-color: rgba(249,115,22,0.36) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.24), var(--sombra-sm) !important;
+}
+
+.admin-orders-empty {
+    padding: 34px !important;
+    border-radius: 22px !important;
+    background: var(--cor-card-bg) !important;
+    border: 1px dashed var(--cor-borda) !important;
+    color: var(--cor-texto-mutado) !important;
+    text-align: center !important;
+    font-weight: 800 !important;
+}
+
+.admin-reopen-modal-card h3 {
+    margin: 0 0 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    color: var(--cor-texto) !important;
+    font-size: 1.28rem !important;
+    font-weight: 900 !important;
+}
+
+.admin-reopen-modal-card h3 i {
+    color: var(--cor-alerta) !important;
+}
+
+.admin-reopen-modal-card label {
+    margin: 12px 0 5px !important;
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.82rem !important;
+    font-weight: 850 !important;
+}
+
+.admin-reopen-modal-card textarea.config-input {
+    min-height: 96px !important;
+    resize: vertical !important;
+}
+
+.admin-reopen-summary,
+.admin-reopen-warning {
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+    background: rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.50) !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.35 !important;
+}
+
+.admin-reopen-warning {
+    margin-top: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--cor-alerta) !important;
+    background: var(--warning-bg) !important;
+    border-color: rgba(245,158,11,0.28) !important;
+    font-weight: 850 !important;
+}
+
+.admin-reopen-modal-card .modal-actions {
+    margin-top: 22px !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+}
+
+.admin-order-details-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    text-align: left !important;
+}
+
+.admin-order-details-grid div,
+.admin-order-details-last {
+    padding: 12px !important;
+    border-radius: 12px !important;
+    background: var(--cor-panel-bg) !important;
+    border: 1px solid var(--cor-borda) !important;
+}
+
+.admin-order-details-grid span,
+.admin-order-details-last span {
+    display: block !important;
+    margin-bottom: 4px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+}
+
+.admin-order-details-grid strong,
+.admin-order-details-last strong {
+    color: var(--cor-texto) !important;
+    font-size: 0.9rem !important;
+}
+
+.admin-order-details-last {
+    margin-top: 10px !important;
+    text-align: left !important;
+}
+
+body[data-theme="dark"] .admin-shell .admin-orders-toolbar,
+body[data-theme="dark"] .admin-shell .admin-order-base-card,
+body[data-theme="dark"] .admin-reopen-summary {
+    background:
+        linear-gradient(135deg, rgba(var(--order-rgb, 37, 99, 235), 0.16), rgba(var(--order-rgb, 37, 99, 235), 0.04) 46%, rgba(255,255,255,0) 74%),
+        linear-gradient(145deg, rgba(13,16,15,0.96), rgba(4,6,5,0.98)) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .admin-order-status-pill {
+    background: rgba(255,255,255,0.07) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .admin-shell .admin-reopen-btn {
+    color: #FDBA74 !important;
+    background: linear-gradient(145deg, rgba(249,115,22,0.22), rgba(127,29,29,0.22)) !important;
+}
+
+@media (max-width: 1180px) {
+    .admin-shell .admin-orders-toolbar,
+    .admin-shell .admin-order-base-card {
+        grid-template-columns: 1fr !important;
+    }
+
+    .admin-shell .admin-order-base-actions {
+        justify-content: flex-start !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .admin-shell .admin-order-base-card h3 {
+        white-space: normal !important;
+    }
+
+    .admin-shell .admin-order-base-actions .btn {
+        flex: 1 1 100% !important;
+    }
+
+    .admin-order-details-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

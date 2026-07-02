@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor FÃ¡brica | PMS J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../assets/css/tv.css">
+</head>
+<body class="tv-shell">
+    <script src="../assets/js/pages/tv.js"></script>
+    
+    <header class="tv-header">
+        <div class="header-left tv-brand">
+            <img class="tv-logo" src="../assets/img/logo.png" alt="Logo da Empresa">
+            <div class="tv-brand-copy">
+                <span>SinalizaFlow</span>
+                <small>PMS J7S</small>
+            </div>
+        </div>
+        <div class="header-center tv-title">Painel Operacional</div>
+        <div class="header-right">
+            <div class="connection-status" id="conn-status"><i class="ph-bold ph-arrows-clockwise ph-spin"></i> Atualizando</div>
+            <div class="clock-wrapper">
+                <div id="clock-date" class="clock-date">--/--</div>
+                <div id="clock-time" class="clock-time">--:--</div>
+            </div>
+        </div>
+    </header>
+
+    <main id="board-container" class="tv-board">
+        <div class="tv-loading-state">
+            <i class="ph-bold ph-spinner ph-spin"></i>
+            <h2>Sincronizando Sistema...</h2>
+        </div>
+    </main>
+
+    <footer class="tv-kpi-footer">
+        <div class="footer-pill">
+            <div class="stat-item">NO FLUXO <span class="stat-val" id="stat-total">0</span></div>
+            <div class="stat-item"><div class="stat-dot" style="background:#FB7185;"></div> RETORNOS <span class="stat-val pink" id="stat-returns">0</span></div>
+            <div class="stat-item"><div class="stat-dot" style="background:#F87171;"></div> ATRASADOS <span class="stat-val red" id="stat-late">0</span></div>
+            <div class="stat-item"><div class="stat-dot" style="background:#FBBF24;"></div> RISCO (24h) <span class="stat-val orange" id="stat-warning">0</span></div>
+            <div class="stat-item"><div class="stat-dot" style="background:#34D399;"></div> FINALIZADOS HOJE <span class="stat-val green" id="stat-done">0</span></div>
+        </div>
+    </footer>
+
+    <button class="corner-btn btn-logout" onclick="logout()" title="Sair do Monitor"><i class="ph-bold ph-sign-out"></i></button>
+    <button class="corner-btn btn-theme" onclick="toggleTheme()" title="Alterar Tema"><i id="theme-icon" class="ph-bold ph-moon"></i></button>
+
+</body>
+</html>

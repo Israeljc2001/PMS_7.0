@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Gargalos | PMS J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    <script src="../assets/js/core/shared-report.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --cor-fundo: #F3F4F6; 
+            --cor-card-bg: #FFFFFF; 
+            --cor-panel-bg: #F9FAFB; 
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.1);
+            --cor-borda: #E5E7EB;
+            --cor-borda-hover: #D1D5DB;
+            --cor-texto: #111827; 
+            --cor-texto-mutado: #6B7280;
+            --cor-input-bg: #FFFFFF;
+            
+            --sombra-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --sombra-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius-padrao: 8px;
+            --radius-card: 12px;
+
+            --lay-color: #9333EA; --lay-bg: #F3E8FF;
+            --pcp-color: #EA580C; --pcp-bg: #FFEDD5;
+            --prod-color: #0EA5E9; --prod-bg: #E0F2FE;
+            --fat-color: #10B981; --fat-bg: #D1FAE5;
+            --cor-erro: #EF4444; --cor-sucesso: #10B981;
+        }
+
+        /* ========================================================= */
+        /* 🌙 HIGH-END DARK MODE (Barra Azul + Preto OLED Absoluto)  */
+        /* ========================================================= */
+        [data-theme="dark"] {
+            /* Fundo Preto "Vivo" (Neutro e profundo) */
+            --cor-fundo: #000000; 
+            --cor-card-bg: #111111; 
+            --cor-panel-bg: #1A1A1A; 
+            --cor-input-bg: #000000; 
+            
+            /* Mantendo a Barra Lateral Azul Original */
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.15);
+            
+            /* Textos Contrastantes */
+            --cor-texto: #FFFFFF; 
+            --cor-texto-mutado: #A1A1AA; 
+            
+            /* Bordas Translúcidas */
+            --cor-borda: rgba(255, 255, 255, 0.12); 
+            --cor-borda-hover: rgba(255, 255, 255, 0.25);
+            
+            /* Sombras ajustadas para fundo preto puro */
+            --sombra-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.8);
+            --sombra-md: 0 4px 8px -1px rgba(0, 0, 0, 0.9), 0 2px 4px -1px rgba(0, 0, 0, 0.7);
+            --sombra-lg: 0 15px 25px -5px rgba(0, 0, 0, 0.9), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
+
+            /* Badges e Alertas */
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            
+            /* Cores de texto das observações */
+            --obs-com-text: #FDE68A;
+            --obs-lay-text: #E9D5FF;
+            --obs-pcp-text: #FDBA74;
+            --obs-fat-text: #FDA4AF;
+            
+            /* Filtro de Logo */
+            --filtro-logo-transportadora: brightness(0) invert(1) opacity(0.9);
+        }
+        
+        /* 🚀 Tweaks de Iluminação para Cartões Pretos */
+        [data-theme="dark"] .kpi-card, 
+        [data-theme="dark"] .chart-card, 
+        [data-theme="dark"] .config-panel, 
+        [data-theme="dark"] .list-row,
+        [data-theme="dark"] .modal-card,
+        [data-theme="dark"] .report-card,
+        [data-theme="dark"] .sales-toolbar {
+            background: linear-gradient(145deg, var(--cor-card-bg) 0%, #080808 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), var(--sombra-md);
+        }
+        
+        /* Tabelas no Modo Escuro */
+        [data-theme="dark"] table th {
+            background: #000000; 
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        /* Destaque suave ao passar o rato nos cartões (List-row) */
+        [data-theme="dark"] .list-row:hover {
+            background: linear-gradient(145deg, #1A1A1A 0%, #0A0A0A 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Efeito vermelho suave para pedidos retornados/atrasados */
+        [data-theme="dark"] .list-row.is-retorno,
+        [data-theme="dark"] .list-row.late {
+            background: linear-gradient(145deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.04) 100%) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        /* Efeito escavado nos Inputs */
+        [data-theme="dark"] input, 
+        [data-theme="dark"] select, 
+        [data-theme="dark"] textarea {
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; outline:none; transition: background-color 0.2s, border-color 0.2s; }
+        body { background: var(--cor-fundo); color: var(--cor-texto); display: flex; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* ========================================================= */
+        /* SIDEBAR PADRÃO OURO                                       */
+        /* ========================================================= */
+        aside { width: 260px; min-width: 260px; background: var(--cor-sidebar-bg); display: flex; flex-direction: column; padding: 24px 20px; z-index: 100; box-shadow: var(--sombra-md); position: fixed; height: 100vh; top: 0; left: 0;}
+        
+        .logo-area { margin-bottom: 35px; display: flex; align-items: center; gap: 12px; padding-left: 5px;}
+        .logo-icon { width: 34px; height: 34px; background: #FFFFFF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--cor-sidebar-bg); font-size: 1.5rem;}
+        .logo-text { color: #FFFFFF; font-weight: 900; font-size: 1.4rem; letter-spacing: 0.5px; }
+
+        nav { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .nav-btn { background: transparent; color: var(--cor-sidebar-text); border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 600; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: background 0.2s;}
+        .nav-btn i { font-size: 1.3rem; }
+        .nav-btn:hover { background: var(--cor-sidebar-hover); color: #FFFFFF; }
+        .nav-btn.active { background: #FFFFFF; color: var(--cor-sidebar-bg); font-weight: 800; box-shadow: var(--sombra-sm); }
+        .nav-btn.active i { color: var(--cor-sidebar-bg); }
+
+        .bottom-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+        .action-btn { background: transparent; color: var(--cor-sidebar-text); border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 600; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: background 0.2s;}
+        .action-btn i { font-size: 1.3rem; }
+        .action-btn:hover { background: var(--cor-sidebar-hover); color: #FFFFFF; }
+        
+        .logout-btn { background: rgba(0, 0, 0, 0.15); color: #FDA4AF; border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 700; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: all 0.2s; margin-top: 10px;}
+        .logout-btn i { font-size: 1.3rem; }
+        .logout-btn:hover { background: rgba(225, 29, 72, 0.8); color: #FFFFFF; }
+        /* ========================================================= */
+
+        main { flex: 1; padding: 30px 40px; margin-left: 260px; width: calc(100% - 260px); overflow-y: auto; display: flex; flex-direction: column;}
+        
+        .page-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; gap: 20px; flex-wrap: wrap; border-bottom: 1px solid var(--cor-borda); padding-bottom: 20px; flex-shrink: 0;}
+        .page-header h1 { font-weight: 900; font-size: 2rem; color: var(--cor-texto); letter-spacing: -0.04em; line-height: 1.1; }
+        .page-header p { color: var(--cor-texto-mutado); font-size: 0.95rem; margin-top: 6px; font-weight: 500; }
+        
+        .status-badge-top { background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding:6px 12px; border-radius:9999px; display:flex; align-items:center; gap:8px; font-weight:600; font-size:0.8rem; color:var(--cor-texto); box-shadow: var(--sombra-sm); }
+        .status-badge-top.online i { color: var(--cor-sucesso); }
+
+        .btn { padding:10px 18px; border-radius:var(--radius-padrao); font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size: 0.85rem; height: 40px; box-shadow: var(--sombra-sm);}
+        .btn-secondary { background: var(--cor-card-bg); color: var(--cor-texto); border: 1px solid var(--cor-borda);}
+        .btn-secondary:hover { background: var(--cor-panel-bg); }
+
+        /* Dashboard de KPIs (Gargalos) */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; flex-shrink: 0;}
+        .kpi-card { border: 1px solid var(--cor-borda); border-radius: var(--radius-card); padding: 25px 20px; box-shadow: var(--sombra-sm); background: var(--cor-card-bg); display: flex; flex-direction: column; justify-content: center; }
+        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .kpi-label { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; color: var(--cor-texto); }
+        .kpi-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .kpi-val { font-size: 2rem; font-weight: 900; color: var(--cor-texto); line-height: 1; letter-spacing: -0.02em; }
+
+        /* Filtros */
+        .filter-bar { display: flex; gap: 15px; margin-bottom: 20px; background: var(--cor-card-bg); padding: 15px; border-radius: var(--radius-card); border: 1px solid var(--cor-borda); box-shadow: var(--sombra-sm); flex-shrink: 0;}
+        .input-box { padding: 10px 14px; border-radius: var(--radius-padrao); border: 1px solid var(--cor-borda); background: var(--cor-input-bg); color: var(--cor-texto); font-size: 0.9rem; outline: none; width: 100%; max-width: 300px; }
+        .input-box:focus { border-color: var(--cor-sidebar-bg); }
+
+        #orders-list { flex: 1; padding-bottom: 50px; }
+
+        /* Estilo de Lista Expansível */
+        .list-row { background: var(--cor-card-bg); border-radius: var(--radius-padrao); border: 1px solid var(--cor-borda); box-shadow: var(--sombra-sm); overflow: hidden; transition: all 0.2s; margin-bottom: 15px; }
+        .list-row:hover { box-shadow: var(--sombra-md); border-color: var(--cor-borda-hover); }
+        .list-row.has-error { border-left: 4px solid var(--cor-erro); }
+        .list-row.no-error { border-left: 4px solid var(--cor-sucesso); }
+        .row-header { padding: 16px 20px; display: flex; align-items: center; width: 100%; gap: 15px; cursor: pointer; }
+        .col-id { width: 100px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; }
+        .row-id { color: var(--cor-texto); font-weight: 900; font-size: 1rem; }
+        .col-client { flex: 1.5; min-width: 200px; display: flex; flex-direction: column; gap: 4px; }
+        .row-client { font-weight: 700; font-size: 1.05rem; color: var(--cor-texto); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .info-praz { color: var(--cor-texto-mutado); display: flex; align-items: center; gap: 5px; font-size: 0.85rem; font-weight: 600;}
+        .col-badges { flex: 2; display: flex; gap: 10px; align-items: center; justify-content: flex-start; }
+        .badge-time { background: var(--cor-panel-bg); color: var(--cor-texto); border: 1px solid var(--cor-borda); padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+        .badge-err { background: rgba(239, 68, 68, 0.1); color: var(--cor-erro); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+        .col-actions { width: auto; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
+        .btn-detalhes { color: var(--cor-texto-mutado); font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; text-transform: uppercase;}
+        .btn-detalhes:hover { color: var(--cor-sidebar-bg); }
+
+        /* Área Expandida */
+        .card-details { display: none; padding: 25px; background: var(--cor-panel-bg); border-top: 1px solid var(--cor-borda); }
+        .list-row.is-expanded .card-details { display: block; animation: slideDown 0.2s ease-out; }
+        .list-row.is-expanded .btn-detalhes i { transform: rotate(180deg); color: var(--cor-sidebar-bg); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Timeline do Raio-X */
+        .timeline-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .timeline-step { background: var(--cor-card-bg); border: 1px solid var(--cor-borda); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--sombra-sm); }
+        .ts-title { font-size: 0.8rem; text-transform: uppercase; font-weight: 800; color: var(--cor-texto-mutado); display: flex; align-items: center; gap: 6px; }
+        .ts-time { font-size: 1.4rem; font-weight: 900; color: var(--cor-texto); }
+        .ts-users { font-size: 0.8rem; font-weight: 600; color: var(--cor-texto-mutado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Bloco de Erros */
+        .error-block { background: rgba(239, 68, 68, 0.03); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .error-title { font-size: 0.9rem; font-weight: 900; color: var(--cor-erro); text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .error-item { padding: 12px 0; border-bottom: 1px dashed rgba(239, 68, 68, 0.2); font-size: 0.95rem; color: var(--cor-texto); display: flex; flex-direction: column; gap: 6px; }
+        .error-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .error-meta { font-size: 0.8rem; color: var(--cor-texto-mutado); font-weight: 600; display: flex; align-items: center; gap: 10px;}
+    </style>
+</head>
+<body>
+    
+    <aside>
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+            PMS J7S
+        </div>
+        
+        <nav style="flex:1;">
+            <button class="nav-btn" onclick="window.location.href='admin.html'">
+                <i class="ph-fill ph-squares-four" style="font-size: 1.4rem;"></i> Visão Geral
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='dashboard-comercial.html'">
+                <i class="ph-fill ph-briefcase" style="font-size: 1.4rem;"></i> Gestão Comercial
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='relatorios.html'">
+                <i class="ph-fill ph-chart-line-up" style="font-size: 1.4rem;"></i> Relatórios Master
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='gargalos.html'">
+                <i class="ph-fill ph-magnifying-glass" style="font-size: 1.4rem;"></i> Análise de Gargalos
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='usuarios.html'">
+                <i class="ph-fill ph-users" style="font-size: 1.4rem;"></i> Utilizadores
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='configuracoes.html'">
+                <i class="ph-fill ph-gear" style="font-size: 1.4rem;"></i> Configurações
+            </button>
+        </nav>
+        
+        <div class="bottom-actions">
+            <button onclick="toggleTheme()" class="nav-btn" style="margin-bottom: 10px;">
+                <i id="theme-icon" class="ph-fill ph-moon" style="font-size: 1.4rem;"></i> <span id="theme-text">Modo Escuro</span>
+            </button>
+            <button onclick="logout()" class="logout-btn">
+                <i class="ph-bold ph-sign-out" style="font-size: 1.4rem;"></i> Sair do Sistema
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1>Análise de Lead Time (Bruto 24/7)</h1>
+                <p>Auditoria de tempo total de ponta a ponta sem pausas em pedidos finalizados.</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button class="btn btn-secondary" onclick="loadData()" id="btn-sync" style="margin-right: 15px;"><i class="ph-bold ph-arrows-clockwise"></i> Atualizar Dados</button>
+                <div class="status-badge-top online"><i class="ph-fill ph-database"></i> Conectado</div>
+                <div class="status-badge-top"><i class="ph-bold ph-clock"></i> <span id="last-update-text">Atualizando...</span></div>
+            </div>
+        </div>
+
+        <div id="loading-state" style="text-align: center; padding: 100px; color: var(--cor-texto-mutado);">
+            <i class="ph-bold ph-spinner ph-spin" style="font-size: 4rem; color: var(--cor-sidebar-bg); margin-bottom: 20px;"></i>
+            <h2>Auditando Históricos...</h2>
+            <p>Calculando o Lead Time bruto por setor.</p>
+        </div>
+
+        <div id="auditoria-content" style="display: none; flex-direction: column;">
+            
+            <div id="dashboard-kpis" class="kpi-grid"></div>
+
+            <div class="filter-bar">
+                <input type="text" id="search-input" class="input-box" placeholder="Buscar por ID ou Cliente..." onkeyup="renderAuditoriaList()">
+                <select id="filter-errors" class="input-box" style="max-width: 250px;" onchange="renderAuditoriaList()">
+                    <option value="all">Todos os Pedidos Finalizados</option>
+                    <option value="errors_only">Mostrar Apenas com Ocorrências (Erros/Retornos)</option>
+                </select>
+            </div>
+
+            <div id="orders-list"></div>
+
+        </div>
+    </main>
+
+    <script>
+        // =========================================================================
+        // FUNÇÕES CORE GERAIS
+        // =========================================================================
+
+        window.toggleCard = function(id) {
+            const row = document.getElementById(`row-${id}`); if (!row) return;
+            const wasExpanded = row.classList.contains('is-expanded');
+            document.querySelectorAll('.list-row.is-expanded').forEach(c => c.classList.remove('is-expanded'));
+            if (!wasExpanded) row.classList.add('is-expanded');
+        };
+
+        function toggleTheme() { const b=document.body; const n=b.getAttribute('data-theme')==='dark'?'light':'dark'; b.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateThemeIcon(n); }
+        function loadTheme() { const t=localStorage.getItem('theme')||'light'; document.body.setAttribute('data-theme',t); updateThemeIcon(t); }
+        function updateThemeIcon(t) { const i=document.getElementById('theme-icon'); if(i) i.className = t==='dark' ? 'ph-bold ph-sun' : 'ph-bold ph-moon'; }
+        function logout() { localStorage.removeItem('sinaliza_sessao'); window.location.href = 'index.html'; }
+
+        // =========================================================================
+        // DADOS E FETCH
+        // =========================================================================
+        let ordersData = [];
+        let configWorkflow = [];
+        let auditedData = [];
+
+        window.onload = async () => {
+            loadTheme();
+            const sessaoString = localStorage.getItem('sinaliza_sessao');
+            if (!sessaoString) { window.location.href = 'index.html'; return; }
+            await loadData();
+        };
+
+        async function loadData() {
+            const btn = document.getElementById('btn-sync');
+            if(btn) btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Atualizando...';
+            try {
+                const { workflow, orders } = await fetchWorkflowAndOrders();
+                configWorkflow = workflow;
+                
+                if (orders) {
+                    ordersData = orders.map(o => ({
+                        id: o.ID || o.id,
+                        client: o.CLIENTE || o.client,
+                        status: o.STATUS || o.status,
+                        history: parseOrderHistory(o.HISTORY || o.history),
+                        created_at: o.CREATED_AT || o.created_at || o.DATA_EMISSAO
+                    }));
+                    processLeadTimeBruto();
+                }
+            } catch(e) {
+                console.error("Erro:", e);
+            } finally {
+                if(btn) btn.innerHTML = '<i class="ph-bold ph-arrows-clockwise"></i> Atualizar Dados';
+                document.getElementById('last-update-text').innerText = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        // =========================================================================
+        // O NOVO MOTOR DE INTERVALOS (A MATEMÁTICA DEFINITIVA 24/7 BASEADA NO TO)
+        // =========================================================================
+        function processLeadTimeBruto() {
+            const finalStage = configWorkflow.length > 0 ? getSafeStatus(configWorkflow[configWorkflow.length-1].name) : 'finalizado';
+            const fatStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('faturamento') || getSafeStatus(w.name).includes('faturam')).map(w => getSafeStatus(w.name));
+            
+            const layStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('layout') || getSafeStatus(w.name).includes('layout')).map(w => getSafeStatus(w.name));
+            const pcpStages = configWorkflow.filter(w => getSafeStatus(w.role).includes('pcp') || getSafeStatus(w.name).includes('pcp')).map(w => getSafeStatus(w.name));
+            const prodStages = configWorkflow.filter(w => { const r = getSafeStatus(w.role); return r.includes('produc') || r.includes('produç'); }).map(w => getSafeStatus(w.name));
+
+            auditedData = [];
+            
+            let tLay = 0, cLay = 0;
+            let tPcp = 0, cPcp = 0;
+            let tProd = 0, cProd = 0;
+            let tFat = 0, cFat = 0;
+            let totalErrorsGlobal = 0;
+
+            ordersData.forEach(o => {
+                let st = getSafeStatus(o.status);
+                const logs = (o.history || []).filter(h => h.date && !isNaN(new Date(h.date).getTime())).sort((a,b) => new Date(a.date) - new Date(b.date));
+                if (logs.length > 0 && logs[logs.length-1].to) st = getSafeStatus(logs[logs.length-1].to);
+
+                // Filtra pedidos concluídos
+                const isFat = fatStages.includes(st) || st.includes('faturam') || st.includes('nota');
+                const isFin = st === finalStage || st.includes('finalizad') || st.includes('concluid') || st.includes('entregue') || logs.some(h => String(h.action).toLowerCase().includes('nota emitida'));
+                
+                if (!isFat && !isFin) return; 
+
+                let orderData = {
+                    id: o.id, client: o.client,
+                    timeLay: 0, usersLay: new Set(),
+                    timePcp: 0, usersPcp: new Set(),
+                    timeProd: 0, usersProd: new Set(),
+                    timeFat: 0, usersFat: new Set(),
+                    errors: [],
+                    finishedDate: logs.length > 0 ? new Date(logs[logs.length-1].date) : new Date(o.created_at)
+                };
+
+                // A MATEMÁTICA DE FATIAS DE TEMPO
+                let lastDate = new Date(o.created_at || o.DATA_EMISSAO);
+                if (isNaN(lastDate.getTime()) && logs.length > 0) lastDate = new Date(logs[0].date);
+
+                let currentStatus = '';
+                if (logs.length > 0) {
+                    currentStatus = getSafeStatus(logs[0].from);
+                    if (!currentStatus) currentStatus = getSafeStatus(logs[0].to); // Fallback caso não tenha FROM no 1º log
+                } else {
+                    currentStatus = getSafeStatus(o.status);
+                }
+
+                logs.forEach(log => {
+                    const logDate = new Date(log.date);
+                    if (isNaN(logDate.getTime()) || logDate < lastDate) return;
+
+                    const dm = diffMinsCalc(lastDate, logDate);
+
+                    // Despeja os minutos acumulados no balde do status em que o pedido estava
+                    if (dm > 0 && dm < 43200) { // Ignora pulos absurdos maiores que 30 dias
+                        if (layStages.includes(currentStatus)) orderData.timeLay += dm;
+                        else if (prodStages.includes(currentStatus)) orderData.timeProd += dm;
+                        else if (pcpStages.includes(currentStatus) || currentStatus.includes('pcp') || currentStatus.includes('libera')) orderData.timePcp += dm;
+                        else if (fatStages.includes(currentStatus) || currentStatus.includes('faturam')) orderData.timeFat += dm;
+                    }
+
+                    // Atualiza qual é o status atual para a próxima fatia de tempo baseado no TO
+                    const logTo = getSafeStatus(log.to);
+                    if (logTo) currentStatus = logTo;
+                    lastDate = logDate;
+
+                    // EXTRAÇÃO DE USUÁRIOS E OCORRÊNCIAS (Agora blindada pelo nome da ação)
+                    const act = String(log.action).toLowerCase();
+                    const usr = normalizarNome(log.user);
+
+                    if (usr && usr !== 'SISTEMA') {
+                        if (act.includes('projeto inici') || act.includes('projeto final') || act.includes('enviado ao cliente') || act.includes('cliente apro') || act.includes('layout') || act.includes('arte')) {
+                            orderData.usersLay.add(usr);
+                        }
+                        else if (act.includes('pcp')) {
+                            orderData.usersPcp.add(usr);
+                        }
+                        else if (act.includes('produç') || act.includes('produc') || act.includes('máquina') || act.includes('bancada') || act.includes('expedição')) {
+                            orderData.usersProd.add(usr);
+                        }
+                        else if (act.includes('faturam') || act.includes('nota emitida')) {
+                            orderData.usersFat.add(usr);
+                        }
+                    }
+
+                    // Acompanhamento de Erros (Ignorando os "Ajustes de Prazo" do Comercial)
+                    if (act.includes('devolução') || act.includes('retorno') || act.includes('reprov') || act.includes('problema') || act.includes('estendido') || act.includes('justificativa')) {
+                        let obs = log.obs ? String(log.obs).replace(/\[Motivo:/i, 'Motivo:').replace(/\]/g, '').trim() : '';
+                        orderData.errors.push({ date: logDate, action: log.action, user: usr || 'Sistema', obs: obs });
+                        totalErrorsGlobal++;
+                    }
+                });
+
+                // A última fatia de tempo (do último log até o momento exato da finalização)
+                const finalDm = diffMinsCalc(lastDate, orderData.finishedDate);
+                if (finalDm > 0 && finalDm < 43200) {
+                    if (layStages.includes(currentStatus)) orderData.timeLay += finalDm;
+                    else if (prodStages.includes(currentStatus)) orderData.timeProd += finalDm;
+                    else if (pcpStages.includes(currentStatus) || currentStatus.includes('pcp')) orderData.timePcp += finalDm;
+                    else if (fatStages.includes(currentStatus) || currentStatus.includes('faturam')) orderData.timeFat += finalDm;
+                }
+
+                // Formatação final
+                orderData.usersLay = Array.from(orderData.usersLay).join(', ');
+                orderData.usersProd = Array.from(orderData.usersProd).join(', ');
+                orderData.usersPcp = Array.from(orderData.usersPcp).join(', ');
+                orderData.usersFat = Array.from(orderData.usersFat).join(', ');
+
+                if (orderData.timeLay > 0) { tLay += orderData.timeLay; cLay++; }
+                if (orderData.timeProd > 0) { tProd += orderData.timeProd; cProd++; }
+                if (orderData.timePcp > 0) { tPcp += orderData.timePcp; cPcp++; }
+                if (orderData.timeFat > 0) { tFat += orderData.timeFat; cFat++; }
+
+                auditedData.push(orderData);
+            });
+
+            auditedData.sort((a,b) => b.finishedDate - a.finishedDate);
+
+            // Printa os KPIs de Topo
+            document.getElementById('dashboard-kpis').innerHTML = `
+                <div class="kpi-card" style="border-left: 4px solid var(--lay-color);">
+                    <div class="kpi-header"><span class="kpi-label">Lead Time Médio - Layout</span><div class="kpi-icon" style="background:var(--lay-bg); color:var(--lay-color);"><i class="ph-fill ph-paint-brush"></i></div></div>
+                    <div class="kpi-val">${formatAvgTime(cLay > 0 ? tLay/cLay : 0)}</div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid var(--prod-color);">
+                    <div class="kpi-header"><span class="kpi-label">Lead Time Médio - Fábrica</span><div class="kpi-icon" style="background:var(--prod-bg); color:var(--prod-color);"><i class="ph-fill ph-hammer"></i></div></div>
+                    <div class="kpi-val">${formatAvgTime(cProd > 0 ? tProd/cProd : 0)}</div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid var(--fat-color);">
+                    <div class="kpi-header"><span class="kpi-label">Lead Time Médio - Faturamento</span><div class="kpi-icon" style="background:var(--fat-bg); color:var(--fat-color);"><i class="ph-fill ph-receipt"></i></div></div>
+                    <div class="kpi-val">${formatAvgTime(cFat > 0 ? tFat/cFat : 0)}</div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid var(--cor-erro);">
+                    <div class="kpi-header"><span class="kpi-label">Ocorrências (Retornos/Pausas)</span><div class="kpi-icon" style="background:rgba(239,68,68,0.1); color:var(--cor-erro);"><i class="ph-fill ph-warning-octagon"></i></div></div>
+                    <div class="kpi-val">${totalErrorsGlobal}</div>
+                </div>
+            `;
+
+            renderAuditoriaList();
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('auditoria-content').style.display = 'flex';
+        }
+
+        // =========================================================================
+        // LISTA DE AUDITORIA
+        // =========================================================================
+        function renderAuditoriaList() {
+            const container = document.getElementById('orders-list');
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const filter = document.getElementById('filter-errors').value;
+
+            let filtered = auditedData;
+            if (filter === 'errors_only') filtered = filtered.filter(o => o.errors.length > 0);
+            if (search) filtered = filtered.filter(o => String(o.id).includes(search) || (o.client && o.client.toLowerCase().includes(search)));
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding: 50px; color:var(--cor-texto-mutado);">Nenhum pedido atende a estes critérios.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(o => {
+                const totalMins = o.timeLay + o.timePcp + o.timeProd + o.timeFat;
+                const hasErrors = o.errors.length > 0;
+                
+                let errHtml = '';
+                if (hasErrors) {
+                    errHtml = `<div class="error-block">
+                        <div class="error-title"><i class="ph-fill ph-warning-octagon" style="font-size:1.3rem;"></i> Ocorrências Registradas</div>
+                        ${o.errors.map(e => `
+                            <div class="error-item">
+                                <div style="font-weight:800;">${e.action}</div>
+                                <div style="font-weight:500;">${e.obs}</div>
+                                <div class="error-meta">
+                                    <span><i class="ph-bold ph-user" style="color:var(--cor-erro)"></i> ${e.user}</span>
+                                    <span><i class="ph-bold ph-calendar-blank"></i> ${e.date.toLocaleString('pt-BR')}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                }
+
+                return `
+                <div class="list-row ${hasErrors ? 'has-error' : 'no-error'}" id="row-${o.id}">
+                    <div class="row-header" onclick="toggleCard('${o.id}')">
+                        <div class="col-id"><span class="row-id">#${o.id}</span></div>
+                        <div class="col-client">
+                            <span class="row-client">${o.client}</span>
+                            <span class="info-praz"><i class="ph-bold ph-check-circle" style="color:var(--cor-sucesso)"></i> Concluído em: ${o.finishedDate.toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div class="col-badges">
+                            <div class="badge-time" title="Lead Time Total"><i class="ph-bold ph-clock"></i> Lead Time: ${formatLeadTime(totalMins)}</div>
+                            ${hasErrors ? `<div class="badge-err"><i class="ph-bold ph-warning-octagon"></i> ${o.errors.length} Erro(s)</div>` : ''}
+                        </div>
+                        <div class="col-actions">
+                            <div class="btn-detalhes">Raio-X <i class="ph-bold ph-caret-down"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-details" onclick="event.stopPropagation()">
+                        <div style="font-size:0.85rem; font-weight:800; color:var(--cor-texto-mutado); text-transform:uppercase; margin-bottom:15px;">Tempo Bruto por Setor (Sem Pausas)</div>
+                        <div class="timeline-container">
+                            <div class="timeline-step" style="border-left: 3px solid var(--lay-color);">
+                                <div class="ts-title"><i class="ph-fill ph-paint-brush" style="color:var(--lay-color);"></i> Layout</div>
+                                <div class="ts-time">${formatLeadTime(o.timeLay)}</div>
+                                <div class="ts-users" title="${o.usersLay}">${o.usersLay || 'N/D'}</div>
+                            </div>
+                            <div class="timeline-step" style="border-left: 3px solid var(--pcp-color);">
+                                <div class="ts-title"><i class="ph-fill ph-clipboard-text" style="color:var(--pcp-color);"></i> PCP</div>
+                                <div class="ts-time">${formatLeadTime(o.timePcp)}</div>
+                                <div class="ts-users" title="${o.usersPcp}">${o.usersPcp || 'N/D'}</div>
+                            </div>
+                            <div class="timeline-step" style="border-left: 3px solid var(--prod-color);">
+                                <div class="ts-title"><i class="ph-fill ph-hammer" style="color:var(--prod-color);"></i> Fábrica</div>
+                                <div class="ts-time">${formatLeadTime(o.timeProd)}</div>
+                                <div class="ts-users" title="${o.usersProd}">${o.usersProd || 'N/D'}</div>
+                            </div>
+                            <div class="timeline-step" style="border-left: 3px solid var(--fat-color);">
+                                <div class="ts-title"><i class="ph-fill ph-receipt" style="color:var(--fat-color);"></i> Emissão</div>
+                                <div class="ts-time">${formatLeadTime(o.timeFat)}</div>
+                                <div class="ts-users" title="${o.usersFat}">${o.usersFat || 'N/D'}</div>
+                            </div>
+                        </div>
+                        ${errHtml}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    </script>
+</body>
+</html>

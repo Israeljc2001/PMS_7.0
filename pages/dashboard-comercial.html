@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Comercial | PMS J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --cor-primaria: #2563EB; 
+            --cor-primaria-hover: #1D4ED8;
+            --cor-primaria-soft-bg: #EFF6FF;
+            --cor-fundo: #F3F4F6; 
+            --cor-card-bg: #FFFFFF; 
+            --cor-panel-bg: #F9FAFB; 
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.1);
+            --cor-borda: #E5E7EB;
+            --cor-borda-hover: #D1D5DB;
+            --cor-texto: #111827; 
+            --cor-texto-mutado: #6B7280;
+            --cor-input-bg: #FFFFFF;
+            --cor-sucesso: #10B981; 
+            --cor-erro: #EF4444; 
+            --cor-alerta: #F59E0B; 
+            
+            --sombra-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --sombra-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --sombra-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            --radius-padrao: 8px;
+            --radius-card: 12px;
+        }
+
+        /* ========================================================= */
+        /* 🌙 HIGH-END DARK MODE (Barra Azul + Preto OLED Absoluto)  */
+        /* ========================================================= */
+        [data-theme="dark"] {
+            /* Fundo Preto "Vivo" (Neutro e profundo) */
+            --cor-fundo: #000000; 
+            --cor-card-bg: #111111; 
+            --cor-panel-bg: #1A1A1A; 
+            --cor-input-bg: #000000; 
+            
+            /* Mantendo a Barra Lateral Azul Original */
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.15);
+            
+            /* Textos Contrastantes */
+            --cor-texto: #FFFFFF; 
+            --cor-texto-mutado: #A1A1AA; 
+            
+            /* Bordas Translúcidas */
+            --cor-borda: rgba(255, 255, 255, 0.12); 
+            --cor-borda-hover: rgba(255, 255, 255, 0.25);
+            
+            /* Sombras ajustadas para fundo preto puro */
+            --sombra-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.8);
+            --sombra-md: 0 4px 8px -1px rgba(0, 0, 0, 0.9), 0 2px 4px -1px rgba(0, 0, 0, 0.7);
+            --sombra-lg: 0 15px 25px -5px rgba(0, 0, 0, 0.9), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
+
+            /* Badges e Alertas */
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            
+            /* Cores de texto das observações */
+            --obs-com-text: #FDE68A;
+            --obs-lay-text: #E9D5FF;
+            --obs-pcp-text: #FDBA74;
+            --obs-fat-text: #FDA4AF;
+            
+            /* Filtro de Logo */
+            --filtro-logo-transportadora: brightness(0) invert(1) opacity(0.9);
+        }
+        
+        /* 🚀 Tweaks de Iluminação para Cartões Pretos */
+        [data-theme="dark"] .kpi-card, 
+        [data-theme="dark"] .chart-card, 
+        [data-theme="dark"] .config-panel, 
+        [data-theme="dark"] .list-row,
+        [data-theme="dark"] .modal-card,
+        [data-theme="dark"] .report-card,
+        [data-theme="dark"] .sales-toolbar {
+            background: linear-gradient(145deg, var(--cor-card-bg) 0%, #080808 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), var(--sombra-md);
+        }
+        
+        /* Tabelas no Modo Escuro */
+        [data-theme="dark"] table th {
+            background: #000000; 
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        /* Destaque suave ao passar o rato nos cartões (List-row) */
+        [data-theme="dark"] .list-row:hover {
+            background: linear-gradient(145deg, #1A1A1A 0%, #0A0A0A 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Efeito vermelho suave para pedidos retornados/atrasados */
+        [data-theme="dark"] .list-row.is-retorno,
+        [data-theme="dark"] .list-row.late {
+            background: linear-gradient(145deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.04) 100%) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        /* Efeito escavado nos Inputs */
+        [data-theme="dark"] input, 
+        [data-theme="dark"] select, 
+        [data-theme="dark"] textarea {
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; outline:none; transition: background-color 0.2s, border-color 0.2s; }
+        body { background: var(--cor-fundo); color: var(--cor-texto); display: flex; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* SIDEBAR PADRÃO OURO */
+        aside { width: 260px; min-width: 260px; background: var(--cor-sidebar-bg); display: flex; flex-direction: column; padding: 24px 20px; z-index: 100; box-shadow: var(--sombra-md); position: fixed; height: 100vh; top: 0; left: 0;}
+        .logo-area { margin-bottom: 35px; display: flex; align-items: center; gap: 12px; padding-left: 5px; color: #FFFFFF; font-weight: 900; font-size: 1.4rem; letter-spacing: 0.5px;}
+        .logo-icon { width: 34px; height: 34px; background: #FFFFFF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--cor-sidebar-bg); font-size: 1.5rem;}
+        
+        nav { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .nav-btn { background: transparent; color: var(--cor-sidebar-text); border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 600; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: background 0.2s;}
+        .nav-btn:hover { background: var(--cor-sidebar-hover); color: #FFFFFF; }
+        .nav-btn.active { background: #FFFFFF; color: var(--cor-sidebar-bg); font-weight: 800; box-shadow: var(--sombra-sm); }
+        .nav-btn.active i { color: var(--cor-sidebar-bg); }
+        
+        .bottom-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+        .logout-btn { background: rgba(0, 0, 0, 0.15); color: #FDA4AF; border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 700; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: all 0.2s; margin-top: 10px;}
+        .logout-btn:hover { background: rgba(225, 29, 72, 0.8); color: #FFFFFF; }
+
+        /* CONTEÚDO PRINCIPAL */
+        main { flex: 1; padding: 30px 40px; margin-left: 260px; overflow-y: auto;}
+        
+        .page-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; gap: 20px; flex-wrap: wrap; border-bottom: 1px solid var(--cor-borda); padding-bottom: 20px;}
+        .page-header h1 { font-weight: 900; font-size: 2rem; color: var(--cor-texto); letter-spacing: -0.04em; line-height: 1.1; }
+        .page-header p { color: var(--cor-texto-mutado); font-size: 0.95rem; margin-top: 6px; font-weight: 500; }
+        
+        .status-badge-top { background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding:6px 12px; border-radius:9999px; display:flex; align-items:center; gap:8px; font-weight:600; font-size:0.8rem; color:var(--cor-texto); box-shadow: var(--sombra-sm); transition: 0.3s; }
+        .status-badge-top.online i { color: var(--cor-sucesso); }
+        .status-badge-top.syncing i { color: var(--cor-alerta); }
+        .user-badge { background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding:4px 12px 4px 4px; border-radius:9999px; display:flex; align-items:center; gap:10px; font-weight:600; font-size:0.85rem; color:var(--cor-texto); box-shadow: var(--sombra-sm);}
+
+        .btn { padding:10px 18px; border-radius:var(--radius-padrao); font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size: 0.85rem; height: 40px; box-shadow: var(--sombra-sm);}
+        .btn-secondary { background: var(--cor-card-bg); color: var(--cor-texto); border: 1px solid var(--cor-borda);}
+        .btn-secondary:hover { background: var(--cor-panel-bg); }
+
+        .input-box, select { padding: 10px 14px; font-size: 0.9rem; font-weight: 600; background: var(--cor-input-bg); border: 1px solid var(--cor-borda); border-radius: var(--radius-padrao); color: var(--cor-texto); box-sizing: border-box; outline: none; }
+        .input-box:focus, select:focus { border-color: var(--cor-primaria); box-shadow: 0 0 0 3px var(--cor-primaria-soft-bg); }
+
+        /* DASHBOARD ESPECÍFICO */
+        .sales-toolbar { margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; background: var(--cor-card-bg); padding: 15px 20px; border-radius: var(--radius-card); border: 1px solid var(--cor-borda); box-shadow: var(--sombra-sm);}
+        
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:30px; }
+        .kpi-card { background: var(--cor-card-bg); padding:25px 20px; border-radius:var(--radius-card); border:1px solid var(--cor-borda); display:flex; justify-content:space-between; align-items:center; box-shadow:var(--sombra-sm); }
+        .kpi-val { font-size:2rem; font-weight:900; letter-spacing: -0.02em; margin-top: 6px; color: var(--cor-texto); line-height: 1; }
+        .kpi-label { font-size:0.85rem; font-weight:800; color:var(--cor-texto-mutado); text-transform: uppercase; letter-spacing: 0.05em; }
+        .kpi-icon { width:48px; height:48px; border-radius: 12px; display:flex; align-items:center; justify-content:center; font-size: 1.5rem; }
+
+        .chart-card { background: var(--cor-card-bg); border-radius: var(--radius-card); border: 1px solid var(--cor-borda); box-shadow: var(--sombra-sm); padding: 20px;}
+        .chart-title { font-size: 1.05rem; font-weight: 800; color: var(--cor-texto); border-bottom: 1px solid var(--cor-borda); padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;}
+        
+        .table-responsive-container { width: 100%; overflow-x: auto; border-radius: var(--radius-padrao); border: 1px solid var(--cor-borda); background: var(--cor-card-bg); box-shadow: var(--sombra-sm); margin-bottom: 20px;}
+        .report-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: left; }
+        .report-table th { background: var(--cor-panel-bg); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--cor-texto-mutado); padding: 12px 16px; border-bottom: 1px solid var(--cor-borda);}
+        .report-table td { padding: 12px 16px; border-bottom: 1px solid var(--cor-borda); color:var(--cor-texto); vertical-align: middle; font-weight: 500; font-size: 0.9rem; }
+        .report-table tr:last-child td { border-bottom: none; }
+        .report-table tbody tr:hover { background: var(--cor-panel-bg); }
+        .status-badge { padding: 4px 12px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #DBEAFE; color: #2563EB;}
+    </style>
+</head>
+<body>
+    
+    <aside>
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+            PMS J7S
+        </div>
+        
+        <nav style="flex:1;">
+            <button class="nav-btn" onclick="window.location.href='admin.html'">
+                <i class="ph-fill ph-squares-four" style="font-size: 1.4rem;"></i> Visão Geral
+            </button>
+            <button class="nav-btn active" onclick="window.location.href='dashboard-comercial.html'">
+                <i class="ph-fill ph-briefcase" style="font-size: 1.4rem;"></i> Gestão Comercial
+            </button>
+            <button class="nav-btn" onclick="window.location.href='relatorios.html'">
+                <i class="ph-fill ph-chart-line-up" style="font-size: 1.4rem;"></i> Relatórios Master
+            </button>
+            <button class="nav-btn" onclick="window.location.href='gargalos.html'">
+                <i class="ph-fill ph-magnifying-glass" style="font-size: 1.4rem;"></i> Análise de Gargalos
+            </button>
+            <button class="nav-btn" onclick="window.location.href='usuarios.html'">
+                <i class="ph-fill ph-users" style="font-size: 1.4rem;"></i> Utilizadores
+            </button>
+            <button class="nav-btn" onclick="window.location.href='configuracoes.html'">
+                <i class="ph-fill ph-gear" style="font-size: 1.4rem;"></i> Configurações
+            </button>
+        </nav>
+        
+        <div class="bottom-actions">
+            <button onclick="toggleTheme()" class="nav-btn" style="margin-bottom: 10px;">
+                <i id="theme-icon" class="ph-fill ph-moon" style="font-size: 1.4rem;"></i> <span id="theme-text">Modo Escuro</span>
+            </button>
+            <button onclick="logout()" class="logout-btn">
+                <i class="ph-bold ph-sign-out" style="font-size: 1.4rem;"></i> Sair do Sistema
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1>Painel Administrativo</h1>
+                <p>Gestão completa e inteligência de negócios</p>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap: wrap; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="loadData()" id="btn-sync" style="margin-right: 5px;">
+                    <i class="ph-bold ph-arrows-clockwise"></i> Atualizar
+                </button>
+                <div id="db-status-badge" class="status-badge-top online">
+                    <i class="ph-fill ph-database"></i> <span id="db-status-text">Conectado</span>
+                </div>
+                <div class="status-badge-top">
+                    <i class="ph-bold ph-clock" style="color:var(--cor-texto-mutado)"></i> <span id="last-update-text">--:--:--</span>
+                </div>
+                <div class="user-badge">
+                    <div style="width:24px; height:24px; background:var(--cor-primaria); border-radius:50%; color:white; display:flex; align-items:center; justify-content:center; font-size:0.75rem;">A</div>
+                    Admin
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-state" style="text-align: center; padding: 100px; color: var(--cor-texto-mutado);">
+            <i class="ph-bold ph-spinner ph-spin" style="font-size: 4rem; color: var(--cor-primaria); margin-bottom: 20px;"></i>
+            <h2>Processando Métricas Comerciais...</h2>
+        </div>
+
+        <div id="sales-content" style="display: none; flex-direction: column;">
+            
+            <div class="sales-toolbar">
+                <div style="display:flex; gap:10px; align-items:center; flex: 1; flex-wrap:wrap;">
+                    <i class="ph-fill ph-funnel" style="color:var(--cor-primaria); font-size:1.4rem;"></i>
+                    <select id="sales-period-filter" class="input-box" style="max-width:200px; margin:0;" onchange="renderSalesDashboard()">
+                        <option value="this_month" selected>📅 Este Mês</option>
+                        <option value="last_month">⏪ Mês Passado</option>
+                        <option value="this_year">📆 Este Ano</option>
+                        <option value="all">♾️ Todo o Período</option>
+                    </select>
+                    <select id="sales-person-filter" class="input-box" style="max-width:250px; margin:0;" onchange="renderSalesDashboard()">
+                        <option value="all" selected>👥 Todos os Vendedores</option>
+                    </select>
+                </div>
+                <div>
+                    <span style="font-size:0.85rem; color:var(--cor-texto-mutado); font-weight:700; background: var(--cor-panel-bg); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--cor-borda);" id="sales-info-label">A filtrar dados...</span>
+                </div>
+            </div>
+
+            <div class="kpi-grid" id="sales-kpi-container"></div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                <div class="chart-card">
+                    <div class="chart-title"><span>Vendas por Condição de Pagamento</span><i class="ph-fill ph-wallet" style="color:var(--cor-texto-mutado)"></i></div>
+                    <div id="chart-payment" style="height: 300px;"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title"><span>Top 5 Clientes em Volume</span><i class="ph-fill ph-trophy" style="color:var(--cor-alerta)"></i></div>
+                    <div id="chart-clients" style="height: 300px;"></div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <div class="chart-card">
+                    <div class="chart-title"><span>Funil Geral de Estados</span><i class="ph-fill ph-funnel" style="color:var(--cor-texto-mutado)"></i></div>
+                    <div id="chart-status" style="height: 300px;"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title"><span>Evolução Diária de Entradas</span><i class="ph-fill ph-trend-up" style="color:var(--cor-sucesso)"></i></div>
+                    <div id="chart-daily" style="height: 300px;"></div>
+                </div>
+            </div>
+
+            <div class="chart-card" style="padding: 25px;">
+                <h3 style="margin-bottom:15px; font-weight: 800; color:var(--cor-texto); font-size: 1.2rem;">Detalhamento de Pedidos (Pipeline)</h3>
+                <div class="table-responsive-container" style="border: 1px solid var(--cor-borda); box-shadow: none; margin-bottom:0;">
+                    <table class="report-table">
+                        <thead><tr><th>ID / Cliente</th><th>Vendedor</th><th>Valor</th><th>Pagamento</th><th>Emissão</th><th>Estado Atual</th></tr></thead>
+                        <tbody id="sales-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ====================================================
+        // 🔒 SESSÃO E CORE
+        // ====================================================
+        const sessaoString = localStorage.getItem('sinaliza_sessao');
+        if (!sessaoString) { window.location.href = 'index.html'; } 
+        
+        function logout() { localStorage.removeItem('sinaliza_sessao'); window.location.href = 'index.html'; }
+        
+        const API_URL = '/api';
+        let ordersData = [];
+        let configWorkflow = [];
+        const moneyFmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+        let paymentChart, clientsChart, statusChart, dailyChart;
+
+        window.onload = async () => {
+            loadTheme();
+            await loadData();
+        };
+
+        function getSafeStatus(val) { return String(val || '').trim().toLowerCase(); }
+
+        function getRealOrderStage(o, finalStage) {
+            let st = getSafeStatus(o.status);
+            if (o.history && o.history.length > 0) {
+                const lastLog = o.history[o.history.length - 1];
+                if (lastLog.to) st = getSafeStatus(lastLog.to);
+            }
+            if (st === 'finalizado' || st === 'concluido' || st === 'entregue') {
+                return finalStage || 'finalizado';
+            }
+            return st;
+        }
+
+        async function loadData() {
+            const btn = document.getElementById('btn-sync');
+            const statusBadge = document.getElementById('db-status-badge');
+            const statusText = document.getElementById('db-status-text');
+
+            if(btn) btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Atualizando...';
+            statusBadge.className = 'status-badge-top syncing';
+            statusText.innerHTML = 'A ler banco...';
+
+            try {
+                const wfRes = await fetch(`${API_URL}/config/workflow`).then(r=>r.json()).catch(()=>null);
+                const ordRes = await fetch(`${API_URL}/pedidos`).then(r=>r.json()).catch(()=>null);
+                
+                if(wfRes && wfRes.dados) configWorkflow = typeof wfRes.dados === 'string' ? JSON.parse(wfRes.dados) : wfRes.dados;
+                
+                if(ordRes) {
+                    ordersData = ordRes.map(o => ({
+                        id: o.ID || o.id,
+                        client: o.CLIENTE || o.client,
+                        sales: o.VENDEDOR || o.sales,
+                        value: o.VALOR !== undefined ? o.VALOR : o.value,
+                        status: o.STATUS || o.status,
+                        payment: o.PAGAMENTO || o.payment,
+                        issue_date: o.DATA_EMISSAO || o.issue_date,
+                        history: (typeof (o.HISTORY || o.history) === 'string') ? (JSON.parse(o.HISTORY || o.history || '[]') || []) : (o.HISTORY || o.history || []),
+                        created_at: o.CREATED_AT || o.created_at || o.DATA_EMISSAO
+                    }));
+                    
+                    populateSalesPersonFilter(); 
+                    renderSalesDashboard();
+                    
+                    document.getElementById('loading-state').style.display = 'none';
+                    document.getElementById('sales-content').style.display = 'flex';
+                }
+                
+                statusBadge.className = 'status-badge-top online';
+                statusText.innerHTML = 'Conectado';
+            } catch(e) {
+                console.error("Erro:", e);
+                statusBadge.className = 'status-badge-top offline';
+                statusText.innerHTML = 'Falha';
+            } finally {
+                if(btn) btn.innerHTML = '<i class="ph-bold ph-arrows-clockwise"></i> Atualizar';
+                document.getElementById('last-update-text').innerText = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }
+        }
+
+        // ====================================================
+        // DASHBOARD COMERCIAL
+        // ====================================================
+        function populateSalesPersonFilter() {
+            const sel = document.getElementById('sales-person-filter');
+            const currentVal = sel.value;
+            const sellers = [...new Set(ordersData.map(o => o.sales ? o.sales.trim() : 'N/D'))].sort();
+            
+            let html = `<option value="all">👥 Todos os Vendedores</option>`;
+            
+            sellers.forEach(s => { 
+                const sLower = s.toLowerCase();
+                // 🛑 BLOQUEIO: Só adiciona se NÃO for "j7s" e NÃO for "bruno"
+                if(s && s !== 'N/D' && !sLower.includes('j7s') && !sLower.includes('bruno')) {
+                    html += `<option value="${s}">${s}</option>`; 
+                }
+            });
+            
+            sel.innerHTML = html; 
+            
+            // Tenta manter a seleção anterior, a menos que fosse um dos bloqueados
+            if (currentVal && !currentVal.toLowerCase().includes('j7s') && !currentVal.toLowerCase().includes('bruno')) {
+                sel.value = currentVal;
+            }
+        }
+
+        function getFilteredSalesData() {
+            const period = document.getElementById('sales-period-filter').value;
+            const person = document.getElementById('sales-person-filter').value;
+            const now = new Date(); let startDate = new Date(); let endDate = new Date();
+            
+            if (period === 'this_month') { startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0); endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59); } 
+            else if (period === 'last_month') { startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0); endDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59); } 
+            else if (period === 'this_year') { startDate = new Date(now.getFullYear(), 0, 1, 0, 0, 0); endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59); } 
+            else { startDate = new Date(2000, 0, 1); endDate = new Date(2100, 0, 1); }
+
+            return ordersData.filter(o => {
+                const sellerName = String(o.sales || '').toLowerCase();
+                
+                // 🛑 BLOQUEIO: Remove j7s e bruno de todas as listas e gráficos comerciais
+                if (sellerName.includes('j7s') || sellerName.includes('bruno')) return false;
+
+                if (person !== 'all' && (!o.sales || o.sales !== person)) return false;
+                
+                let rawDate = o.issue_date || o.created_at; 
+                if (!rawDate) return false;
+                
+                if (typeof rawDate === 'string' && rawDate.length === 10) rawDate += 'T12:00:00';
+                const orderDate = new Date(rawDate);
+                
+                return orderDate >= startDate && orderDate <= endDate;
+            });
+        }
+
+        function renderSalesDashboard() {
+            const filteredData = getFilteredSalesData();
+            const container = document.getElementById('sales-kpi-container');
+            const tableBody = document.getElementById('sales-table-body');
+            const periodSelect = document.getElementById('sales-period-filter');
+            const personSelect = document.getElementById('sales-person-filter');
+            
+            const period = periodSelect ? periodSelect.value : 'this_month';
+            const person = personSelect ? personSelect.value : 'all';
+            
+            const pText = periodSelect && periodSelect.selectedIndex >= 0 ? periodSelect.options[periodSelect.selectedIndex].text : '';
+            const sText = personSelect && personSelect.selectedIndex >= 0 ? personSelect.options[personSelect.selectedIndex].text : '';
+            
+            const infoLabel = document.getElementById('sales-info-label');
+            if (infoLabel) infoLabel.innerText = `Filtro Ativo: ${pText} • ${sText} (${filteredData.length} resultados)`;
+
+            // 1. CALCULANDO VENDAS
+            let totalSold = 0;
+            filteredData.forEach(o => {
+                let valStr = String(o.value || o.VALOR || 0).replace(',', '.');
+                totalSold += parseFloat(valStr) || 0;
+            });
+
+            // 2. CALCULANDO FATURAMENTO GLOBAL
+            let totalInvoiced = 0;
+            const now = new Date(); 
+            let sDate = new Date(2000, 0, 1), eDate = new Date(2100, 0, 1);
+            if (period === 'this_month') { sDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0); eDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59); } 
+            else if (period === 'last_month') { sDate = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0); eDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59); } 
+            else if (period === 'this_year') { sDate = new Date(now.getFullYear(), 0, 1, 0, 0, 0); eDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59); }
+
+            function getSafe(val) { return String(val || '').trim().toLowerCase(); }
+            const finalStage = (typeof configWorkflow !== 'undefined' && configWorkflow.length > 0) ? getSafe(configWorkflow[configWorkflow.length-1].name) : 'finalizado';
+
+            let pClean = person.toLowerCase();
+            if (pClean !== 'all' && pClean.includes('(')) pClean = pClean.split('(')[0].trim();
+
+            ordersData.forEach(o => {
+                let sClean = String(o.sales || o.VENDEDOR || '').trim().toLowerCase();
+                
+                // 🛑 BLOQUEIO: Se o vendedor for j7s ou bruno, ignora no faturamento geral do comercial
+                if (sClean.includes('j7s') || sClean.includes('bruno')) return;
+
+                let matchSeller = false;
+                if (person === 'all') {
+                    matchSeller = true;
+                } else {
+                    if (sClean.includes(pClean) || pClean.includes(sClean)) matchSeller = true;
+                }
+
+                if (!matchSeller) return;
+
+                let valStr = String(o.value || o.VALOR || 0).replace(',', '.');
+                const val = parseFloat(valStr) || 0; 
+                const st = getSafe(o.status || o.STATUS);
+
+                if (st === finalStage || st.includes('finaliz') || st.includes('entreg') || st.includes('fatur') || st.includes('conclu') || st.includes('fim')) {
+                    
+                    let fatDate = null;
+                    let hist = o.history || o.HISTORY || [];
+                    if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch(e) { hist = []; } }
+                    
+                    if (Array.isArray(hist) && hist.length > 0) {
+                        let fatLog = [...hist].reverse().find(h => {
+                            const hTo = getSafe(h.to);
+                            const hAct = getSafe(h.action);
+                            return hTo === finalStage || hTo.includes('finaliz') || hTo.includes('entreg') || hTo.includes('fatur') || hTo.includes('conclu') || hTo.includes('fim') || hAct.includes('fatur') || hAct.includes('nota') || hAct.includes('conclu') || hAct.includes('fim');
+                        });
+                        
+                        if (!fatLog) fatLog = hist[hist.length - 1];
+                        if (fatLog && fatLog.date) fatDate = new Date(fatLog.date);
+                    }
+
+                    if (!fatDate && (o.issue_date || o.created_at || o.DATA_EMISSAO || o.CREATED_AT)) {
+                        let dStr = o.issue_date || o.created_at || o.DATA_EMISSAO || o.CREATED_AT;
+                        if (dStr.length === 10) dStr += 'T12:00:00';
+                        fatDate = new Date(dStr);
+                    }
+
+                    if (fatDate && (period === 'all' || (fatDate >= sDate && fatDate <= eDate))) {
+                        totalInvoiced += val;
+                    }
+                }
+            });
+
+            // 3. ATUALIZA A INTERFACE
+            const ticketMedio = filteredData.length > 0 ? (totalSold / filteredData.length) : 0;
+            const moneyFmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            if (container) {
+                container.innerHTML = `
+                    <div class="kpi-card" style="border-left: 4px solid var(--cor-primaria)">
+                        <div><span class="kpi-label">Vendas Totais</span><div class="kpi-val">${moneyFmt.format(totalSold)}</div></div>
+                        <div class="kpi-icon" style="background:var(--cor-primaria-soft-bg); color:var(--cor-primaria)"><i class="ph-fill ph-currency-dollar"></i></div>
+                    </div>
+                    <div class="kpi-card" style="border-left: 4px solid var(--cor-sucesso)">
+                        <div><span class="kpi-label">Faturado / Concluído</span><div class="kpi-val money" style="color:var(--cor-sucesso)">${moneyFmt.format(totalInvoiced)}</div></div>
+                        <div class="kpi-icon" style="background:rgba(16, 185, 129, 0.1); color:var(--cor-sucesso)"><i class="ph-fill ph-receipt"></i></div>
+                    </div>
+                    <div class="kpi-card" style="border-left: 4px solid var(--cor-alerta)">
+                        <div><span class="kpi-label">Ticket Médio</span><div class="kpi-val">${filteredData.length ? moneyFmt.format(totalSold / filteredData.length) : 'R$ 0,00'}</div></div>
+                        <div class="kpi-icon" style="background:rgba(245, 158, 11, 0.1); color:var(--cor-alerta)"><i class="ph-fill ph-trend-up"></i></div>
+                    </div>`;
+            }
+
+            if (tableBody) {
+                if (filteredData.length === 0) { 
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--cor-texto-mutado); font-weight:600;">Nenhum dado encontrado para este filtro.</td></tr>'; 
+                } else { 
+                    filteredData.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+                    
+                    tableBody.innerHTML = filteredData.map(o => {
+                        let displayDate = '-';
+                        let validDate = o.issue_date || o.created_at;
+                        if (validDate) { 
+                            try { displayDate = new Date(validDate).toLocaleDateString('pt-BR'); }catch(e){}
+                        }
+                        
+                        let moneyVal = 'R$ 0,00';
+                        try { moneyVal = moneyFmt.format(parseFloat(String(o.value||0).replace(',','.'))); } catch(e){}
+
+                        return `<tr>
+                            <td><b style="color:var(--cor-texto)">#${o.id}</b><br><span style="font-size:0.8rem; color:var(--cor-texto-mutado)">${o.client || '-'}</span></td>
+                            <td style="font-weight:700;"><i class="ph-fill ph-user-circle" style="color:var(--cor-texto-mutado); margin-right:4px;"></i>${o.sales || '-'}</td>
+                            <td style="color:var(--cor-sucesso); font-weight:800;">${moneyVal}</td>
+                            <td>${o.payment || '-'}</td>
+                            <td style="color:var(--cor-texto-mutado); font-weight:600;"><i class="ph-bold ph-calendar-blank"></i> ${displayDate}</td>
+                            <td><span class="status-badge badge-active">${o.status}</span></td>
+                        </tr>`;
+                    }).join(''); 
+                }
+            }
+            if (typeof renderSalesCharts === 'function') renderSalesCharts(filteredData);
+        }
+
+        function renderSalesCharts(data) {
+            const themeMode = document.body.getAttribute('data-theme') || 'light';
+            const baseOptions = { chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' }, theme: { mode: themeMode } };
+
+            const payments = {}; data.forEach(o => { const p = o.payment || 'N/D'; payments[p] = (payments[p] || 0) + 1; });
+            const payOpt = { ...baseOptions, chart: { type: 'pie', height: 300 }, series: Object.values(payments), labels: Object.keys(payments), colors: ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'], legend: { position: 'bottom' } };
+            if(paymentChart) paymentChart.updateOptions(payOpt); else { paymentChart = new ApexCharts(document.querySelector("#chart-payment"), payOpt); paymentChart.render(); }
+
+            const clients = {}; data.forEach(o => { const c = o.client || 'N/D'; clients[c] = (clients[c] || 0) + parseFloat(String(o.value || 0).replace(',','.')); });
+            const sortedClients = Object.entries(clients).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            const clientOpt = { ...baseOptions, chart: { type: 'bar', height: 300 }, plotOptions: { bar: { horizontal: true, borderRadius: 4 } }, dataLabels: { enabled: false }, series: [{ name: 'Valor Total', data: sortedClients.map(x => x[1]) }], xaxis: { categories: sortedClients.map(x => x[0]), labels: { formatter: (val) => { return "R$ " + val } } }, colors: ['#F59E0B'] };
+            if(clientsChart) clientsChart.updateOptions(clientOpt); else { clientsChart = new ApexCharts(document.querySelector("#chart-clients"), clientOpt); clientsChart.render(); }
+
+            const statusCounts = {}; if(configWorkflow) configWorkflow.forEach(w => statusCounts[w.name] = 0); data.forEach(o => { if(statusCounts[o.status] !== undefined) statusCounts[o.status]++; });
+            const statusOpt = { ...baseOptions, chart: { type: 'bar', height: 300 }, plotOptions: { bar: { borderRadius: 4, distributed: true } }, dataLabels: { enabled: true }, legend: { show: false }, series: [{ name: 'Pedidos', data: Object.values(statusCounts) }], xaxis: { categories: Object.keys(statusCounts) }, colors: ['#2563EB', '#3B82F6', '#6366F1', '#8B5CF6', '#10B981'] };
+            if(statusChart) statusChart.updateOptions(statusOpt); else { statusChart = new ApexCharts(document.querySelector("#chart-status"), statusOpt); statusChart.render(); }
+
+            const daily = {}; data.forEach(o => { if(o.created_at) { try{ const k = String(o.created_at).split('T')[0]; daily[k] = (daily[k] || 0) + 1; }catch(e){} } });
+            const sortedDates = Object.keys(daily).sort();
+            const dailyOpt = { ...baseOptions, chart: { type: 'area', height: 300 }, series: [{ name: 'Entrada de Pedidos', data: sortedDates.map(k => daily[k]) }], xaxis: { categories: sortedDates.map(k => k.split('-').reverse().slice(0,2).join('/')) }, stroke: { curve: 'smooth', width: 3 }, colors: ['#10B981'], fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 90, 100] } } };
+            if(dailyChart) dailyChart.updateOptions(dailyOpt); else { dailyChart = new ApexCharts(document.querySelector("#chart-daily"), dailyOpt); dailyChart.render(); }
+        }
+
+        function toggleTheme() { const b=document.body; const c=b.getAttribute('data-theme'); const n=c==='dark'?'light':'dark'; b.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateThemeIcon(n); if(paymentChart){ renderSalesDashboard(); } }
+        function loadTheme() { const t=localStorage.getItem('theme')||'light'; document.body.setAttribute('data-theme',t); updateThemeIcon(t); }
+        function updateThemeIcon(t) { const i=document.getElementById('theme-icon'); const txt=document.getElementById('theme-text'); if(t==='dark'){i.className='ph-fill ph-sun';txt.innerText='Modo Claro';}else{i.className='ph-fill ph-moon';txt.innerText='Modo Escuro';} }
+    </script>
+</body>
+</html>

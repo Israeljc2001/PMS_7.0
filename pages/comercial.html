@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comercial | SinalizaFlow J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src="../assets/vendor/pptxgen.bundle.js"></script>
+    <script>
+        window.pptxgen = window.pptxgen || window.PptxGenJS;
+        if (typeof window.pptxgen === 'undefined') {
+            console.error('Biblioteca PptxGenJS local nao carregada.');
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../dados_imagens.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    <link rel="stylesheet" href="../assets/css/comercial.css">
+</head>
+<body>
+    
+    <div id="portalManagerModal" class="modal-overlay portal-manager-modal" style="display: none;">
+        <div class="modal-card portal-manager-card">
+            <div class="modal-head">
+                <div>
+                    <span class="view-eyebrow"><i class="fa-solid fa-plus"></i> Cadastro manual</span>
+                    <h3 id="portal-manager-title">Novo Portal</h3>
+                    <p>Cadastre portais sem alterar o código do sistema.</p>
+                </div>
+                <button class="btn-icon" onclick="closePortalManagerModal()"><i class="ph-bold ph-x"></i></button>
+            </div>
+
+            <div class="portal-form-grid">
+                <input type="hidden" id="portal-manager-type" value="cliente">
+
+                <div class="form-field">
+                    <label>Nome da empresa</label>
+                    <input id="portal-company" class="input-box" placeholder="Ex: Cliente / Transportadora">
+                </div>
+
+                <div class="form-field">
+                    <label>Tipo do portal</label>
+                    <select id="portal-type" class="input-box">
+                        <option value="cliente">Cliente</option>
+                        <option value="transportadora">Transportadora</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label>Usuário / Login</label>
+                    <input id="portal-user" class="input-box" placeholder="Ex: usuario@empresa.com.br">
+                </div>
+
+                <div class="form-field">
+                    <label>Senha</label>
+                    <input id="portal-pass" class="input-box" placeholder="Senha do portal">
+                </div>
+
+                <div class="form-field form-field-full">
+                    <label>Link do portal</label>
+                    <input id="portal-url" class="input-box" placeholder="https://...">
+                </div>
+
+                <div class="form-field form-field-full">
+                    <label>Observação</label>
+                    <textarea id="portal-obs-input" class="input-box portal-textarea" placeholder="Ex: Requer VPN, usar CNPJ, acessar com certificado..."></textarea>
+                </div>
+
+                <div class="form-field form-field-full">
+                    <label>Logo da empresa</label>
+                    <div class="portal-logo-uploader">
+                        <input id="portal-logo-file" type="file" accept="image/*" onchange="handlePortalLogoFile(event)">
+                        <div class="portal-logo-preview" id="portal-logo-preview">
+                            <i class="fa-regular fa-image"></i>
+                            <span>Selecionar imagem</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portal-manager-actions">
+                <button class="btn btn-secondary" onclick="closePortalManagerModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveManualPortal()">
+                    <i class="fa-solid fa-floppy-disk"></i> Salvar Portal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/pages/comercial.js"></script>
+    <script src="../assets/js/pages/comercial-proposta.js"></script>
+
+    <div class="comercial-app commercial-shell">
+    <aside class="app-sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+            <span class="brand-wordmark">Sinaliza<span>Flow</span></span>
+        </div>
+        <nav class="sidebar-nav" style="flex:1;">
+            <div class="menu-label">Principal</div>
+            <button id="btn-dash" class="nav-btn active" onclick="switchView('dash')"><i class="ph-fill ph-squares-four" style="font-size: 1.3rem;"></i> Visão Geral</button>
+            <button id="btn-action" class="nav-btn" onclick="switchView('action')">
+                <i class="ph-fill ph-warning-circle" style="font-size: 1.3rem;"></i> Fila de Ação
+                <span id="return-badge" class="alert-badge">0</span>
+            </button>
+            <button id="btn-monitor" class="nav-btn" onclick="switchView('monitor')"><i class="ph-fill ph-binoculars" style="font-size: 1.3rem;"></i> Monitoramento</button>
+            
+            <div class="menu-label">Ferramentas</div>
+            <button id="btn-tools" class="nav-btn" onclick="switchView('tools')"><i class="fa-solid fa-wrench nav-icon"></i> Utilidades</button>
+            <button id="btn-transportadoras" class="nav-btn" onclick="switchView('transportadoras')"><i class="fa-solid fa-address-book nav-icon"></i> Transportadoras</button>
+            <button id="btn-portais" class="nav-btn" onclick="switchView('portais')"><i class="fa-solid fa-globe nav-icon"></i> Portais</button>
+            <button id="btn-normas" class="nav-btn" onclick="switchView('normas')"><i class="fa-solid fa-folder-open nav-icon"></i> Normas e Arquivos</button>
+            <button id="btn-galeria" class="nav-btn" onclick="switchView('galeria')"><i class="fa-solid fa-images nav-icon"></i> Galeria</button>
+        </nav>
+        <div class="sidebar-footer" style="margin-top:auto;">
+            <button onclick="toggleTheme()" class="nav-btn" style="margin-bottom: 10px;">
+                <i id="theme-icon" class="ph-fill ph-moon" style="font-size: 1.3rem;"></i> <span id="theme-text">Modo Escuro</span>
+            </button>
+            <div class="sidebar-user">
+                <i class="ph-fill ph-user-circle"></i>
+                <div class="sidebar-user-info">
+                    <span>Usuário logado</span>
+                    <strong id="user-name">...</strong>
+                </div>
+            </div>
+            <button onclick="logout()" class="logout-btn"><i class="ph-bold ph-sign-out" style="font-size: 1.3rem;"></i> Sair do Sistema</button>
+        </div>
+    </aside>
+
+    <main id="main-content">
+        <div class="topbar">
+            <div class="topbar-search">
+                <i class="ph-bold ph-magnifying-glass"></i>
+                <input type="text" placeholder="Buscar pedidos na fila" onkeyup="if(!document.getElementById('view-action').classList.contains('hidden')){document.getElementById('search-input-action').value=this.value;renderActionOrders();}">
+                <span>Ctrl K</span>
+            </div>
+            <div class="topbar-actions">
+                <button class="icon-btn" onclick="sync()" title="Sincronizar"><i class="ph-bold ph-arrows-clockwise"></i></button>
+                <div id="db-status-badge" class="status-badge-top online"><i class="ph-fill ph-database"></i> <span id="db-status-text">Conectado</span></div>
+                <div class="status-badge-top"><i class="ph-bold ph-clock" style="color:var(--cor-texto-mutado)"></i> <span id="last-update-text">Atualizando...</span></div>
+                <div class="topbar-user"><i class="ph-fill ph-user-circle"></i><div><strong id="topbar-user-name">Usuário</strong><span>Comercial ativo</span></div></div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <div class="page-user-identity">
+                <span class="page-overline">Usuário logado</span>
+                <h1 id="page-user-name">USUÁRIO</h1>
+                <p><strong id="page-sector-label">Comercial</strong> · Central de ação e acompanhamento de pedidos.</p>
+            </div>
+            <div class="page-header-actions" style="display:flex; align-items:center; gap:12px; flex-wrap: wrap;">
+                <div class="user-badge"><span style="width:10px; height:10px; background:var(--cor-sucesso); border-radius:50%;"></span> Sistema Online</div>
+            </div>
+        </div>
+
+        <div id="view-dash">
+            <div class="dashboard-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap:15px; margin-bottom:25px; background:var(--cor-card-bg); padding:15px 20px; border-radius:var(--radius-card); border: 1px solid var(--cor-borda); box-shadow:var(--sombra-sm);">
+                <div>
+                    <h3 style="margin:0; font-size:1.1rem; color:var(--cor-texto); font-weight: 700;">Desempenho e Metas</h3>
+                    <span style="font-size:0.85rem; color:var(--cor-texto-mutado); font-weight: 500;" id="period-label">A filtrar por: Este Mês</span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <i class="ph-fill ph-calendar-blank" style="color:var(--cor-primaria); font-size:1.3rem;"></i>
+                    <select id="period-filter" class="input-box" style="width:auto; min-width:200px; margin:0;" onchange="applyPeriodFilter()">
+                        <option value="this_month" selected>📅 Este Mês (Atual)</option>
+                        <option value="last_month">⏪ Mês Passado</option>
+                        <option value="this_year">📆 Este Ano (Acumulado)</option>
+                        <option value="all">♾️ Todo o Período</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="kpi-row-top" id="kpi-container-top"></div>
+            
+            <div class="kpi-row-bottom">
+                <div class="chart-box"><div class="section-title"><span>Tendência de Vendas</span><i class="ph-fill ph-chart-bar" style="color:var(--cor-texto-mutado)"></i></div><div id="chart-sales" style="flex:1;"></div></div>
+                <div class="calendar-box"><div class="section-title"><span>Previsão de Entregas</span><i class="ph-fill ph-calendar-check" style="color:var(--cor-texto-mutado)"></i></div><div id="calendar" style="flex:1; min-height: 400px;"></div></div>
+            </div>
+            
+            <div class="reports-grid">
+                <div class="report-card"><div class="section-title"><span>Vendas por Condição</span><i class="ph-fill ph-wallet" style="color:var(--cor-texto-mutado)"></i></div><div id="chart-payment" style="height: 300px;"></div></div>
+                <div class="report-card"><div class="section-title"><span>Top Clientes</span><i class="ph-fill ph-trophy" style="color:var(--cor-alerta)"></i></div><div id="chart-clients" style="height: 300px;"></div></div>
+            </div>
+            <div class="reports-grid">
+                <div class="report-card"><div class="section-title"><span>Funil de Estados</span><i class="ph-fill ph-funnel" style="color:var(--cor-texto-mutado)"></i></div><div id="chart-status" style="height: 300px;"></div></div>
+                <div class="report-card"><div class="section-title"><span>Evolução Diária</span><i class="ph-fill ph-trend-up" style="color:var(--cor-sucesso)"></i></div><div id="chart-daily" style="height: 300px;"></div></div>
+            </div>
+        </div>
+
+        <div id="view-action" class="hidden action-workspace">
+            <div class="filters">
+                <div class="filter-search" style="position: relative; flex: 1; min-width: 200px;">
+                    <i class="ph-bold ph-magnifying-glass" style="position: absolute; left: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; pointer-events: none;"></i>
+                    <input type="text" id="search-input-action" class="input-box" placeholder="Buscar ID ou Cliente..." onkeyup="renderActionOrders()" style="padding-left: 40px; margin: 0;">
+                </div>
+                
+                <select id="filter-salesperson-action" class="input-box" style="width:auto; min-width:180px; margin:0;" onchange="renderActionOrders()"></select>
+                
+                <button class="btn btn-secondary" onclick="sync()" style="margin: 0;"><i class="ph-bold ph-arrows-clockwise" style="font-size:1.1rem;"></i> Atualizar</button>
+            </div>
+
+            <div id="orders-container-action" class="orders-container">
+                <div style="text-align:center; padding:60px; color:var(--cor-texto-mutado);"><i class="ph-bold ph-spinner ph-spin" style="font-size:3rem;"></i><br><br>A carregar fila...</div>
+            </div>
+        </div>
+
+        <div id="view-monitor" class="hidden monitor-workspace">
+            <div class="filters">
+                <div class="filter-search" style="position: relative; flex: 1; min-width: 200px;">
+                    <i class="ph-bold ph-magnifying-glass" style="position: absolute; left: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; pointer-events: none;"></i>
+                    <input type="text" id="search-input-monitor" class="input-box" placeholder="Rastrear na fábrica..." onkeyup="renderMonitorOrders()" style="padding-left: 40px; margin: 0;">
+                </div>
+                
+                <select id="filter-salesperson-monitor" class="input-box" style="width:auto; min-width:180px; margin:0;" onchange="renderMonitorOrders()"></select>
+                
+                <select id="filter-status-monitor" class="input-box" onchange="renderMonitorOrders()" style="width:auto; margin: 0; cursor: pointer;">
+                    <option value="all">Todos na Fábrica</option>
+                    <option value="Em Layout">Layout</option>
+                    <option value="PCP Revisão">PCP</option>
+                    <option value="Em Produção">Produção</option>
+                    <option value="Em Faturamento">Faturamento</option>
+                </select>
+                <button class="btn btn-secondary" onclick="sync()" style="margin: 0;"><i class="ph-bold ph-arrows-clockwise" style="font-size:1.1rem;"></i> Atualizar</button>
+            </div>
+
+            <div id="orders-container-monitor" class="orders-container">
+                <div style="text-align:center; padding:60px; color:var(--cor-texto-mutado);"><i class="ph-bold ph-spinner ph-spin" style="font-size:3rem;"></i><br><br>A carregar fábrica...</div>
+            </div>
+        </div>
+
+        <!-- FERRAMENTAS INTERNAS ADDON -->
+        
+        <div id="view-tools" class="hidden">
+            <h2 style="margin-bottom: 20px; font-weight: 800; font-size: 1.5rem; color: var(--cor-texto);">Utilidades & Calculadoras</h2>
+            
+            <div class="tools-grid">
+                <div class="tool-card green-border proposal-tool-card">
+                    <h2><i class="fa-solid fa-file-powerpoint"></i> Orcamento para Proposta PPT</h2>
+                    <p class="proposal-tool-copy">Selecione o PDF do orcamento e o PPTX modelo. O sistema preserva os slides existentes e atualiza somente a ultima pagina.</p>
+
+                    <div class="proposal-upload-grid">
+                        <label class="proposal-upload-box" for="proposal-pdf-input">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span id="proposal-file-label">Selecionar PDF do orcamento</span>
+                            <small>PDF gerado pelo sistema de orcamentos</small>
+                        </label>
+                        <label class="proposal-upload-box" for="proposal-template-input">
+                            <i class="fa-solid fa-file-powerpoint"></i>
+                            <span id="proposal-template-label">Selecionar PPTX modelo</span>
+                            <small>Os 5 primeiros slides serao preservados</small>
+                        </label>
+                    </div>
+                    <input id="proposal-pdf-input" type="file" accept="application/pdf,.pdf" hidden onchange="handleProposalPdfSelection(event)">
+                    <input id="proposal-template-input" type="file" accept="application/vnd.openxmlformats-officedocument.presentationml.presentation,.pptx" hidden onchange="handleProposalTemplateSelection(event)">
+
+                    <div class="proposal-options-grid">
+                        <div>
+                            <label>Vendedor</label>
+                            <input id="proposal-salesperson" class="input-box" placeholder="Nome do vendedor">
+                        </div>
+                        <div>
+                            <label>Validade padrao</label>
+                            <input id="proposal-default-validity" class="input-box" value="7 dias">
+                        </div>
+                    </div>
+
+                    <button id="proposal-generate-btn" class="btn btn-primary" onclick="generateProposalFromBudget()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Proposta PPT
+                    </button>
+                    <div id="proposal-result" class="tool-result-box proposal-result-box"></div>
+                </div>
+
+                <div class="tool-card blue-border">
+                    <h2><i class="fa-solid fa-eraser"></i> Limpar Texto</h2>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Cole seu texto (CPF, CNPJ, Tel):</label>
+                    <input type="text" id="input-limpar" class="input-box" placeholder="Ex: 123.456-789" autocomplete="off" style="margin-bottom: 10px;">
+                    <button class="btn btn-primary" onclick="limparCaracteres()">
+                        <i class="fa-solid fa-check"></i> Remover Símbolos
+                    </button>
+                    <div id="resultado-limpar" class="tool-result-box"></div>
+                    <button id="copiarBtn" class="btn btn-secondary" onclick="copiarResultado()" style="display: none; margin-top: 10px;">
+                        <i class="fa-regular fa-copy"></i> Copiar Resultado
+                    </button>
+                </div>
+
+                <div class="tool-card blue-border">
+                    <h2><i class="fa-solid fa-link"></i> Links Úteis</h2>
+                    <p style="color: var(--cor-texto-mutado); font-size: 0.9rem; margin-bottom: 20px;">Acesso direto aos sistemas governamentais.</p>
+                    <div class="link-grid">
+                        <a href="https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/Cnpjreva_Solicitacao.asp?cnpj=36734676000156" target="_blank" class="link-chip"><i class="fa-solid fa-magnifying-glass"></i> Consulta CNPJ</a>
+                        <a href="https://dfe-portal.svrs.rs.gov.br/Nfe/Ccc" target="_blank" class="link-chip"><i class="fa-solid fa-file-invoice"></i> Portal NFe</a>
+                        <a href="http://www.sintegra.gov.br/" target="_blank" class="link-chip"><i class="fa-solid fa-building"></i> SINTEGRA</a>
+                        <a href="https://www.cadesp.fazenda.sp.gov.br/" target="_blank" class="link-chip"><i class="fa-solid fa-map-location-dot"></i> CADESP SP</a>
+                    </div>
+                </div>
+
+                <div class="tool-card orange-border">
+                    <h2><i class="fa-solid fa-box-open"></i> Peso e Volume</h2>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Material:</label>
+                    <select id="material" class="input-box" style="margin-bottom: 10px;">
+                        <option value="" disabled selected>Selecione o material...</option>
+                        <option value="papel">Papel Triplex (350g/m²)</option>
+                        <option value="adesivo">Adesivo (500g/m²)</option>
+                        <option value="pvc2">PVC 2mm (1.0kg/m²)</option>
+                        <option value="pvc3">PVC 3mm (2.4kg/m²)</option>
+                        <option value="pvc10">PVC 10mm (15.0kg/m²)</option>
+                        <option value="acm">ACM (3.94kg/m²)</option>
+                        <option value="pvc_imantado">PVC Imantado (3.88kg/m²)</option>
+                        <option value="acrilico2">Acrílico 2mm (2.5kg/m²)</option>
+                        <option value="policarbonato2">Policarbonato 2mm (2.5kg/m²)</option>
+                        <option value="bobina">Bobina de Adesivo 1,22m (250g/m²)</option>
+                    </select>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <div style="flex:1;"><label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Altura (cm):</label><input type="number" id="altura" class="input-box" placeholder="0"></div>
+                        <div style="flex:1;"><label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Largura (cm):</label><input type="number" id="largura" class="input-box" placeholder="0"></div>
+                    </div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Quantidade (peças):</label>
+                    <input type="number" id="quantidade" class="input-box" placeholder="Qtd" style="margin-bottom: 10px;">
+                    <button class="btn btn-primary" onclick="calcular()">Calcular</button>
+                    <div id="resultadoCaixa" class="tool-result-box"></div>
+                </div>
+
+                <div class="tool-card orange-border">
+                    <h2><i class="fa-solid fa-ruler-combined"></i> Tubos de Aço 2"</h2>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Quantidade (peças):</label>
+                    <input type="number" id="qtdTubo" class="input-box" placeholder="Ex: 40" style="margin-bottom: 10px;">
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Comprimento (metros):</label>
+                    <input type="number" id="compTubo" class="input-box" placeholder="Ex: 3" style="margin-bottom: 10px;">
+                    <button class="btn btn-primary" onclick="calcularTubo()">Calcular Volume</button>
+                    <div id="resultadoTubo" class="tool-result-box"></div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div id="view-transportadoras" class="hidden logistics-workspace">
+            <div class="logistics-section-heading">
+                <span class="view-eyebrow"><i class="fa-solid fa-truck-fast"></i> Logística Comercial</span>
+                <h2>Cotação, rastreio e transportadoras</h2>
+                <p>Use a mensagem sugerida para solicitar cotação e consulte rastreios sem sair da mesma tela.</p>
+            </div>
+
+            <div class="logistics-top-grid">
+                <div class="msg-panel logistics-msg-panel">
+                <h3><i class="fa-brands fa-whatsapp"></i> Mensagem sugerida para cotação</h3>
+                <textarea id="msgPadrao" class="input-box logistics-msg-textarea">Frete CIF (remetente vai pagar)
+
+CNPJ Remetente: 82.962.127/0001-56
+CNPJ Destino: 00.000.000/0000-00
+
+Cep Remetente: 89203-212 (Joinville-SC)
+Cep Destinatário: 00000-000 ( ) 
+
+Valor da NF: R$ 0,00
+Peso Bruto:  0 kg
+
+Medidas / Volumes 
+
+0 x 0 x 0 cm - 0 volumes
+0 x 0 x 0 cm - 0 volumes
+0 x 0 x 0 cm - 0 volumes</textarea>
+                <button class="btn btn-primary" style="margin-top: 15px; width: auto;" onclick="copiarMensagemPadrao()"><i class="fa-regular fa-copy"></i> Copiar Texto</button>
+            </div>
+
+                <div class="rastreio-container logistics-rastreio-card">
+                <h2 style="text-align: center; color: var(--cor-texto); font-size: 1.8rem; font-weight: 700; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-magnifying-glass-location" style="font-size: 2.5rem; color: var(--cor-alerta); background: var(--warning-bg); padding: 20px; border-radius: 50%;"></i> Rastreio de Encomenda
+                </h2>
+                
+                <label for="numeroNF" style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Número da Nota Fiscal:</label>
+                <input type="text" id="numeroNF" class="input-box" placeholder="Ex: 13600" autocomplete="off" style="margin-bottom: 20px;">
+                
+                <label for="transportadora" style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Transportadora:</label>
+                <select id="transportadora" class="input-box" style="margin-bottom: 30px;">
+                    <option value="" disabled selected>Selecione a transportadora...</option>
+                    <option value="alfacargas">Alfa Cargas</option>
+                    <option value="arlete">Arlete Transportes</option>
+                    <option value="azulcargo">Azul Cargo</option>
+                    <option value="azure">Azure Logística</option>
+                    <option value="braspress">Braspress</option>
+                    <option value="buslog">Buslog</option>
+                    <option value="ClaroTransportes">Claro Transportes</option>
+                    <option value="correios">Correios</option>
+                    <option value="daytona">Daytona Express</option>
+                    <option value="disktenha">Disk Tenha</option>
+                    <option value="saomiguel">Expresso São Miguel</option>
+                    <option value="fundamental">Fundamental Transportes</option>
+                    <option value="global">Global</option>
+                    <option value="gollog">Gollog</option>
+                    <option value="icaro">Ícaro Express</option>
+                    <option value="jadlog">Jadlog</option>
+                    <option value="mirin">Mirin do Sul</option>
+                    <option value="totalexpress">Total Express</option>
+                    <option value="transjoi">Transjoi</option>
+                    <option value="transligue">Transligue</option>
+                    <option value="translovato">Translovato</option>
+                </select>
+                
+                <button class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;" onclick="consultarRastreio()">RASTREAR AGORA</button>
+                <div id="avisoRastreio" style="text-align: center; margin-top: 20px; font-weight: 600; font-size: 0.95rem;"></div>
+            </div>
+            </div>
+
+            <div class="logistics-section-heading logistics-section-heading-sm">
+                <span class="view-eyebrow"><i class="fa-solid fa-address-book"></i> Base de contatos</span>
+                <h2>Transportadoras cadastradas</h2>
+                <p>Lista de transportadoras com contato rápido por e-mail, WhatsApp e site.</p>
+            </div>
+
+            <div class="tools-grid transportadoras-grid">
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/icaro-1.png" alt="Icaro" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">📍 Atende SC e PR (Cargas rápidas)</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('wellenton@icaroexpress.com')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554797570971')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.icaroexpress.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/claro.png" alt="Claro" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Ótima para grandes volumes, Responde rápido pelo WhatsApp</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('cotacao@clarotransportes.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('5527997486374')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://clarotransportes.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/sao-miguel-1.png" alt="São Miguel" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Fracionado Sul e Sudeste, leva até 3 metros</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('coleta.joi@saomiguel.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554991921058')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.expressosaomiguel.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/braspress.png" alt="Braspress" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Apenas para volumes menores, enviar quando já tiver o CNPJ cadastrado (Cotação pelo Site)</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('sac@braspress.com')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('5511954139805')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.braspress.com" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/gollog.png" alt="Gollog" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Serviço aéreo consultar quais dimensões antes, orçamento via Intelipost</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('servicos.gollog@voegol.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554834440078')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.gollog.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/transligue.png" alt="Transligue" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Melhor opção para envios maiores para SP e Região</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('coletas@transligue.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554799580399')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="http://www.transligue.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/disk_tenha.png" alt="Disk Tenha" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Melhor opção para Joinville e Região/ Orçamento via Site</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('comercial@disketenha.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554789227235')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://disktenha.com.br/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/buslog.png" alt="Buslog" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Ótima opção para RJ, cotação via Site</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('faturamento@buslog.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554891236936')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://buslog.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/correios.png" alt="Correios" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Priorizar envio via Sedex, apenas cargas pequenas</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('spmsuvadcomunicaservicos1@correios.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('55999999999')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.correios.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/fundamental.png" alt="Fundamental" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Cargas maiores, porém considerar apenas quando não tiver outra opção</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('cotacao@fundamentaltransportes.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('5511956659680')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://fundamentaltransportes.com.br/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/mirin.png" alt="Mirin" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Ótima opção para SC, SP, PR e RS</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('itajai@mirindosul.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554799500498')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://mirindosul.com.br/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/translovato.png" alt="Translovato" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Leva grandes volumes</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('lizandra.lorrana@translovato.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('55479231-424')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.translovato.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/total.png" alt="Total" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Utilizar em última opção, cargas menores</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('coleta@totalexpress.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554788196532')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://totalexpress.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/jadlog.png" alt="Jadlog" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Utilizar em última opção, cargas menores</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('comercial.joi@jadlog.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554799523993')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.jadlog.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/arlete.png" alt="Arlete" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Está em teste ainda, atendem RS, SC, PR, SP, MG, RJ, ES e GO</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('cotacao.jvl@arletetransportes.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554788657876')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://arletetransportes.com.br/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/azure.png" alt="Azure" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Consegue um bom preço quando são volumes maiores</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('comercialmtz01@azurelog.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554799634899')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://azurelog.com.br/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/alfa_cargas.png" alt="Alfa Cargas" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Leva grandes volumes, Cotação via e-mail.</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('comercial@alfacargas.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('5511992907559')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.alfatransportes.com.br" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/transjoi.png" alt="Transjoi" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Em teste</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('contato@transp18.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554797570971')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.transjoi.com.br/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/azul.png" alt="Azul" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Transporte aéreo</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('contato@transp19.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('554734642929')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="#" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+                <div class="tool-card"><div class="brand-logo-area"><img src="../logo_transportadoras/global.png" alt="Global" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div><div style="text-align: center; font-size: 0.9rem; color: var(--cor-texto-mutado); margin-bottom: 25px; flex-grow: 1;">Grandes volumes, demora para responder</div><div><div class="action-row-tools"><button class="btn btn-secondary" style="flex: 1;" onclick="copiarEmail('contato@transp20.com.br')"><i class="fa-regular fa-envelope"></i> E-mail</button><button class="btn btn-success" style="flex: 1; background: #22c55e;" onclick="abrirWhats('5511959556221')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div><a href="https://www.azulcargoexpress.com.br/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-globe"></i> Acessar Site</a></div></div>
+            </div>
+        </div>
+
+        <div id="view-portais" class="hidden portals-workspace">
+            <div class="portal-section-heading portal-section-heading-actions">
+                <div>
+                    <span class="view-eyebrow"><i class="fa-solid fa-key"></i> Gestão de acessos</span>
+                    <h2>Portais de Clientes</h2>
+                    <p>Credenciais, observações e links de acesso dos principais portais comerciais.</p>
+                </div>
+                <button class="btn btn-primary portal-add-btn" onclick="openPortalManagerModal('cliente')">
+                    <i class="fa-solid fa-plus"></i> Novo Portal
+                </button>
+            </div>
+
+            <div id="portais-clientes-grid" class="tools-grid portais-grid portais-clientes-grid">
+                <div class="tool-card portal-card blue-border" id="card-1">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/whirlpool.png" alt="Whirlpool" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>Whirlpool</span>';">
+                    </div>
+                    <div class="portal-company-name">Whirlpool</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-1" class="editable-span" contenteditable="true">comercial@j7s.com.br</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-1" class="editable-span" contenteditable="true">Portal@123</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-1" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-1')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-1','user-1','pass-1','obs-1')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card orange-border" id="card-2">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/DOCOL.png" alt="Docol" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>Docol</span>';">
+                    </div>
+                    <div class="portal-company-name">Docol</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-2" class="editable-span" contenteditable="true">pcp@j7s.com.br</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-2" class="editable-span" contenteditable="true">PcpJ7s@456</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-2" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-2')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-2','user-2','pass-2','obs-2')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card blue-border" id="card-3">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/KRONA.png" alt="Krona" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>Krona</span>';">
+                    </div>
+                    <div class="portal-company-name">Krona</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-3" class="editable-span" contenteditable="true">cayque.z@j7s.com.br</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-3" class="editable-span" contenteditable="true">Logistica@789</span></div>
+                        <div class="portal-obs" style="color: var(--cor-alerta);"><span id="obs-3" class="editable-span" contenteditable="true">* Requer VPN</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-3')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-3','user-3','pass-3','obs-3')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card orange-border" id="card-4">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/TUPY.png" alt="Tupy" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>Tupy</span>';">
+                    </div>
+                    <div class="portal-company-name">Tupy</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-4" class="editable-span" contenteditable="true">comercial.br@j7s.com.br</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-4" class="editable-span" contenteditable="true">Cotar123!</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-4" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-4')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-4','user-4','pass-4','obs-4')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card blue-border" id="card-5">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/WEG.png" alt="WEG" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>WEG</span>';">
+                    </div>
+                    <div class="portal-company-name">WEG</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-5" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-5" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-5" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-5')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-5','user-5','pass-5','obs-5')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card orange-border" id="card-6">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/nidec.png" alt="Nidec" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>Nidec</span>';">
+                    </div>
+                    <div class="portal-company-name">Nidec</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-6" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-6" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-6" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-6')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-6','user-6','pass-6','obs-6')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card blue-border" id="card-7">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/NIMBI.png" alt="Nimbi" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>Nimbi</span>';">
+                    </div>
+                    <div class="portal-company-name">Nimbi</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-7" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-7" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-7" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-7')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-7','user-7','pass-7','obs-7')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card orange-border" id="card-8">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/SCHULZ.png" alt="Schulz" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>Schulz</span>';">
+                    </div>
+                    <div class="portal-company-name">Schulz</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-8" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-8" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-8" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-8')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-8','user-8','pass-8','obs-8')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card blue-border" id="card-9">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/SENAI.png" alt="SENAI" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>SENAI</span>';">
+                    </div>
+                    <div class="portal-company-name">SENAI</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-9" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-9" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-9" class="editable-span" contenteditable="true">Clique para obs...</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-9')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-9','user-9','pass-9','obs-9')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card portal-card orange-border" id="card-10">
+                    <div class="brand-logo-area portal-logo-area">
+                        <img src="../portais/gcertifica.png" alt="GCertifica" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'portal-logo-fallback\'>GCertifica</span>';">
+                    </div>
+                    <div class="portal-company-name">GCertifica</div>
+
+                    <div class="creds-box portal-creds-box">
+                        <div><strong>Usuário:</strong> <span id="user-10" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div><strong>Senha:</strong> <span id="pass-10" class="editable-span" contenteditable="true">Clique para preencher</span></div>
+                        <div class="portal-obs" style="color: var(--cor-texto-mutado);"><span id="obs-10" class="editable-span" contenteditable="true">Certificados e documentos</span></div>
+                    </div>
+
+                    <div class="action-row-tools portal-card-actions">
+                        <button class="btn btn-secondary" onclick="copyPassword('pass-10')"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        <button class="btn btn-secondary" onclick="updatePassword('card-10','user-10','pass-10','obs-10')"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </div>
+
+                    <a href="#" target="_blank" class="btn btn-primary portal-access-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+            </div>
+
+            <div class="portal-section-heading portal-section-heading-sm portal-section-heading-actions">
+                <div>
+                    <span class="view-eyebrow"><i class="fa-solid fa-truck-fast"></i> Logística</span>
+                    <h2>Portais das Transportadoras</h2>
+                    <p>Acessos rápidos para consulta e emissão nos portais logísticos.</p>
+                </div>
+                <button class="btn btn-secondary portal-add-btn" onclick="openPortalManagerModal('transportadora')">
+                    <i class="fa-solid fa-plus"></i> Novo Portal
+                </button>
+            </div>
+
+            <div id="portais-transportadoras-grid" class="tools-grid portais-grid portais-transportadoras-grid">
+                <div class="tool-card">
+                    <div class="brand-logo-area"><img src="../logo_transportadoras/intelipost.png" alt="Intelipost" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div>
+                    <div class="creds-box" style="margin-top: auto;">
+                        <div><strong>User:</strong> <span class="editable-span">cayque.z@j7s.com.br</span></div>
+                        <div><strong>Pass:</strong> <span class="editable-span">Comercial@j7s</span></div>
+                    </div>
+                    <a href="https://secure.intelipost.com.br/login/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="brand-logo-area"><img src="../logo_transportadoras/icaro-1.png" alt="Icaro" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div>
+                    <div class="creds-box" style="margin-top: auto;">
+                        <div><strong>User:</strong> <span class="editable-span">comercial@j7s.com.br</span></div>
+                        <div><strong>Pass:</strong> <span class="editable-span">J7s@1234</span></div>
+                    </div>
+                    <a href="https://icaro.eslcloud.com.br/users/sign_in" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="brand-logo-area"><img src="../logo_transportadoras/gollog.png" alt="Gollog" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-truck\' style=\'font-size:3rem; color:var(--cor-texto-mutado); opacity:0.3;\'></i>';"></div>
+                    <div class="creds-box" style="margin-top: auto;">
+                        <div><strong>User:</strong> <span class="editable-span">504.105.870-95</span></div>
+                        <div><strong>Pass:</strong> <span class="editable-span">comercialj7s</span></div>
+                        <div style="font-size:0.8rem; color: var(--cor-texto-mutado); margin-top:10px;">Opção "Para sua Empresa", informe CNPJ e escolha "COLABORADOR"</div>
+                    </div>
+                    <a href="https://secure.intelipost.com.br/login/" target="_blank" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar Portal</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-normas" class="hidden">
+            <h2 style="margin-bottom: 20px; font-weight: 800; font-size: 1.5rem; color: var(--cor-texto);">Normas e Arquivos</h2>
+            
+            <h3 style="font-size: 0.9rem; color: var(--cor-primaria); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--cor-primaria); padding-left: 12px; display: flex; align-items: center;">Dados Cadastrais J7s</h3>
+            <div class="tools-grid">
+                <div class="file-card" style="border-left-color: #F58220;">
+                    <span class="file-icon" style="color:#F58220;">🏢</span>
+                    <div class="file-info">
+                        <strong>J7s Sinalização</strong>
+                        <span>CNPJ: 82.962.127/0001-56</span>
+                    </div>
+                    <button class="btn btn-secondary btn-icon-only" onclick="copiarTexto('82.962.127/0001-56')" title="Copiar CNPJ" style="margin-left: auto;"><i class="fa-regular fa-copy"></i></button>
+                </div>
+                
+                <a href="../docs/contrato_social.pdf" class="file-card js-preview" data-name="Contrato Social" style="border-left-color: #8B5CF6;">
+                    <span class="file-icon" style="color:#8B5CF6;">🏛️</span>
+                    <div class="file-info"><strong>Contrato Social</strong><span>PDF | Atualizado</span></div>
+                </a>
+                
+                <a href="../docs/balanco_patrimonial_2024.pdf" class="file-card js-preview" data-name="Balanço 2024" style="border-left-color: #8B5CF6;">
+                    <span class="file-icon" style="color:#8B5CF6;">📊</span>
+                    <div class="file-info"><strong>Balanço Patrimonial 2024</strong><span>PDF | Fechamento</span></div>
+                </a>
+            </div>
+
+            <h3 style="font-size: 0.9rem; color: var(--cor-primaria); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--cor-primaria); padding-left: 12px; display: flex; align-items: center;">Dados para PIX</h3>
+            <div class="tools-grid">
+                <div class="file-card" style="border-left-color: #10b981;">
+                    <span class="file-icon" style="color:#10b981;"><i class="fa-brands fa-pix"></i></span>
+                    <div class="file-info">
+                        <strong>Chave PIX (CNPJ)</strong>
+                        <span>82.962.127/0001-56</span>
+                    </div>
+                    <button class="btn btn-secondary btn-icon-only" onclick="copiarTexto('82.962.127/0001-56')" title="Copiar Chave" style="margin-left: auto;"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <h3 style="font-size: 0.9rem; color: var(--cor-primaria); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--cor-primaria); padding-left: 12px; display: flex; align-items: center;">Norma ACM e Componentes</h3>
+            <div class="tools-grid">
+                <a href="../Ficha técnica Adesivo Industrial.pdf" class="file-card js-preview" data-name="FT Adesivo Industrial">
+                    <span class="file-icon">📄</span>
+                    <div class="file-info"><strong>FT Adesivo Industrial</strong><span>PDF | Especificação</span></div>
+                </a>
+                <a href="../Ficha técnica refletivo prismatico.pdf" class="file-card js-preview" data-name="FT Refletivo Prismático">
+                    <span class="file-icon">✨</span>
+                    <div class="file-info"><strong>FT Refletivo Prismático</strong><span>PDF | Técnico</span></div>
+                </a>
+                <a href="../Laudo refletivo Avery tipo I (Laboratorio Lenco).pdf" class="file-card js-preview" data-name="Laudo Avery Tipo I">
+                    <span class="file-icon">🔬</span>
+                    <div class="file-info"><strong>Laudo Avery Tipo I</strong><span>PDF | Laboratório Lenco</span></div>
+                </a>
+                <a href="../Ficha técnica tubo de aço galvanizado.pdf" class="file-card js-preview" data-name="FT Tubo Galvanizado">
+                    <span class="file-icon">⚙️</span>
+                    <div class="file-info"><strong>FT Tubo Aço Galvanizado</strong><span>PDF | Estrutural</span></div>
+                </a>
+                <a href="../Parafuso francês com porca sextavada.pdf" class="file-card js-preview" data-name="Parafuso Francês">
+                    <span class="file-icon">🔩</span>
+                    <div class="file-info"><strong>Parafuso Francês</strong><span>PDF | Fixação</span></div>
+                </a>
+            </div>
+
+            <h3 style="font-size: 0.9rem; color: var(--cor-primaria); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--cor-primaria); padding-left: 12px; display: flex; align-items: center;">Norma Fotoluminescente</h3>
+            <div class="tools-grid">
+                <a href="../Fotoluminescente 30hs - Laudo completo.pdf" class="file-card js-preview" data-name="Laudo Fotoluminescente">
+                    <span class="file-icon" style="color: #F58220;">💡</span>
+                    <div class="file-info"><strong>Fotoluminescente 30hs</strong><span>PDF | Laudo Completo</span></div>
+                </a>
+            </div>
+
+            <h3 style="font-size: 0.9rem; color: var(--cor-primaria); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--cor-primaria); padding-left: 12px; display: flex; align-items: center;">Norma PVC</h3>
+            <div class="tools-grid">
+                <a href="../Laudo PVC.pdf" class="file-card js-preview" data-name="Laudo PVC">
+                    <span class="file-icon" style="color: #0284C7;">🟦</span>
+                    <div class="file-info"><strong>Laudo PVC</strong><span>PDF | Especificação</span></div>
+                </a>
+            </div>
+
+            <h3 style="font-size: 0.9rem; color: var(--cor-primaria); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--cor-primaria); padding-left: 12px; display: flex; align-items: center;">Outros Materiais e Arquivos</h3>
+            <div class="tools-grid">
+                <a href="../FICHA TÉCNICA MDF 15MM.pdf" class="file-card js-preview" data-name="FT MDF 15mm">
+                    <span class="file-icon">🟫</span>
+                    <div class="file-info"><strong>FT MDF 15mm</strong><span>PDF | Madeira</span></div>
+                </a>
+                <a href="../Lona perfurada.pdf" class="file-card js-preview" data-name="Lona Perfurada">
+                    <span class="file-icon">🚩</span>
+                    <div class="file-info"><strong>Lona Perfurada</strong><span>PDF | Banner</span></div>
+                </a>
+                <a href="../J7s Sinalização powerd by ColorAdd.pptx" class="file-card" download>
+                    <span class="file-icon" style="color: #d24726;">📑</span>
+                    <div class="file-info"><strong>Apresentação J7s ColorAdd</strong><span>PPTX | Powerpoint</span></div>
+                </a>
+                <a href="../arquivos/J7s - Portifolio.pdf" class="file-card js-preview" data-name="Portfólio">
+                    <span class="file-icon">📘</span>
+                    <div class="file-info"><strong>Portfólio J7s</strong><span>PDF | Institucional</span></div>
+                </a>
+            </div>
+        </div>
+
+        <div id="view-galeria" class="hidden">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; flex-wrap:wrap; gap:15px;">
+                <div>
+                    <h2 style="margin: 0; font-weight: 800; font-size: 1.5rem; color: var(--cor-texto);">Galeria de Produtos</h2>
+                    <p style="color: var(--cor-texto-mutado); font-size: 0.95rem; margin-top: 4px;">Selecione a categoria abaixo para encontrar as fotos.</p>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center; background: var(--cor-card-bg); padding: 10px 15px; border-radius: var(--radius-padrao); border: 1px solid var(--cor-borda);">
+                    <i class="fa-solid fa-filter" style="color:var(--cor-primaria);"></i>
+                    <select id="filtro-categorias" class="input-box" style="margin:0; width:auto; border:none; padding:5px; box-shadow:none; background:transparent;" onchange="renderizarGaleria()">
+                        <option value="todas">Todas as Pastas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="galeria-container" class="tools-grid"></div>
+            
+            <div id="aviso-vazio" style="padding: 40px; text-align: center; background: var(--cor-card-bg); border-radius: var(--radius-padrao); color: var(--cor-texto-mutado); display: none; border: 1px solid var(--cor-borda);">Nenhuma imagem encontrada nesta pasta.</div>
+            <div id="aviso-erro" style="padding: 40px; text-align: center; background: var(--warning-bg); border-radius: var(--radius-padrao); border: 1px solid var(--cor-alerta); color: #D97706; display: none;">
+                <strong><i class="fa-solid fa-triangle-exclamation"></i> Atenção:</strong> Não encontrei o arquivo de dados.<br>
+                Por favor, dê dois cliques no arquivo <code>atualizar_galeria.bat</code> nesta pasta.
+            </div>
+        </div>
+    </main>
+    </div>
+
+    <div id="briefingModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; font-weight: 700; font-size: 1.3rem; color: var(--cor-texto);">
+                <i class="ph-fill ph-paper-plane-right" style="color:var(--cor-primaria);"></i> Enviar p/ Layout
+            </h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;">Preencha o briefing do pedido <strong id="br-order-id" style="color:var(--cor-primaria);"></strong>.</p>
+            
+            <div class="form-grid">
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display: block; margin-bottom: 4px;">Tipo de Pedido:</label>
+                    <select id="br-tipo" class="input-box" style="margin:0;">
+                        <option value="Normal">Normal</option>
+                        <option value="Urgente">Urgente</option>
+                        <option value="Homologado">Homologado</option>
+                        <option value="Projeto">Projeto Especial</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display: block; margin-bottom: 4px;">Prazo de Entrega (Global):</label>
+                    <input type="date" id="br-data-layout" class="input-box" style="margin:0;">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display: block; margin-bottom: 4px;">WhatsApp Cliente:</label>
+                    <input type="text" id="br-whatsapp" class="input-box" placeholder="(11) 99999-9999" style="margin:0;">
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display: block; margin-bottom: 4px;">E-mail Cliente:</label>
+                    <input type="text" id="br-email" class="input-box" placeholder="cliente@email.com" style="margin:0;">
+                </div>
+            </div>
+
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px; margin-top: 5px;">Briefing da Arte/Projeto:</label>
+            <textarea id="br-obs" class="input-box" style="height: 100px;" placeholder="Descreva os detalhes, referências, tamanhos precisos..."></textarea>
+            
+            <div class="upload-area" onclick="document.getElementById('br-file-input').click()">
+                <i class="ph-fill ph-cloud-arrow-up" style="font-size:2rem; color:var(--cor-primaria); margin-bottom: 10px;"></i>
+                <p style="font-weight: 600; color: var(--cor-texto); font-size: 0.95rem;">Anexar Ficheiros Físicos no Servidor</p>
+                <p style="font-size: 0.8rem; color: var(--cor-texto-mutado); margin-top: 4px;">A pasta no servidor local será criada automaticamente</p>
+                <input type="file" id="br-file-input" multiple hidden onchange="handleLayoutFileSelect(this)">
+                <div id="br-file-preview" style="margin-top: 15px;"></div>
+            </div>
+
+            <input type="hidden" id="br-id">
+            
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('briefingModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmBriefing()" id="btn-submit-layout"><i class="ph-bold ph-check"></i> Enviar para Produção</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resendModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="margin-bottom:10px; display:flex; align-items:center; gap:10px; font-weight: 700; font-size: 1.3rem; color: var(--cor-texto);">
+                <i class="ph-fill ph-arrow-u-up-right" style="color:var(--cor-erro);"></i> Corrigir e Reenviar
+            </h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;">Responda a devolução do pedido <strong id="resend-order-id" style="color:var(--cor-erro);"></strong>.</p>
+            
+            <input type="hidden" id="resend-id">
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display: block; margin-bottom: 4px;">Reenviar para o Setor:</label>
+            <select id="resend-target" class="input-box" style="margin-bottom:15px;"></select>
+            
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display: block; margin-bottom: 4px;">Observações da Correção:</label>
+            <textarea id="resend-obs" class="input-box" style="height:100px; margin-bottom:15px;" placeholder="Explique o que foi corrigido e como a fábrica deve prosseguir..."></textarea>
+            
+            <div class="upload-area" onclick="document.getElementById('resend-file-input').click()">
+                <i class="ph-fill ph-cloud-arrow-up" style="font-size:2rem; color:var(--cor-erro); margin-bottom: 10px;"></i>
+                <p style="font-weight: 600; color: var(--cor-texto); font-size: 0.95rem;">Anexar Ficheiros Corrigidos (Opcional)</p>
+                <input type="file" id="resend-file-input" multiple hidden onchange="handleResendFileSelect(this)">
+                <div id="resend-file-preview" style="margin-top: 15px;"></div>
+            </div>
+            
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('resendModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-danger" onclick="submitResend()" id="btn-submit-resend"><i class="ph-bold ph-paper-plane-tilt"></i> Reenviar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editDateModal" class="modal-overlay comercial-date-modal">
+        <div class="modal-card comercial-date-card">
+            <h3 style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-weight: 700; font-size: 1.3rem;"><i class="ph-fill ph-calendar-check" style="color:var(--cor-primaria);"></i> Alterar Prazo</h3>
+            <p style="color:var(--cor-texto-mutado); margin-bottom:20px; font-size:0.9rem;">Defina uma nova data de entrega para a fábrica.</p>
+            <p class="comercial-date-intro">Atualize a data do pedido enquanto ele aguarda acao do Comercial.</p>
+            <div class="comercial-date-summary">
+                <div><span>ID do pedido</span><strong id="comercialDataPedidoId">--</strong></div>
+                <div><span>Cliente</span><strong id="comercialDataCliente">--</strong></div>
+                <div><span>Data atual</span><strong id="comercialDataAtual">--</strong></div>
+            </div>
+            <div class="comercial-date-form">
+                <label for="comercialNovaData">Nova data</label>
+                <input type="date" id="comercialNovaData" class="input-box">
+                <input type="hidden" id="new-delivery-date">
+                <label for="comercialMotivoAlteracaoData">Motivo da alteracao</label>
+                <select id="comercialMotivoAlteracaoData" class="input-box">
+                    <option value="">Selecione o motivo</option>
+                    <option value="retorno_comercial">Retorno ao Comercial</option>
+                    <option value="aguardando_cliente">Aguardando cliente</option>
+                    <option value="ajuste_prazo">Ajuste de prazo</option>
+                    <option value="correcao_data">Correcao de data</option>
+                    <option value="outros">Outros</option>
+                </select>
+                <label for="comercialObsAlteracaoData">Observacao opcional</label>
+                <textarea id="comercialObsAlteracaoData" class="input-box" placeholder="Detalhe a necessidade da alteracao, se houver."></textarea>
+            </div>
+            <input type="hidden" id="edit-date-id">
+            <div class="comercial-date-actions">
+                <button class="btn btn-secondary" onclick="document.getElementById('editDateModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveNewDate()" id="btn-save-comercial-date"><i class="ph-bold ph-check"></i> Salvar alteracao</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="filesModal" class="modal-overlay">
+        <div class="modal-card-lg" style="padding: 0;">
+            <div style="padding:20px 25px; border-bottom:1px solid var(--cor-borda); display:flex; justify-content:space-between; align-items:center; background:var(--cor-card-bg);">
+                <h3 style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:10px; font-weight: 700;">
+                    <i class="ph-fill ph-folder-open" style="color:var(--cor-primaria);"></i> Ficheiros do Pedido <span id="modal-order-id" style="color:var(--cor-primaria);"></span>
+                </h3>
+                <button class="btn btn-secondary btn-icon-only" onclick="closeFilesModal()" style="height: 32px; width: 32px;"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="file-browser">
+                <div class="file-list" id="file-list-container"></div>
+                <div class="file-preview" id="preview-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 600px; padding: 0; display: flex; flex-direction: column; max-height: 80vh;">
+            <div style="padding: 20px 25px; border-bottom: 1px solid var(--cor-borda); background: var(--cor-card-bg); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.2rem;">
+                    <i class="ph-fill ph-clock-counter-clockwise" style="color:var(--cor-primaria);"></i> Auditoria <span id="hist-order-id" style="color:var(--cor-primaria);"></span>
+                </h3>
+                <button class="btn btn-secondary btn-icon-only" onclick="closeHistoryModal()" style="height: 32px; width: 32px;"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div id="history-container" style="padding: 20px 25px; overflow-y: auto; flex: 1; background: var(--cor-panel-bg);"></div>
+        </div>
+    </div>
+</body>
+</html>

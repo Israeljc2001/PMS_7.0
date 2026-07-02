@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCP | SinalizaFlow J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    
+    <link rel="stylesheet" href="../assets/css/pcp.css">
+</head>
+<body>
+
+    <button id="scrollTopBtn" class="btn-scroll-top" onclick="scrollToTop()">
+        <i class="ph-bold ph-arrow-up"></i>
+    </button>
+
+    <script src="../assets/js/auth/pcp-auth.js"></script>
+
+    <div class="commercial-shell pcp-shell">
+        <aside class="app-sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+                <div class="brand-wordmark">Sinaliza<span>Flow</span></div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="menu-label">PRINCIPAL</div>
+
+                <button id="btn-dash" class="nav-btn active" onclick="switchTab('dash')">
+                    <i class="ph-fill ph-clipboard-text"></i>
+                    <span>Fila de Revisão</span>
+                </button>
+
+                <button id="btn-returns" class="nav-btn" onclick="switchTab('returns')">
+                    <i class="ph-fill ph-warning-circle"></i>
+                    <span>Fila de Retornos</span>
+                    <span id="badge-returns" class="badge-notification alert-badge hidden">0</span>
+                </button>
+
+                <button id="btn-reports" class="nav-btn" onclick="switchTab('reports')">
+                    <i class="ph-fill ph-chart-bar"></i>
+                    <span>Relatórios</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button onclick="toggleTheme()" class="nav-btn">
+                    <i id="theme-icon" class="ph-fill ph-moon"></i>
+                    <span id="theme-text">Modo Escuro</span>
+                </button>
+
+                <button onclick="logout()" class="logout-btn">
+                    <i class="ph-bold ph-sign-out"></i>
+                    <span>Sair do Sistema</span>
+                </button>
+            </div>
+        </aside>
+
+        <main id="main-content">
+            <div class="topbar">
+                <div class="topbar-sector-context">
+                    <span class="sector-dot"></span>
+                    <div>
+                        <strong>Setor PCP</strong>
+                        <span>Validação técnica • Banco de dados em tempo real</span>
+                    </div>
+                </div>
+
+                <div class="topbar-actions">
+                    <button class="icon-btn" onclick="sync()" title="Atualizar">
+                        <i class="ph-bold ph-arrows-clockwise"></i>
+                    </button>
+
+                    <div id="db-status-badge" class="status-badge-top online">
+                        <i class="ph-fill ph-database"></i>
+                        <span id="db-status-text">Conectado</span>
+                    </div>
+
+                    <div class="status-badge-top">
+                        <i class="ph-bold ph-clock"></i>
+                        <span id="last-update-text">Atualizando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-header layout-work-header">
+                <div class="page-user-identity layout-page-left">
+                    <span class="page-overline">
+                        <i class="ph-fill ph-check-square-offset"></i>
+                        Página atual
+                    </span>
+                    <h1 id="page-title">Fila de Revisão</h1>
+                    <p id="page-subtitle">Validação técnica, conferência de ficheiros e liberação para a fábrica.</p>
+                </div>
+
+                <div class="layout-user-highlight">
+                    <span>Operador em atividade</span>
+                    <strong id="user-name">...</strong>
+                </div>
+            </div>
+
+            <div id="view-dash" class="action-workspace">
+                <div class="view-intro pcp-view-intro">
+                    <div>
+                        <span class="view-eyebrow"><i class="ph-fill ph-clipboard-text"></i> Revisão técnica</span>
+                        <h2>Fila de Revisão</h2>
+                        <p>Pedidos aguardando conferência técnica antes da produção.</p>
+                    </div>
+                    <span class="view-chip"><i class="ph-fill ph-shield-check"></i> Conferência ativa</span>
+                </div>
+
+                <div id="kpi-container" class="kpi-grid-cols"></div>
+                
+                <div class="filters">
+                    <div style="position: relative; flex: 1; min-width: 200px;">
+                        <i class="ph-bold ph-magnifying-glass" style="position: absolute; left: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; pointer-events: none;"></i>
+                        <input type="text" id="search-input" class="input-box" placeholder="Buscar ID ou Cliente..." onkeyup="toggleClearBtn(); renderOrders()" style="padding-left: 40px; padding-right: 35px; margin: 0;">
+                        <i id="clear-search-btn" class="ph-bold ph-x" style="position: absolute; right: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; cursor: pointer; display: none;" onclick="clearSearch()" title="Limpar busca"></i>
+                    </div>
+                    
+                    <select id="filter-type" class="input-box" style="width:auto; min-width:150px; margin:0;" onchange="renderOrders()">
+                        <option value="all">🏷️ Todos os Tipos</option>
+                        <option value="urgente">🔥 Urgente</option>
+                        <option value="homologado">⭐ Homologado</option>
+                        <option value="projeto">📐 Projeto</option>
+                        <option value="normal">📦 Normal</option>
+                    </select>
+
+                    <select id="sort-select" class="input-box" style="width:auto; min-width:160px; margin:0;" onchange="renderOrders()">
+                        <option value="oldest">⏳ Mais Antigos</option>
+                        <option value="recent">✨ Mais Recentes</option>
+                        <option value="late">⚠️ Atrasados</option>
+                    </select>
+                    
+                    <button class="btn btn-secondary" onclick="sync()" style="margin: 0;"><i class="ph-bold ph-arrows-clockwise" style="font-size:1.1rem;"></i> Atualizar</button>
+                </div>
+
+                <div id="orders-container" class="orders-container">
+                    <div style="text-align:center; padding:60px; color:var(--cor-texto-mutado);">
+                        <i class="ph-bold ph-spinner ph-spin" style="font-size:3rem;"></i><br><br>A carregar fila...
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-reports" class="hidden report-workspace">
+                <div class="report-dashboard-grid">
+                    <section class="report-panel report-panel-distribution">
+                        <div class="report-panel-head">
+                            <div>
+                                <span class="view-eyebrow"><i class="ph-fill ph-chart-pie-slice"></i> Distribuição</span>
+                                <h3>Total liberado por inspetor</h3>
+                            </div>
+                        </div>
+                        <div id="designer-distribution" class="designer-distribution-panel"></div>
+                    </section>
+
+                    <section class="report-panel report-panel-funnel">
+                        <div class="report-panel-head">
+                            <div>
+                                <span class="view-eyebrow"><i class="ph-fill ph-funnel"></i> Validação técnica</span>
+                                <h3>Desempenho de validação</h3>
+                            </div>
+                        </div>
+                        <div id="micro-funnel-grid" class="report-metric-grid"></div>
+                    </section>
+
+                    <section class="report-panel report-panel-active">
+                        <div class="report-panel-head">
+                            <div>
+                                <span class="view-eyebrow"><i class="ph-fill ph-pulse"></i> Tempo real</span>
+                                <h3>Pedidos na tela</h3>
+                            </div>
+                        </div>
+                        <div id="active-projects-grid" class="gamer-grid"></div>
+                    </section>
+                    
+                    <section class="report-panel report-panel-fame">
+                        <div class="report-panel-head">
+                            <div>
+                                <span class="view-eyebrow"><i class="ph-fill ph-trophy"></i> Ranking</span>
+                                <h3>Hall da fama</h3>
+                            </div>
+                        </div>
+                        <div id="ranking-grid" class="gamer-grid"></div>
+                    </section>
+
+                    <section class="report-panel report-panel-full">
+                        <div class="report-panel-head">
+                            <div>
+                                <span class="view-eyebrow"><i class="ph-fill ph-warning-circle"></i> Reprovações</span>
+                                <h3>Top motivos de reprovação</h3>
+                            </div>
+                        </div>
+                        <div id="motivos-list" class="report-list-stack"></div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="actionModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modal-title" style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; font-weight: 700; font-size: 1.3rem;">Confirmar Ação</h3>
+            <p id="modal-desc" style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;"></p>
+            
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Motivo Técnico:</label>
+            <select id="modal-reason-select" class="input-box" style="margin-bottom:15px;"></select>
+
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Observação / Instrução de Correção:</label>
+            <textarea id="modal-obs" class="input-box" style="height: 100px; margin-bottom: 15px;" placeholder="Se estiver devolvendo, explique detalhadamente o que precisa ser corrigido..."></textarea>
+            
+            <input type="hidden" id="modal-id">
+            <input type="hidden" id="modal-new-status">
+            <input type="hidden" id="modal-move-type">
+            
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmAction()" id="btn-confirm-action">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE JUSTIFICATIVA (Obrigatório para o Lockdown funcionar) -->
+    <div id="prazoModal" class="modal-overlay" style="z-index: 99999;">
+        <div class="modal-card">
+            <h3 style="margin-bottom:10px; display:flex; align-items:center; gap:10px; font-weight: 700; font-size: 1.3rem; color:var(--cor-alerta);"><i class="ph-fill ph-clock-plus"></i> Justificar Prazo</h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;">Selecione o prazo adicional e justifique o motivo para liberar o projeto.</p>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Tempo Adicional:</label>
+                    <select id="prazo-dias" class="input-box">
+                        <option value="0">0 Dias (Só Justificar)</option>
+                        <option value="1">+ 1 Dia</option>
+                        <option value="3">+ 3 Dias</option>
+                        <option value="5">+ 5 Dias</option>
+                    </select>
+                </div>
+                <div style="flex: 2; min-width: 200px;">
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Motivo Principal:</label>
+                    <select id="prazo-motivo" class="input-box">
+                        <option value="Sobrecarga">Fila muito longa (Sobrecarga)</option>
+                        <option value="Dúvida Técnica">Dúvida Técnica (Aguardando Retorno)</option>
+                        <option value="Falta Ficheiro">Falta de Ficheiros de Produção</option>
+                        <option value="Início Tardio">Início Tardio no Setor</option>
+                        <option value="Outros">Outros (Descrever abaixo)</option>
+                    </select>
+                </div>
+            </div>
+
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Detalhes da Justificativa:</label>
+            <textarea id="prazo-detalhes" class="input-box" style="height: 80px; margin-bottom: 20px;" placeholder="Descreva brevemente o que causou o atraso..."></textarea>
+            
+            <input type="hidden" id="prazo-id">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('prazoModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-warning" onclick="confirmPrazo()"><i class="ph-bold ph-clock"></i> Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="filesModal" class="modal-overlay"><div class="modal-card-lg" style="padding: 0;"><div style="padding:20px 25px; border-bottom:1px solid var(--cor-borda); display:flex; justify-content:space-between; align-items:center; background:var(--cor-card-bg);"><h3 style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:10px; font-weight: 700;"><i class="ph-fill ph-folder-open" style="color:var(--cor-primaria);"></i> Ficheiros do Pedido <span id="modal-order-id" style="color:var(--cor-primaria);"></span></h3><button class="btn btn-secondary btn-icon-only" onclick="closeFilesModal()" style="height: 32px; width: 32px; padding: 0;"><i class="ph-bold ph-x"></i></button></div><div class="file-browser"><div class="file-list" id="file-list-container"></div><div class="file-preview" id="preview-container"></div></div></div></div>
+    <div id="historyModal" class="modal-overlay"><div class="modal-card" style="max-width: 600px; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 80vh;"><div style="padding: 20px 25px; border-bottom: 1px solid var(--cor-borda); background: var(--cor-card-bg); display: flex; justify-content: space-between; align-items: center;"><h3 style="margin: 0; display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.2rem;"><i class="ph-fill ph-clock-counter-clockwise" style="color:var(--cor-primaria);"></i> Auditoria <span id="hist-order-id" style="color:var(--cor-primaria);"></span></h3><button class="btn btn-secondary btn-icon-only" onclick="closeHistoryModal()" style="height: 32px; width: 32px; padding: 0;"><i class="ph-bold ph-x"></i></button></div><div id="history-container" style="padding: 20px 25px; overflow-y: auto; flex: 1; background: var(--cor-panel-bg);"></div></div></div>
+
+    <!-- CORTINA DE FERRO (LOCKDOWN DE ATRASOS) -->
+    <div id="lockdownModal" class="modal-overlay" style="z-index: 99998; backdrop-filter: blur(15px); background: rgba(15, 23, 42, 0.95); display: none;">
+        <div class="modal-card" style="max-width: 800px; border-top: 8px solid var(--cor-erro); box-shadow: 0 0 50px rgba(239, 68, 68, 0.2);">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="ph-fill ph-lock-key" style="font-size: 4rem; color: var(--cor-erro); margin-bottom: 10px;"></i>
+                <h2 style="font-size: 1.8rem; font-weight: 900; color: var(--cor-texto); letter-spacing: -1px;">SISTEMA BLOQUEADO</h2>
+                <p style="color: var(--cor-erro); font-size: 1rem; margin-top: 8px; font-weight: 700;">Você possui pedidos em atraso crítico na sua responsabilidade.</p>
+                <p style="color: var(--cor-texto-mutado); font-size: 0.9rem; margin-top: 4px; font-weight: 500;">Para liberar o acesso ao painel, você deve justificar e definir um novo prazo para os pedidos abaixo.</p>
+            </div>
+            
+            <div id="lockdown-list" style="max-height: 50vh; overflow-y: auto; background: var(--cor-panel-bg); border-radius: 8px; padding: 10px; border: 1px solid var(--cor-borda);">
+                <!-- A lista de pedidos atrasados entra aqui via JS -->
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="../assets/js/pages/pcp.js"></script>
+</body>
+</html>

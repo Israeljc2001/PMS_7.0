@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito | PMS J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+<body>
+
+    <div class="login-bg-orb orb-one"></div>
+    <div class="login-bg-orb orb-two"></div>
+
+    <div class="split-layout login-shell">
+        <div class="branding-side">
+            <div class="logo-area">
+                <img src="assets/img/logo.png" alt="Logo PMS J7S" class="custom-logo">
+                <span style="display: none;">PMS J7s</span> </div>
+            <h1>Rápido, Eficiente<br>e Produtivo</h1>
+            <p>A plataforma central de gestão da J7S Sinalização. Para garantir a máxima eficiência e a absoluta integridade das informações, todo o sistema foi reescrito do zero, com espelhamento em tempo real diretamente com o <strong>Oracle Cloud Database</strong>.</p>
+            
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <i class="devicon-oracle-original colored" title="Oracle DB"></i>
+                    <i class="devicon-nodejs-plain colored" title="Node.js"></i>
+                    <i class="devicon-javascript-plain colored" title="JavaScript"></i>
+                    <i class="devicon-html5-plain colored" title="HTML 5"></i>
+                    <i class="devicon-css3-plain colored" title="CSS 3"></i>
+                    <i class="devicon-express-original colored" title="Express"></i>
+                    <i class="devicon-github-original colored" title="Git"></i>
+                    <i class="devicon-oracle-original colored" title="Oracle DB"></i>
+                    <i class="devicon-nodejs-plain colored" title="Node.js"></i>
+                    <i class="devicon-javascript-plain colored" title="JavaScript"></i>
+                    <i class="devicon-html5-plain colored" title="HTML 5"></i>
+                    <i class="devicon-css3-plain colored" title="CSS 3"></i>
+                    <i class="devicon-express-original colored" title="Express"></i>
+                    <i class="devicon-github-original colored" title="Git"></i>
+                </div>
+            </div>
+            
+            <div class="credits-info">
+                <div class="version-box">Versão 3.0</div>
+                <div class="credits-text">
+                    <p><i class="ph-fill ph-shield-check" style="color: #10b981;"></i> Segurança & Dados Ativos</p>
+                    <p>Plataforma Desenvolvida por <strong>Israel Cidral</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-side">
+            <div class="form-container">
+                <span class="form-eyebrow">Acesso Restrito</span>
+                <h2>Acessar<br>Conta</h2>
+                <p>Insira as suas credenciais para continuar</p>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <label>Utilizador</label>
+                        <input type="text" id="username" class="input-box" placeholder="Ex: israel" required autocomplete="username">
+                        <i class="ph-fill ph-user"></i>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Palavra-passe</label>
+                        <input type="password" id="password" class="input-box" placeholder="••••••••" required autocomplete="current-password">
+                        <i class="ph-fill ph-lock-key"></i>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="btn-submit">
+                        Entrar no Sistema <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="footer-links">
+                    <i class="ph-fill ph-lock" style="color: var(--cor-primaria);"></i> Acesso Restrito
+                    <span style="margin: 0 8px; color: var(--cor-borda-hover);">|</span>
+                    <a href="#" onclick="openForgotModal(event)">Esqueci a senha</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Recuperar Senha</h3>
+            <p>Insira o seu e-mail de acesso. Enviaremos um link para criar uma nova palavra-passe.</p>
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>E-mail Associado</label>
+                <input type="email" id="forgot-email" class="input-box" placeholder="Ex: israel@j7s.com.br" required>
+                <i class="ph-fill ph-envelope-simple"></i>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-login btn-cancel" onclick="document.getElementById('forgotModal').style.display='none'" style="margin-top:0;">Cancelar</button>
+                <button type="button" class="btn-login" id="btn-submit-forgot" onclick="submitForgotPassword()" style="margin-top:0;">Enviar Link</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resetModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Criar Nova Senha</h3>
+            <p>Por motivos de segurança, digite a nova palavra-passe.</p>
+            <input type="hidden" id="reset-token">
+            <div class="input-group">
+                <label>Nova Palavra-passe</label>
+                <input type="password" id="reset-new-pass" class="input-box" placeholder="••••••••" required>
+                <i class="ph-fill ph-lock-key"></i>
+            </div>
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>Confirmar Palavra-passe</label>
+                <input type="password" id="reset-confirm-pass" class="input-box" placeholder="••••••••" required>
+                <i class="ph-fill ph-lock-key"></i>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-login btn-cancel" onclick="document.getElementById('resetModal').style.display='none'; window.location.href='index.html'" style="margin-top:0;">Cancelar</button>
+                <button type="button" class="btn-login" id="btn-submit-reset" onclick="submitResetPassword()" style="margin-top:0;">Atualizar Senha</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginLoadingOverlay" class="login-loading-overlay" aria-hidden="true">
+        <div class="login-loading-backdrop"></div>
+        <div class="login-loading-card">
+            <div class="login-logo-loader">
+                <img src="assets/img/logo.png" alt="Logo J7S">
+            </div>
+            <h2>Carregando</h2>
+            <p id="login-loading-message">Preparando sua área de trabalho...</p>
+        </div>
+    </div>
+
+    <script src="assets/js/pages/index.js"></script>
+</body>
+</html>

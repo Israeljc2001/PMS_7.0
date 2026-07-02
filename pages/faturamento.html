@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faturamento | SinalizaFlow J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    
+    <link rel="stylesheet" href="../assets/css/faturamento.css">
+</head>
+<body>
+
+    <script src="../assets/js/pages/faturamento.js"></script>
+
+    <div class="commercial-shell faturamento-shell">
+    <aside class="app-sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-receipt"></i></div>
+            <span class="brand-wordmark">Sinaliza<span>Flow</span></span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="menu-label">Principal</div>
+            <button id="btn-dash" class="nav-btn active" onclick="switchTab('Faturamento')">
+                <i class="ph-fill ph-files" style="font-size: 1.3rem;"></i> Fila Pendente
+            </button>
+            <button id="btn-done" class="nav-btn" onclick="switchTab('Finalizado')">
+                <i class="ph-fill ph-check-circle" style="font-size: 1.3rem;"></i> Finalizados
+            </button>
+            <button id="btn-reports" class="nav-btn" onclick="switchTab('reports')">
+                <i class="ph-fill ph-chart-bar" style="font-size: 1.3rem;"></i> Relatórios
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <button onclick="toggleTheme()" class="nav-btn"><i id="theme-icon" class="ph-fill ph-moon" style="font-size: 1.3rem;"></i> <span id="theme-text">Modo Escuro</span></button>
+            <div class="sidebar-user">
+                <i class="ph-fill ph-user-circle"></i>
+                <div class="sidebar-user-info">
+                    <span>Operador</span>
+                    <strong id="user-name">...</strong>
+                </div>
+            </div>
+            <button onclick="logout()" class="logout-btn"><i class="ph-bold ph-sign-out" style="font-size: 1.3rem;"></i> Sair do Sistema</button>
+        </div>
+    </aside>
+
+    <main id="main-content">
+        <div class="topbar">
+            <div class="topbar-sector-context">
+                <span class="sector-dot"></span>
+                <div>
+                    <strong>Setor Faturamento</strong>
+                    <span>NF - Banco de dados em tempo real</span>
+                </div>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="icon-btn" onclick="sync()" title="Atualizar">
+                    <i class="ph-bold ph-arrows-clockwise"></i>
+                </button>
+
+                <div id="db-status-badge" class="status-badge-top online"><i class="ph-fill ph-database"></i> <span id="db-status-text">Conectado</span></div>
+                <div class="status-badge-top"><i class="ph-bold ph-clock" style="color:var(--cor-texto-mutado)"></i> <span id="last-update-text">Atualizando...</span></div>
+            </div>
+        </div>
+        <div class="page-header">
+            <div>
+                <span class="page-overline">
+                    <i class="ph-fill ph-receipt"></i>
+                    Pagina atual
+                </span>
+                <h1 id="page-title">Setor de Faturamento</h1>
+                <p id="page-subtitle">Conferência de dados de expedição, arquivos e emissão de notas.</p>
+            </div>
+        </div>
+
+        <div id="view-dash">
+            <div id="kpi-container" class="kpi-grid-cols"></div>
+            
+            <div class="filters">
+                <div style="position: relative; flex: 1; min-width: 200px;">
+                    <i class="ph-bold ph-magnifying-glass" style="position: absolute; left: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; pointer-events: none;"></i>
+                    <input type="text" id="search-input" class="input-box" placeholder="Buscar ID ou Cliente..." onkeyup="toggleClearBtn(); renderOrders()" style="padding-left: 40px; padding-right: 35px; margin: 0;">
+                    <i id="clear-search-btn" class="ph-bold ph-x" style="position: absolute; right: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; cursor: pointer; display: none;" onclick="clearSearch()" title="Limpar busca"></i>
+                </div>
+                
+                <select id="filter-type" class="input-box" style="width:auto; min-width:150px; margin:0;" onchange="renderOrders()">
+                    <option value="all">🏷️ Todos os Tipos</option>
+                    <option value="urgente">🔥 Urgente</option>
+                    <option value="homologado">⭐ Homologado</option>
+                    <option value="projeto">📐 Projeto</option>
+                    <option value="normal">📦 Normal</option>
+                </select>
+
+                <select id="sort-select" class="input-box" style="width:auto; min-width:160px; margin:0;" onchange="renderOrders()">
+                    <option value="oldest">⏳ Mais Antigos</option>
+                    <option value="recent">✨ Mais Recentes</option>
+                    <option value="late">⚠️ Atrasados</option>
+                </select>
+                
+                <button class="btn btn-secondary" onclick="sync()" style="margin: 0;"><i class="ph-bold ph-arrows-clockwise" style="font-size:1.1rem;"></i> Atualizar</button>
+            </div>
+
+            <div id="orders-container" class="orders-container"><div style="text-align:center; padding:60px; color:var(--cor-texto-mutado);"><i class="ph-bold ph-spinner ph-spin" style="font-size:3rem;"></i><br><br>A carregar fila...</div></div>
+        </div>
+
+        <div id="view-reports" class="hidden">
+            
+            <div style="background: var(--cor-card-bg); border: 1px solid var(--cor-borda); border-radius: var(--radius-card); padding: 20px; margin-bottom: 25px; box-shadow: var(--sombra-sm);">
+                <div style="font-weight: 700; font-size: 1rem; color: var(--cor-texto); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i class="ph-fill ph-chart-pie-slice" style="color:var(--cor-primaria)"></i> Equipe de Emissão</div>
+                <div id="designer-distribution" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+            </div>
+            
+            <h2 style="margin-bottom:15px; color:var(--cor-texto); font-size:1.2rem; display:flex; align-items:center; gap:8px; font-weight: 700;"><i class="ph-fill ph-funnel" style="color:var(--cor-primaria)"></i> Desempenho do Setor</h2>
+            <div id="micro-funnel-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;"></div>
+            
+            <h2 style="margin-bottom:15px; display:flex; align-items:center; gap:8px; font-size:1.2rem; font-weight: 700; color:var(--cor-texto);"><i class="ph-fill ph-trophy" style="color:var(--cor-alerta)"></i> Ranking de Emissões</h2>
+            <div id="ranking-grid" class="gamer-grid" style="margin-bottom: 30px;"></div>
+
+            <h2 style="margin-bottom:15px; display:flex; align-items:center; gap:8px; font-size:1.2rem; font-weight: 700; color:var(--cor-texto);"><i class="ph-fill ph-warning-octagon" style="color:var(--cor-erro)"></i> Análise de Gargalos</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding-bottom: 40px;">
+                <div style="background: var(--cor-card-bg); border: 1px solid var(--cor-borda); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--sombra-sm);">
+                    <div style="font-weight: 700; font-size: 1rem; color: var(--cor-texto); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i class="ph-fill ph-warning" style="color:var(--cor-alerta)"></i> Problemas e Atrasos (NF)</div>
+                    <div id="motivos-atraso-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
+                <div style="background: var(--cor-card-bg); border: 1px solid var(--cor-borda); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--sombra-sm);">
+                    <div style="font-weight: 700; font-size: 1rem; color: var(--cor-texto); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i class="ph-fill ph-arrow-u-up-left" style="color:var(--cor-erro)"></i> Motivos de Devolução (Retorno)</div>
+                    <div id="motivos-retorno-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    </div>
+
+    <div id="actionModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modal-title" style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; font-weight: 700; font-size: 1.3rem;">Confirmar</h3>
+            <p id="modal-desc" style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;"></p>
+            
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Motivo da Movimentação:</label>
+            <select id="modal-reason-select" class="input-box" style="margin-bottom:15px;"></select>
+
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Nota Fiscal / Observação Adicional:</label>
+            <textarea id="modal-obs" class="input-box" style="height: 80px; margin-bottom: 15px;" placeholder="Digite o número da Nota ou o detalhe da devolução..."></textarea>
+            
+            <input type="hidden" id="modal-id">
+            <input type="hidden" id="modal-new-status">
+            <input type="hidden" id="modal-move-type">
+            
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmAction()" id="btn-confirm-action">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="prazoModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="margin-bottom:10px; display:flex; align-items:center; gap:10px; font-weight: 700; font-size: 1.3rem; color:var(--cor-alerta);"><i class="ph-fill ph-warning"></i> Registrar Problema / Atraso</h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;">O que está impedindo o faturamento deste pedido?</p>
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Motivo Principal:</label>
+            <select id="prazo-motivo" class="input-box" style="margin-bottom:15px;">
+                <option value="Dados Incompletos">Dados de Faturamento Incompletos</option>
+                <option value="Sistema Fora do Ar">Sistema de NF Fora do Ar</option>
+                <option value="Aguardando Cliente">Aguardando Retorno do Cliente</option>
+                <option value="Problema Financeiro">Pendência Financeira (Boleto/Pix)</option>
+                <option value="Problema Operacional">Sobrecarga / Fila Longa</option>
+            </select>
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Detalhes (Opcional):</label>
+            <textarea id="prazo-detalhes" class="input-box" style="height: 60px; margin-bottom: 20px;" placeholder="Ex: Cliente não enviou o CNPJ correto..."></textarea>
+            <input type="hidden" id="prazo-id">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('prazoModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-warning" onclick="confirmPrazo()"><i class="ph-bold ph-warning"></i> Registrar Atraso</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="filesModal" class="modal-overlay"><div class="modal-card-lg" style="padding: 0;"><div style="padding:20px 25px; border-bottom:1px solid var(--cor-borda); display:flex; justify-content:space-between; align-items:center; background:var(--cor-card-bg);"><h3 style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:10px; font-weight: 700;"><i class="ph-fill ph-folder-open" style="color:var(--cor-primaria);"></i> Ficheiros do Pedido <span id="modal-order-id" style="color:var(--cor-primaria);"></span></h3><button class="btn btn-secondary btn-icon-only" onclick="closeFilesModal()" style="height: 32px; width: 32px; padding: 0;"><i class="ph-bold ph-x"></i></button></div><div class="file-browser"><div class="file-list" id="file-list-container"></div><div class="file-preview" id="preview-container"></div></div></div></div>
+    
+    <div id="historyModal" class="modal-overlay"><div class="modal-card" style="max-width: 600px; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 80vh;"><div style="padding: 20px 25px; border-bottom: 1px solid var(--cor-borda); background: var(--cor-card-bg); display: flex; justify-content: space-between; align-items: center;"><h3 style="margin: 0; display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.2rem;"><i class="ph-fill ph-clock-counter-clockwise" style="color:var(--cor-primaria);"></i> Auditoria <span id="hist-order-id" style="color:var(--cor-primaria);"></span></h3><button class="btn btn-secondary btn-icon-only" onclick="closeHistoryModal()" style="height: 32px; width: 32px; padding: 0;"><i class="ph-bold ph-x"></i></button></div><div id="history-container" style="padding: 20px 25px; overflow-y: auto; flex: 1; background: var(--cor-panel-bg);"></div></div></div>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout | SinalizaFlow J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+    
+    <link rel="stylesheet" href="../assets/css/layout.css">
+</head>
+<body>
+
+    <button id="scrollTopBtn" class="btn-scroll-top" onclick="scrollToTop()">
+        <i class="ph-bold ph-arrow-up"></i>
+    </button>
+
+    <script src="../assets/js/auth/layout-auth.js"></script>
+
+    <div class="commercial-shell layout-shell">
+    <aside class="app-sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+            <div class="brand-wordmark">Sinaliza<span>Flow</span></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="menu-label">PRINCIPAL</div>
+
+            <button id="btn-dash" class="nav-btn active" onclick="switchTab('dash')">
+                <i class="ph-fill ph-kanban"></i>
+                <span>Fila de Criação</span>
+            </button>
+
+            <button id="btn-returns" class="nav-btn" onclick="switchTab('returns')">
+                <i class="ph-fill ph-warning-circle"></i>
+                <span>Fila de Retornos</span>
+                <span id="badge-returns" class="badge-notification alert-badge hidden">0</span>
+            </button>
+
+            <button id="btn-reports" class="nav-btn" onclick="switchTab('reports')">
+                <i class="ph-fill ph-chart-bar"></i>
+                <span>Relatórios</span>
+            </button>
+
+            <button id="btn-ranking" class="nav-btn" onclick="switchTab('ranking')">
+                <i class="ph-fill ph-trophy"></i>
+                <span>Ranking</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <div id="sidebar-score-card" class="sidebar-score-card">
+                <div class="sidebar-score-top">
+                    <div class="sidebar-score-orb">
+                        <i class="ph-fill ph-sparkle"></i>
+                    </div>
+                    <div>
+                        <span>Minha pontuação</span>
+                        <strong id="sidebar-score-name">...</strong>
+                    </div>
+                </div>
+
+                <div class="sidebar-score-main">
+                    <div class="sidebar-score-ring" id="sidebar-score-ring" style="--score-percent: 0;">
+                        <div class="sidebar-score-ring-inner">
+                            <span id="sidebar-score-level">N1</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-score-info">
+                        <strong id="sidebar-score-count">0 layouts</strong>
+                        <span id="sidebar-score-avg">Média: 0m</span>
+                        <small id="sidebar-score-rank">Ranking: --</small>
+                    </div>
+                </div>
+
+                <div class="sidebar-score-progress">
+                    <span id="sidebar-score-progress-fill"></span>
+                </div>
+                <div class="sidebar-score-caption" id="sidebar-score-caption">0/5 para o próximo nível</div>
+            </div>
+
+            <button onclick="toggleTheme()" class="nav-btn">
+                <i id="theme-icon" class="ph-fill ph-moon"></i>
+                <span id="theme-text">Modo Escuro</span>
+            </button>
+<button onclick="logout()" class="logout-btn">
+                <i class="ph-bold ph-sign-out"></i>
+                <span>Sair do Sistema</span>
+            </button>
+        </div>
+    </aside>
+
+    <main id="main-content">
+        <div class="topbar">
+<div class="topbar-sector-context">
+                <span class="sector-dot"></span>
+                <div>
+                    <strong>Setor de Criação</strong>
+                    <span>Layout • Banco de dados em tempo real</span>
+                </div>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="icon-btn" onclick="sync()" title="Atualizar">
+                    <i class="ph-bold ph-arrows-clockwise"></i>
+                </button>
+
+                <div id="db-status-badge" class="status-badge-top online">
+                    <i class="ph-fill ph-database"></i>
+                    <span id="db-status-text">Conectado</span>
+                </div>
+
+                <div class="status-badge-top">
+                    <i class="ph-bold ph-clock"></i>
+                    <span id="last-update-text">Atualizando...</span>
+                </div>
+</div>
+        </div>
+
+                                <div class="page-header layout-work-header">
+            <div class="page-user-identity layout-page-left">
+                <span class="page-overline">
+                    <i class="ph-fill ph-kanban"></i>
+                    Página atual
+                </span>
+                <h1 id="page-title">Fila de Criação</h1>
+                <p id="page-subtitle">
+                    Pedidos em desenvolvimento, retornos e aprovações do Layout.
+                </p>
+            </div>
+
+            <div class="layout-user-highlight">
+                <span>Designer em operação</span>
+                <strong id="layout-page-user">...</strong>
+            </div>
+        </div>
+
+
+
+
+
+        <div id="view-dash" class="action-workspace">
+            <div class="view-intro layout-view-intro">
+                <div>
+                    <span class="view-eyebrow"><i class="ph-fill ph-paint-brush"></i> Produção de layout</span>
+                    <h2>Fila de Criação</h2>
+                    <p>Pedidos em desenvolvimento, retornos e aprovações.</p>
+                </div>
+                <span class="view-chip"><i class="ph-fill ph-lightning"></i> Trabalho ativo</span>
+            </div>
+            <div id="kpi-container" class="kpi-grid-cols"></div>
+            
+            <div class="filters">
+                <div style="position: relative; flex: 1; min-width: 200px;">
+                    <i class="ph-bold ph-magnifying-glass" style="position: absolute; left: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; pointer-events: none;"></i>
+                    <input type="text" id="search-input" class="input-box" placeholder="Buscar ID ou Cliente..." onkeyup="syncLayoutSearchToTopbar(this.value); toggleClearBtn(); renderOrders()" style="padding-left: 40px; padding-right: 35px; margin: 0;">
+                    <i id="clear-search-btn" class="ph-bold ph-x" style="position: absolute; right: 14px; top:50%; transform: translateY(-50%); color: var(--cor-texto-mutado); font-size: 1.1rem; cursor: pointer; display: none;" onclick="clearSearch()" title="Limpar busca"></i>
+                </div>
+                
+                <select id="filter-designer" class="input-box" style="width:auto; min-width:180px; margin:0;" onchange="renderOrders()">
+                    <option value="all">🎨 Todos os Designers</option>
+                    <option value="unassigned">⏳ Sem Responsável</option>
+                </select>
+
+                <select id="filter-type" class="input-box" style="width:auto; min-width:150px; margin:0;" onchange="renderOrders()">
+                    <option value="all">🏷️ Todos os Tipos</option>
+                    <option value="urgente">🔥 Urgente</option>
+                    <option value="homologado">⭐ Homologado</option>
+                    <option value="projeto">📐 Projeto</option>
+                    <option value="normal">📦 Normal</option>
+                </select>
+
+                <select id="sort-select" class="input-box" style="width:auto; min-width:160px; margin:0;" onchange="renderOrders()">
+                    <option value="oldest">⏳ Mais Antigos</option>
+                    <option value="recent">✨ Mais Recentes</option>
+                    <option value="late">⚠️ Atrasados/Risco</option>
+                </select>
+                
+                <button class="btn btn-secondary" onclick="sync()" style="margin: 0;"><i class="ph-bold ph-arrows-clockwise" style="font-size:1.1rem;"></i> Atualizar</button>
+            </div>
+
+            <div id="orders-container" class="orders-container"><div style="text-align:center; padding:60px; color:var(--cor-texto-mutado);"><i class="ph-bold ph-spinner ph-spin" style="font-size:3rem;"></i><br><br>A carregar fila...</div></div>
+        </div>
+
+        <div id="view-reports" class="hidden report-workspace">
+            <div class="view-intro report-view-intro">
+                <div>
+                    <span class="view-eyebrow"><i class="ph-fill ph-chart-bar"></i> Relatórios do Layout</span>
+                    <h2>Indicadores da Criação</h2>
+                    <p>Resumo consolidado de produtividade, etapas e gargalos.</p>
+                </div>
+                <span class="view-chip"><i class="ph-fill ph-pulse"></i> Tempo real</span>
+            </div>
+
+            <div class="report-dashboard-grid">
+                <section class="report-panel report-panel-distribution">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-chart-pie-slice"></i> Distribuição</span>
+                            <h3>Total finalizado por designer</h3>
+                        </div>
+                    </div>
+                    <div id="designer-distribution" class="designer-distribution-panel"></div>
+                </section>
+
+                <section class="report-panel report-panel-funnel">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-funnel"></i> Funil interno</span>
+                            <h3>Desempenho por etapa</h3>
+                        </div>
+                    </div>
+                    <div id="micro-funnel-grid" class="report-metric-grid"></div>
+                </section>
+
+                <section class="report-panel report-panel-active">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-pulse"></i> Em andamento</span>
+                            <h3>Projetos ativos por designer</h3>
+                        </div>
+                    </div>
+                    <div id="active-projects-grid" class="gamer-grid report-card-grid"></div>
+                </section>
+
+                <section class="report-panel report-panel-fame">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-trophy"></i> Ranking</span>
+                            <h3>Hall da fama</h3>
+                        </div>
+                    </div>
+                    <div id="ranking-grid" class="gamer-grid report-card-grid"></div>
+                </section>
+
+                <section class="report-panel">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-warning-circle"></i> Gargalos</span>
+                            <h3>Top motivos de atraso</h3>
+                        </div>
+                    </div>
+                    <div id="motivos-list" class="report-list-panel"></div>
+                </section>
+
+                <section class="report-panel">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-clock-plus"></i> Prazo extra</span>
+                            <h3>Pedidos de prazo extra</h3>
+                        </div>
+                    </div>
+                    <div id="ext-designer-list" class="report-list-panel"></div>
+                </section>
+            </div>
+        </div>
+        <div id="view-ranking" class="hidden ranking-workspace">
+            <div class="view-intro ranking-view-intro">
+                <div>
+                    <span class="view-eyebrow"><i class="ph-fill ph-trophy"></i> Ranking oficial</span>
+                    <h2>Ranking do Layout</h2>
+                    <p>Classificação visual da equipe com base nas layouts finalizados e desempenho registrado no sistema.</p>
+                </div>
+                <span class="view-chip ranking-live-chip"><i class="ph-fill ph-medal"></i> Top 3 em destaque</span>
+            </div>
+
+            <div class="ranking-layout-grid">
+                <section class="ranking-podium-panel report-panel report-panel-full">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-crown-simple"></i> Pódio</span>
+                            <h3>Primeiro, segundo e terceiro lugar</h3>
+                        </div>
+                    </div>
+
+                    <div id="ranking-podium" class="ranking-podium">
+                        <div class="ranking-loading">
+                            <i class="ph-bold ph-spinner ph-spin"></i>
+                            Carregando ranking...
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="ranking-rules-panel report-panel">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-info"></i> Regras</span>
+                            <h3>Como funciona</h3>
+                        </div>
+                    </div>
+
+                    <div class="ranking-rules-list">
+                        <div class="ranking-rule-item">
+                            <i class="ph-fill ph-check-circle"></i>
+                            <div>
+                                <strong>Layout finalizado soma ponto</strong>
+                                <span>Cada pedido concluído pelo designer entra no ranking.</span>
+                            </div>
+                        </div>
+
+                        <div class="ranking-rule-item">
+                            <i class="ph-fill ph-clock"></i>
+                            <div>
+                                <strong>Média por layout mede eficiência</strong>
+                                <span>O sistema considera o tempo registrado no histórico do pedido.</span>
+                            </div>
+                        </div>
+
+                        <div class="ranking-rule-item">
+                            <i class="ph-fill ph-trend-up"></i>
+                            <div>
+                                <strong>Nível cresce a cada 5 layouts</strong>
+                                <span>A barra de XP mostra o progresso até o próximo nível.</span>
+                            </div>
+                        </div>
+
+                        <div class="ranking-rule-item">
+                            <i class="ph-fill ph-warning-circle"></i>
+                            <div>
+                                <strong>Ranking é indicador operacional</strong>
+                                <span>Ele ajuda a enxergar produtividade, constância e gargalos do setor.</span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <section class="ranking-list-panel report-panel report-panel-full">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-list-numbers"></i> Classificação completa</span>
+                            <h3>Todos os designers</h3>
+                        </div>
+                    </div>
+                    <div id="ranking-full-list" class="ranking-full-list"></div>
+                </section>
+
+                <aside class="ranking-meaning-panel report-panel">
+                    <div class="report-panel-head">
+                        <div>
+                            <span class="view-eyebrow"><i class="ph-fill ph-target"></i> Representa</span>
+                            <h3>O que esse ranking mostra</h3>
+                        </div>
+                    </div>
+
+                    <p>
+                        O ranking não é apenas uma competição. Ele serve para acompanhar o volume de entrega,
+                        identificar evolução individual, reconhecer bons desempenhos e apoiar decisões de gestão.
+                    </p>
+
+                    <div class="ranking-meaning-tags">
+                        <span>Produtividade</span>
+                        <span>Constância</span>
+                        <span>Eficiência</span>
+                        <span>Reconhecimento</span>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+    </main>
+    </div>
+
+<div id="actionModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modal-title" style="display:flex; align-items:center; gap:10px; margin-bottom: 10px; font-weight: 700; font-size: 1.3rem;">Confirmar</h3>
+            <p id="modal-desc" style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;"></p>
+            
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Motivo da Movimentação:</label>
+            <select id="modal-reason-select" class="input-box" style="margin-bottom:15px;"></select>
+
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Observação Adicional:</label>
+            <textarea id="modal-obs" class="input-box" style="height: 80px; margin-bottom: 15px;" placeholder="Descreva os detalhes da ação..."></textarea>
+            
+            <div id="finish-area" class="hidden">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--cor-primaria); display:block; margin-bottom:4px;">Link de Aprovação (Canva / Drive):</label>
+                <input type="text" id="modal-link" class="input-box" style="margin-bottom:15px; border-color:var(--cor-primaria);" placeholder="Cole o link do layout final aqui...">
+                
+                <div class="upload-area" onclick="document.getElementById('modal-file-input').click()">
+                    <i class="ph-fill ph-cloud-arrow-up" style="font-size:2rem; color:var(--cor-primaria); margin-bottom: 10px;"></i>
+                    <p style="font-weight: 600; color: var(--cor-texto); font-size: 0.95rem;">Anexar Arquivos (PDF/Imagens)</p>
+                    <p style="font-size: 0.8rem; color: var(--cor-texto-mutado); margin-top: 4px;">Os arquivos serão salvos na pasta física do pedido</p>
+                    <input type="file" id="modal-file-input" multiple hidden onchange="handleFileSelect(this)">
+                    <div id="modal-file-preview" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <input type="hidden" id="modal-id">
+            <input type="hidden" id="modal-new-status">
+            <input type="hidden" id="modal-move-type">
+            
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmAction()" id="btn-confirm-action">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="prazoModal" class="modal-overlay" style="z-index: 99999;">
+        <div class="modal-card">
+            <h3 style="margin-bottom:10px; display:flex; align-items:center; gap:10px; font-weight: 700; font-size: 1.3rem; color:var(--cor-alerta);"><i class="ph-fill ph-clock-plus"></i> Solicitar Mais Tempo</h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;">Selecione o prazo adicional e justifique o motivo para o relatório.</p>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Tempo Adicional:</label>
+                    <select id="prazo-dias" class="input-box">
+                        <option value="0">0 Dias (Só Justificar)</option>
+                        <option value="1">+ 1 Dia</option>
+                        <option value="3">+ 3 Dias</option>
+                        <option value="5">+ 5 Dias</option>
+                    </select>
+                </div>
+                <div style="flex: 2; min-width: 200px;">
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Motivo Principal:</label>
+                    <select id="prazo-motivo" class="input-box">
+                        <option value="Sobrecarga">Sobrecarga de trabalho</option>
+                        <option value="Projeto Grande">Projeto de grande complexidade</option>
+                        <option value="Início Tardio">Início Tardio (Demora na fila)</option>
+                        <option value="Problema de Software">Problema de Software/Máquina</option>
+                        <option value="Aguardando Cliente">Aguardando resposta do Cliente</option>
+                        <option value="Falta de Informação">Falta de Info (Comercial)</option>
+                        <option value="Outros">Outros (Descrever abaixo)</option>
+                    </select>
+                </div>
+            </div>
+
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Detalhes da Justificativa:</label>
+            <textarea id="prazo-detalhes" class="input-box" style="height: 80px; margin-bottom: 20px;" placeholder="Descreva brevemente o que causou o gargalo ou atraso..."></textarea>
+            
+            <input type="hidden" id="prazo-id">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('prazoModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-warning" onclick="confirmPrazo()"><i class="ph-bold ph-clock"></i> Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="transferModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="margin-bottom:10px; display:flex; align-items:center; gap:10px; font-weight: 700; font-size: 1.3rem; color:var(--cor-primaria);"><i class="ph-fill ph-arrows-left-right"></i> Transferir Responsabilidade</h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;">Selecione o designer que assumirá o projeto.</p>
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Novo Responsável:</label>
+            <select id="transfer-designer" class="input-box" style="margin-bottom:15px;"></select>
+            <label style="font-size:0.85rem; font-weight:600; color:var(--cor-texto); display:block; margin-bottom:4px;">Motivo (Opcional):</label>
+            <input type="text" id="transfer-reason" class="input-box" placeholder="Ex: Férias, divisão de tarefas..." style="margin-bottom:20px;">
+            <input type="hidden" id="transfer-id">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('transferModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmTransfer()"><i class="ph-bold ph-check"></i> Transferir</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="filesModal" class="modal-overlay"><div class="modal-card-lg" style="padding: 0;"><div style="padding:20px 25px; border-bottom:1px solid var(--cor-borda); display:flex; justify-content:space-between; align-items:center; background:var(--cor-card-bg);"><h3 style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:10px; font-weight: 700;"><i class="ph-fill ph-folder-open" style="color:var(--cor-primaria);"></i> Ficheiros do Pedido <span id="modal-order-id" style="color:var(--cor-primaria);"></span></h3><button class="btn btn-secondary btn-icon-only" onclick="closeFilesModal()" style="height: 32px; width: 32px; padding: 0;"><i class="ph-bold ph-x"></i></button></div><div class="file-browser"><div class="file-list" id="file-list-container"></div><div class="file-preview" id="preview-container"></div></div></div></div>
+    
+    <div id="historyModal" class="modal-overlay"><div class="modal-card" style="max-width: 600px; padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: 80vh;"><div style="padding: 20px 25px; border-bottom: 1px solid var(--cor-borda); background: var(--cor-card-bg); display: flex; justify-content: space-between; align-items: center;"><h3 style="margin: 0; display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.2rem;"><i class="ph-fill ph-clock-counter-clockwise" style="color:var(--cor-primaria);"></i> Auditoria <span id="hist-order-id" style="color:var(--cor-primaria);"></span></h3><button class="btn btn-secondary btn-icon-only" onclick="closeHistoryModal()" style="height: 32px; width: 32px; padding: 0;"><i class="ph-bold ph-x"></i></button></div><div id="history-container" style="padding: 20px 25px; overflow-y: auto; flex: 1; background: var(--cor-panel-bg);"></div></div></div>
+
+    <div id="urgentAlertModal" class="modal-overlay" style="z-index: 9999; backdrop-filter: blur(10px);">
+        <div class="modal-card" style="max-width: 800px; border-top: 8px solid var(--cor-erro); background: var(--cor-card-bg); color: var(--cor-texto); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <i class="ph-fill ph-warning-octagon" style="font-size: 5rem; color: var(--cor-erro); animation: pulse 2s infinite;"></i>
+                <h2 style="font-size: 2rem; font-weight: 900; color: var(--cor-erro); margin-top: 15px; letter-spacing: -1px;">ATENÇÃO: RISCO DE ATRASO!</h2>
+                <p style="color: var(--cor-texto-mutado); font-size: 1.1rem; margin-top: 8px; font-weight: 500;">Os projetos abaixo estão prestes a vencer ou já estouraram o prazo. Priorize-os imediatamente para não impactar a fábrica.</p>
+            </div>
+            
+            <div id="urgentAlertList" style="max-height: 45vh; overflow-y: auto; background: var(--cor-panel-bg); border-radius: 8px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--cor-borda);">
+                </div>
+            
+            <button class="btn btn-danger" style="width: 100%; font-size: 1.2rem; padding: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;" onclick="closeUrgentAlert()">
+                <i class="ph-bold ph-check-square-offset"></i> Ciente, vou priorizar estes projetos!
+            </button>
+        </div>
+    </div>
+
+    <script src="../assets/js/pages/layout.js"></script>
+
+    <!-- CORTINA DE FERRO (LOCKDOWN DE ATRASOS) -->
+    <div id="lockdownModal" class="modal-overlay" style="z-index: 99998; backdrop-filter: blur(15px); background: rgba(15, 23, 42, 0.95); display: none;">
+        <div class="modal-card" style="max-width: 800px; border-top: 8px solid var(--cor-erro); box-shadow: 0 0 50px rgba(239, 68, 68, 0.2);">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="ph-fill ph-lock-key" style="font-size: 4rem; color: var(--cor-erro); margin-bottom: 10px;"></i>
+                <h2 style="font-size: 1.8rem; font-weight: 900; color: var(--cor-texto); letter-spacing: -1px;">SISTEMA BLOQUEADO</h2>
+                <p style="color: var(--cor-erro); font-size: 1rem; margin-top: 8px; font-weight: 700;">Você possui pedidos em atraso crítico na sua responsabilidade.</p>
+                <p style="color: var(--cor-texto-mutado); font-size: 0.9rem; margin-top: 4px; font-weight: 500;">Para liberar o acesso ao painel, você deve justificar e definir um novo prazo para os pedidos abaixo.</p>
+            </div>
+            
+            <div id="lockdown-list" style="max-height: 50vh; overflow-y: auto; background: var(--cor-panel-bg); border-radius: 8px; padding: 10px; border: 1px solid var(--cor-borda);">
+                <!-- A lista de pedidos atrasados entra aqui via JS -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

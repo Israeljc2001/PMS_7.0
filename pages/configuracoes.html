@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações | PMS J7S</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/core/sinaliza-core.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --cor-primaria: #2563EB; 
+            --cor-primaria-hover: #1D4ED8;
+            --cor-primaria-soft-bg: #EFF6FF;
+            --cor-fundo: #F3F4F6; 
+            --cor-card-bg: #FFFFFF; 
+            --cor-panel-bg: #F9FAFB; 
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.1);
+            --cor-borda: #E5E7EB;
+            --cor-borda-hover: #D1D5DB;
+            --cor-texto: #111827; 
+            --cor-texto-mutado: #6B7280;
+            --cor-input-bg: #FFFFFF;
+            --cor-sucesso: #10B981; 
+            --cor-erro: #EF4444; 
+            --cor-alerta: #F59E0B; 
+            
+            --sombra-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --sombra-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --sombra-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            --radius-padrao: 8px;
+            --radius-card: 12px;
+        }
+
+        /* ========================================================= */
+        /* 🌙 HIGH-END DARK MODE (Barra Azul + Preto OLED Absoluto)  */
+        /* ========================================================= */
+        [data-theme="dark"] {
+            /* Fundo Preto "Vivo" (Neutro e profundo) */
+            --cor-fundo: #000000; 
+            --cor-card-bg: #111111; 
+            --cor-panel-bg: #1A1A1A; 
+            --cor-input-bg: #000000; 
+            
+            /* Mantendo a Barra Lateral Azul Original */
+            --cor-sidebar-bg: #1E3A8A; 
+            --cor-sidebar-text: #E0E7FF;
+            --cor-sidebar-hover: rgba(255, 255, 255, 0.15);
+            
+            /* Textos Contrastantes */
+            --cor-texto: #FFFFFF; 
+            --cor-texto-mutado: #A1A1AA; 
+            
+            /* Bordas Translúcidas */
+            --cor-borda: rgba(255, 255, 255, 0.12); 
+            --cor-borda-hover: rgba(255, 255, 255, 0.25);
+            
+            /* Sombras ajustadas para fundo preto puro */
+            --sombra-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.8);
+            --sombra-md: 0 4px 8px -1px rgba(0, 0, 0, 0.9), 0 2px 4px -1px rgba(0, 0, 0, 0.7);
+            --sombra-lg: 0 15px 25px -5px rgba(0, 0, 0, 0.9), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
+
+            /* Badges e Alertas */
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            
+            /* Cores de texto das observações */
+            --obs-com-text: #FDE68A;
+            --obs-lay-text: #E9D5FF;
+            --obs-pcp-text: #FDBA74;
+            --obs-fat-text: #FDA4AF;
+            
+            /* Filtro de Logo */
+            --filtro-logo-transportadora: brightness(0) invert(1) opacity(0.9);
+        }
+        
+        /* 🚀 Tweaks de Iluminação para Cartões Pretos */
+        [data-theme="dark"] .kpi-card, 
+        [data-theme="dark"] .chart-card, 
+        [data-theme="dark"] .config-panel, 
+        [data-theme="dark"] .list-row,
+        [data-theme="dark"] .modal-card,
+        [data-theme="dark"] .report-card,
+        [data-theme="dark"] .sales-toolbar {
+            background: linear-gradient(145deg, var(--cor-card-bg) 0%, #080808 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), var(--sombra-md);
+        }
+        
+        /* Tabelas no Modo Escuro */
+        [data-theme="dark"] table th {
+            background: #000000; 
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        /* Destaque suave ao passar o rato nos cartões (List-row) */
+        [data-theme="dark"] .list-row:hover {
+            background: linear-gradient(145deg, #1A1A1A 0%, #0A0A0A 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Efeito vermelho suave para pedidos retornados/atrasados */
+        [data-theme="dark"] .list-row.is-retorno,
+        [data-theme="dark"] .list-row.late {
+            background: linear-gradient(145deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.04) 100%) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+        
+        /* Efeito escavado nos Inputs */
+        [data-theme="dark"] input, 
+        [data-theme="dark"] select, 
+        [data-theme="dark"] textarea {
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; outline:none; transition: background-color 0.2s, border-color 0.2s; }
+        body { background: var(--cor-fundo); color: var(--cor-texto); display: flex; font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* ========================================================= */
+        /* SIDEBAR PADRÃO OURO                                       */
+        /* ========================================================= */
+        aside { width: 260px; min-width: 260px; background: var(--cor-sidebar-bg); display: flex; flex-direction: column; padding: 24px 20px; z-index: 100; box-shadow: var(--sombra-md); position: fixed; height: 100vh; top: 0; left: 0;}
+        
+        .logo-area { margin-bottom: 35px; display: flex; align-items: center; gap: 12px; padding-left: 5px;}
+        .logo-icon { width: 34px; height: 34px; background: #FFFFFF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--cor-sidebar-bg); font-size: 1.5rem;}
+        .logo-text { color: #FFFFFF; font-weight: 900; font-size: 1.4rem; letter-spacing: 0.5px; }
+
+        nav { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .nav-btn { background: transparent; color: var(--cor-sidebar-text); border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 600; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: background 0.2s;}
+        .nav-btn i { font-size: 1.3rem; }
+        .nav-btn:hover { background: var(--cor-sidebar-hover); color: #FFFFFF; }
+        .nav-btn.active { background: #FFFFFF; color: var(--cor-sidebar-bg); font-weight: 800; box-shadow: var(--sombra-sm); }
+        .nav-btn.active i { color: var(--cor-sidebar-bg); }
+
+        .bottom-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+        .action-btn { background: transparent; color: var(--cor-sidebar-text); border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 600; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: background 0.2s;}
+        .action-btn i { font-size: 1.3rem; }
+        .action-btn:hover { background: var(--cor-sidebar-hover); color: #FFFFFF; }
+        
+        .logout-btn { background: rgba(0, 0, 0, 0.15); color: #FDA4AF; border: none; padding: 12px 16px; width: 100%; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 700; display: flex; align-items: center; gap: 14px; font-size: 0.95rem; transition: all 0.2s; margin-top: 10px;}
+        .logout-btn i { font-size: 1.3rem; }
+        .logout-btn:hover { background: rgba(225, 29, 72, 0.8); color: #FFFFFF; }
+
+        /* ========================================================= */
+        /* MAIN CONTENT                                              */
+        /* ========================================================= */
+        main { flex: 1; padding: 30px 40px; margin-left: 260px; overflow-y: auto;}
+        
+        .page-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:30px; gap: 20px; flex-wrap: wrap; border-bottom: 1px solid var(--cor-borda); padding-bottom: 20px;}
+        .page-header h1 { font-weight: 900; font-size: 2rem; color: var(--cor-texto); letter-spacing: -0.04em; line-height: 1.1; }
+        .page-header p { color: var(--cor-texto-mutado); font-size: 0.95rem; margin-top: 6px; font-weight: 500; }
+        
+        .btn { padding:10px 18px; border-radius:var(--radius-padrao); font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size: 0.85rem; height: 40px; box-shadow: var(--sombra-sm);}
+        .btn-primary { background: var(--cor-primaria); color: white; border: 1px solid transparent;}
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: var(--sombra-md); }
+        .btn-secondary { background: var(--cor-card-bg); color: var(--cor-texto); border: 1px solid var(--cor-borda);}
+        .btn-secondary:hover { background: var(--cor-panel-bg); }
+        .btn-danger { background: var(--cor-erro); color: white; }
+        .btn-success { background: var(--cor-sucesso); color: white; }
+        .btn-warning { background: var(--cor-alerta); color: white; }
+        .btn-icon-only { width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-padrao);}
+
+        .config-panel { background: var(--cor-card-bg); border-radius: var(--radius-card); border: 1px solid var(--cor-borda); box-shadow: var(--sombra-sm); padding: 25px; margin-bottom: 30px;}
+        .table-responsive-container { width: 100%; overflow-x: auto; border-radius: var(--radius-padrao); border: 1px solid var(--cor-borda); background: var(--cor-card-bg); box-shadow: var(--sombra-sm); margin-bottom: 20px;}
+        .config-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: left; }
+        .config-table th { background: var(--cor-panel-bg); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--cor-texto-mutado); padding: 12px 16px; border-bottom: 1px solid var(--cor-borda);}
+        .config-table td { padding: 10px 16px; border-bottom: 1px solid var(--cor-borda); color:var(--cor-texto); vertical-align: middle; }
+        .config-table tr:last-child td { border-bottom: none; }
+        
+        .config-input, select { width: 100%; padding: 10px 12px; font-size: 0.9rem; font-weight: 500; background: var(--cor-input-bg); border: 1px solid var(--cor-borda); border-radius: var(--radius-padrao); color: var(--cor-texto); outline: none;}
+        .config-input:focus, select:focus { border-color: var(--cor-primaria); box-shadow: 0 0 0 3px var(--cor-primaria-soft-bg); }
+
+        /* Tags para motivos */
+        .reason-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; margin: 4px; border: 1px solid var(--cor-borda); background: var(--cor-panel-bg); color: var(--cor-texto);}
+        .reason-tag button { background: none; border: none; color: inherit; cursor: pointer; display: flex; opacity: 0.6; transition: 0.2s;}
+        .reason-tag button:hover { opacity: 1; color: var(--cor-erro); transform: scale(1.1);}
+
+        /* MODAIS */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(17, 24, 39, 0.6); z-index:1000; display:none; justify-content:center; align-items:center; backdrop-filter: blur(4px); }
+        .modal-card { background:var(--cor-card-bg); width:100%; max-width:450px; padding:30px; border-radius:var(--radius-card); box-shadow:var(--sombra-lg); border: 1px solid var(--cor-borda); color: var(--cor-texto); animation: popIn 0.2s ease-out; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.97) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    </style>
+</head>
+<body>
+    
+    <aside>
+        <div class="logo-area">
+            <div class="logo-icon"><i class="ph-bold ph-hexagon"></i></div>
+            PMS J7S
+        </div>
+        
+        <nav style="flex:1;">
+            <button class="nav-btn" onclick="window.location.href='admin.html'">
+                <i class="ph-fill ph-squares-four" style="font-size: 1.4rem;"></i> Visão Geral
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='dashboard-comercial.html'">
+                <i class="ph-fill ph-briefcase" style="font-size: 1.4rem;"></i> Gestão Comercial
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='relatorios.html'">
+                <i class="ph-fill ph-chart-line-up" style="font-size: 1.4rem;"></i> Relatórios Master
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='gargalos.html'">
+                <i class="ph-fill ph-magnifying-glass" style="font-size: 1.4rem;"></i> Análise de Gargalos
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='usuarios.html'">
+                <i class="ph-fill ph-users" style="font-size: 1.4rem;"></i> Utilizadores
+            </button>
+            
+            <button class="nav-btn" onclick="window.location.href='configuracoes.html'">
+                <i class="ph-fill ph-gear" style="font-size: 1.4rem;"></i> Configurações
+            </button>
+        </nav>
+        
+        <div class="bottom-actions">
+            <button onclick="toggleTheme()" class="nav-btn" style="margin-bottom: 10px;">
+                <i id="theme-icon" class="ph-fill ph-moon" style="font-size: 1.4rem;"></i> <span id="theme-text">Modo Escuro</span>
+            </button>
+            <button onclick="logout()" class="logout-btn">
+                <i class="ph-bold ph-sign-out" style="font-size: 1.4rem;"></i> Sair do Sistema
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1>Configurações do Sistema</h1>
+                <p>Estruture o workflow, SLA e motivos operacionais da fábrica.</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button class="btn btn-primary" onclick="saveConfig()"><i class="ph-bold ph-floppy-disk"></i> Guardar Alterações</button>
+            </div>
+        </div>
+
+        <div class="config-panel">
+            <h3 style="font-size:1.2rem; margin-bottom:15px; color:var(--cor-texto); font-weight: 800; display:flex; align-items:center; gap:10px;"><i class="ph-fill ph-git-merge" style="color:var(--cor-primaria)"></i> Fluxo de Processos (Workflow)</h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:20px; font-weight: 500;">Defina as etapas pela qual os pedidos devem passar, de ponta a ponta.</p>
+            
+            <div class="table-responsive-container" style="box-shadow: none;">
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th width="50" style="text-align: center;">#</th>
+                            <th>Nome da Etapa</th>
+                            <th>Setor Responsável</th>
+                            <th width="120">Prazo SLA (h)</th>
+                            <th width="100" style="text-align: center;">Permite Retorno?</th>
+                            <th width="60">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="config-body">
+                        <tr><td colspan="6" style="text-align:center; padding: 30px; color:var(--cor-texto-mutado);"><i class="ph-bold ph-spinner ph-spin" style="font-size:2rem;"></i></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-secondary" onclick="addStep()"><i class="ph-bold ph-plus"></i> Adicionar Nova Etapa</button>
+        </div>
+
+        <div class="config-panel">
+            <h3 style="font-size:1.2rem; margin-bottom:5px; color:var(--cor-texto); display:flex; align-items:center; gap:10px; font-weight: 800;"><i class="ph-fill ph-list-numbers" style="color:var(--cor-alerta)"></i> Motivos Obrigatórios</h3>
+            <p style="color:var(--cor-texto-mutado); font-size:0.9rem; margin-bottom:25px; font-weight: 500;">A lista de justificativas padronizadas por setor em caso de pausas ou retornos.</p>
+            
+            <div id="reasons-container" style="display: flex; flex-direction: column; gap: 15px;">
+                </div>
+        </div>
+    </main>
+
+    <script>
+        // ====================================================
+        // 🔒 SESSÃO E CORE
+        // ====================================================
+        const sessaoString = localStorage.getItem('sinaliza_sessao');
+        let currentUser = null;
+        let currentRole = null;
+
+        if (!sessaoString) { window.location.href = 'index.html'; } 
+        else {
+            try {
+                const sessaoData = JSON.parse(sessaoString);
+                currentUser = sessaoData.username;
+                currentRole = sessaoData.role;
+                if(currentRole !== 'admin') window.location.href = 'index.html';
+            } catch(e) { logout(); }
+        }
+
+        function logout() { localStorage.removeItem('sinaliza_sessao'); window.location.href = 'index.html'; }
+        
+        const API_URL = '/api';
+        let configData = { workflow: [], movementReasons: {} };
+
+        async function apiFetch(endpoint, method = 'GET', body = null) {
+            const options = { method, headers: { 'Content-Type': 'application/json' } };
+            if (body) options.body = JSON.stringify(body);
+            const res = await fetch(`${API_URL}${endpoint}`, options);
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.error || err.message || `Erro HTTP: ${res.status}`);
+            }
+            return res.json();
+        }
+
+        window.onload = () => {
+            loadTheme();
+            loadConfig();
+        };
+
+        // ====================================================
+        // CARREGAMENTO E RENDERIZAÇÃO
+        // ====================================================
+        async function loadConfig() {
+            try {
+                const wf = await apiFetch('/config/workflow');
+                if(wf && wf.dados) {
+                    let wData = wf.dados;
+                    if(typeof wData === 'string') wData = JSON.parse(wData);
+                    configData.workflow = wData.map(w => ({
+                        name: w.name, role: w.role || w.sector || 'admin', sla: w.sla || 24,
+                        canReturn: w.canReturn !== undefined ? w.canReturn : (w.return !== undefined ? w.return : true)
+                    }));
+                } else { configData.workflow = []; }
+
+                const mr = await apiFetch('/config/motivos');
+                if(mr && mr.dados) {
+                    let mData = mr.dados;
+                    if(typeof mData === 'string') mData = JSON.parse(mData);
+                    configData.movementReasons = mData;
+                } else { configData.movementReasons = {}; }
+
+                renderConfigTable(); 
+                renderReasonsConfig();
+            } catch(e) { 
+                console.error("Erro config:", e); 
+                document.getElementById('config-body').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--cor-erro); padding:20px;">Falha ao carregar configurações.</td></tr>`;
+            }
+        }
+
+        function renderConfigTable() { 
+            const b = document.getElementById('config-body'); 
+            b.innerHTML = ''; 
+            
+            if (configData.workflow.length === 0) {
+                b.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--cor-texto-mutado);">Nenhuma etapa configurada. Adicione a primeira.</td></tr>`;
+                return;
+            }
+
+            configData.workflow.forEach((s, i) => {
+                b.innerHTML += `
+                <tr>
+                    <td align="center" style="font-weight:800; color:var(--cor-texto-mutado);">${i+1}</td>
+                    <td><input class="config-input" style="margin:0;" value="${s.name}" onchange="updStep(${i},'name',this.value)"></td>
+                    <td>
+                        <select class="config-input" style="margin:0;" onchange="updStep(${i},'role',this.value)">
+                            <option value="comercial" ${s.role==='comercial'?'selected':''}>Comercial</option>
+                            <option value="pcp" ${s.role==='pcp'?'selected':''}>PCP</option>
+                            <option value="layout" ${s.role==='layout'?'selected':''}>Layout</option>
+                            <option value="producao" ${s.role==='producao'?'selected':''}>Produção</option>
+                            <option value="faturamento" ${s.role==='faturamento'?'selected':''}>Faturamento</option>
+                            <option value="admin" ${s.role==='admin'?'selected':''}>Admin/Fim</option>
+                        </select>
+                    </td>
+                    <td><input type="number" class="config-input" style="margin:0;" value="${s.sla}" onchange="updStep(${i},'sla',this.value)"></td>
+                    <td align="center"><input type="checkbox" style="transform:scale(1.3); accent-color:var(--cor-primaria);" ${s.canReturn?'checked':''} onchange="updStep(${i},'canReturn',this.checked)"></td>
+                    <td align="center"><button class="btn btn-danger btn-icon-only" onclick="rmStep(${i})"><i class="ph-bold ph-trash"></i></button></td>
+                </tr>`;
+            }); 
+        }
+
+        function addStep() { configData.workflow.push({name:'Nova Etapa', role:'admin', sla:24, canReturn:true}); renderConfigTable(); }
+        function rmStep(i) { Swal.fire({title:'Remover etapa?', icon:'warning', showCancelButton: true, confirmButtonColor:'#EF4444', confirmButtonText:'Remover'}).then(r=>{if(r.isConfirmed){configData.workflow.splice(i,1); renderConfigTable();}}) }
+        function updStep(i,f,v) { configData.workflow[i][f] = v; }
+
+        function renderReasonsConfig() {
+            const container = document.getElementById('reasons-container'); container.innerHTML = '';
+            const sectors = [ { id: 'layout', name: 'Setor de Layout' }, { id: 'pcp', name: 'Setor PCP' }, { id: 'producao', name: 'Setor de Produção' }, { id: 'faturamento', name: 'Setor de Faturamento' }, { id: 'comercial', name: 'Comercial' } ];
+            
+            sectors.forEach(sec => {
+                const reasons = configData.movementReasons[sec.id] || {};
+                const fwdList = reasons.forward || [];
+                let fwdTags = fwdList.map((r, i) => `<div class="reason-tag" style="background:#D1FAE5; color:#059669; border-color:#A7F3D0;"><span>${r}</span><button onclick="removeReason('${sec.id}', 'forward', ${i})"><i class="ph-bold ph-x"></i></button></div>`).join('');
+                
+                let bwdHtml = '';
+
+                // O Faturamento tem dois fluxos de retorno distintos no seu sistema
+                if (sec.id === 'faturamento') {
+                    const bwdProdList = reasons.backward_producao || [];
+                    const bwdComList = reasons.backward_comercial || [];
+                    let bwdProdTags = bwdProdList.map((r, i) => `<div class="reason-tag" style="background:#FEE2E2; color:#DC2626; border-color:#FECACA;"><span>${r}</span><button onclick="removeReason('${sec.id}', 'backward_producao', ${i})"><i class="ph-bold ph-x"></i></button></div>`).join('');
+                    let bwdComTags = bwdComList.map((r, i) => `<div class="reason-tag" style="background:#FEF3C7; color:#D97706; border-color:#FDE68A;"><span>${r}</span><button onclick="removeReason('${sec.id}', 'backward_comercial', ${i})"><i class="ph-bold ph-x"></i></button></div>`).join('');
+
+                    bwdHtml = `
+                        <div style="background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding: 20px; border-radius: var(--radius-padrao); margin-bottom: 15px;">
+                            <div style="font-size: 0.9rem; font-weight: 800; color: var(--cor-erro); margin-bottom: 12px; display:flex; align-items:center; gap:6px;"><i class="ph-bold ph-arrow-u-up-left"></i> Retornar p/ Produção</div>
+                            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                                <input type="text" id="input-bwd-prod-${sec.id}" class="config-input" placeholder="Novo motivo de retorno..." style="margin:0; flex:1;">
+                                <button class="btn btn-danger btn-icon-only" style="height: 44px; width: 44px;" onclick="addReason('${sec.id}', 'backward_producao')"><i class="ph-bold ph-plus"></i></button>
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">${bwdProdTags || '<span style="font-size:0.85rem; font-weight:500; color:var(--cor-texto-mutado)">Nenhum motivo configurado</span>'}</div>
+                        </div>
+                        <div style="background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding: 20px; border-radius: var(--radius-padrao);">
+                            <div style="font-size: 0.9rem; font-weight: 800; color: var(--cor-alerta); margin-bottom: 12px; display:flex; align-items:center; gap:6px;"><i class="ph-bold ph-arrow-u-up-left"></i> Retornar p/ Comercial</div>
+                            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                                <input type="text" id="input-bwd-com-${sec.id}" class="config-input" placeholder="Novo motivo de retorno..." style="margin:0; flex:1;">
+                                <button class="btn btn-warning btn-icon-only" style="height: 44px; width: 44px;" onclick="addReason('${sec.id}', 'backward_comercial')"><i class="ph-bold ph-plus"></i></button>
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">${bwdComTags || '<span style="font-size:0.85rem; font-weight:500; color:var(--cor-texto-mutado)">Nenhum motivo configurado</span>'}</div>
+                        </div>
+                    `;
+                } else {
+                    const bwdList = reasons.backward || [];
+                    let bwdTags = bwdList.map((r, i) => `<div class="reason-tag" style="background:#FEE2E2; color:#DC2626; border-color:#FECACA;"><span>${r}</span><button onclick="removeReason('${sec.id}', 'backward', ${i})"><i class="ph-bold ph-x"></i></button></div>`).join('');
+                    bwdHtml = `
+                        <div style="background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding: 20px; border-radius: var(--radius-padrao); height: 100%;">
+                            <div style="font-size: 0.9rem; font-weight: 800; color: var(--cor-erro); margin-bottom: 12px; display:flex; align-items:center; gap:6px;"><i class="ph-bold ph-arrow-u-up-left"></i> Retornar Etapa (Pausa/Bloqueio)</div>
+                            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                                <input type="text" id="input-bwd-${sec.id}" class="config-input" placeholder="Novo motivo de bloqueio..." style="margin:0; flex:1;">
+                                <button class="btn btn-danger btn-icon-only" style="height: 44px; width: 44px;" onclick="addReason('${sec.id}', 'backward')"><i class="ph-bold ph-plus"></i></button>
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">${bwdTags || '<span style="font-size:0.85rem; font-weight:500; color:var(--cor-texto-mutado)">Nenhum motivo configurado</span>'}</div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML += `
+                    <div style="padding: 20px; border: 1px solid var(--cor-borda); border-radius: var(--radius-padrao); background: var(--cor-panel-bg);">
+                        <h4 style="margin-bottom: 15px; font-size: 1.05rem; font-weight: 800; color: var(--cor-texto);"><i class="ph-bold ph-folder" style="color:var(--cor-primaria); margin-right:8px;"></i>${sec.name}</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; align-items: start;">
+                            
+                            <div style="background: var(--cor-card-bg); border: 1px solid var(--cor-borda); padding: 20px; border-radius: var(--radius-padrao);">
+                                <div style="font-size: 0.9rem; font-weight: 800; color: var(--cor-sucesso); margin-bottom: 12px; display:flex; align-items:center; gap:6px;"><i class="ph-bold ph-check-circle"></i> Avançar Etapa (Conclusão)</div>
+                                <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                                    <input type="text" id="input-fwd-${sec.id}" class="config-input" placeholder="Novo motivo/status..." style="margin:0; flex:1;">
+                                    <button class="btn btn-success btn-icon-only" style="height: 44px; width: 44px;" onclick="addReason('${sec.id}', 'forward')"><i class="ph-bold ph-plus"></i></button>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px;">${fwdTags || '<span style="font-size:0.85rem; font-weight:500; color:var(--cor-texto-mutado)">Nenhum motivo configurado</span>'}</div>
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column;">
+                                ${bwdHtml}
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        }
+        
+        function addReason(sector, type) { 
+            let inputId = `input-fwd-${sector}`;
+            if (type === 'backward') inputId = `input-bwd-${sector}`;
+            if (type === 'backward_producao') inputId = `input-bwd-prod-${sector}`;
+            if (type === 'backward_comercial') inputId = `input-bwd-com-${sector}`;
+
+            const val = document.getElementById(inputId).value.trim(); 
+            if(val) { 
+                if(!configData.movementReasons[sector]) configData.movementReasons[sector] = {}; 
+                if(!configData.movementReasons[sector][type]) configData.movementReasons[sector][type] = [];
+                configData.movementReasons[sector][type].push(val); 
+                renderReasonsConfig(); 
+            } 
+        }
+        
+        function removeReason(sector, type, index) { 
+            Swal.fire({title: 'Remover motivo?', icon: 'warning', showCancelButton: true, confirmButtonColor:'#EF4444', confirmButtonText:'Remover'}).then((r) => { 
+                if(r.isConfirmed) { 
+                    configData.movementReasons[sector][type].splice(index, 1); 
+                    renderReasonsConfig(); 
+                }
+            }); 
+        }
+
+        async function saveConfig() { 
+            try {
+                await apiFetch('/config/workflow', 'POST', { dados: configData.workflow }); 
+                await apiFetch('/config/motivos', 'POST', { dados: configData.movementReasons });
+                Swal.fire({toast:true, position:'top-end', title:'Guardado com sucesso!', icon:'success', showConfirmButton:false, timer:3000}); 
+            } catch (e) { Swal.fire('Erro ao Guardar', 'Motivo: ' + (e.message || e), 'error'); }
+        }
+
+        // ====================================================
+        // TEMA E SENHA PRÓPRIA
+        // ====================================================
+        function toggleTheme() { const b=document.body; const c=b.getAttribute('data-theme'); const n=c==='dark'?'light':'dark'; b.setAttribute('data-theme',n); localStorage.setItem('theme',n); updateThemeIcon(n); }
+        function loadTheme() { const t=localStorage.getItem('theme')||'light'; document.body.setAttribute('data-theme',t); updateThemeIcon(t); }
+        function updateThemeIcon(t) { const i=document.getElementById('theme-icon'); const txt=document.getElementById('theme-text'); if(t==='dark'){i.className='ph-fill ph-sun';txt.innerText='Modo Claro';}else{i.className='ph-fill ph-moon';txt.innerText='Modo Escuro';} }
+
+    </script>
+</body>
+</html>

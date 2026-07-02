@@ -1,0 +1,3061 @@
+@import url('./global.css');
+
+/* =========================================================
+   SINALIZAFLOW J7S — SETOR PCP
+   Padrão visual herdado do Comercial/Layout:
+   espaçamentos, fontes, shell, sidebar, topbar, cards e dark mode.
+   Alterar por setor apenas as cores principais.
+   ========================================================= */
+
+:root {
+    --cor-primaria: #EA580C;
+    --cor-primaria-hover: #C2410C;
+    --cor-primaria-soft-bg: rgba(234, 88, 12, 0.14);
+    --cor-retorno: #EA580C;
+    --retorno-bg: rgba(234, 88, 12, 0.14);
+    --primary: var(--cor-primaria);
+}
+
+body[data-theme="dark"] {
+    --cor-primaria: #FB923C;
+    --cor-primaria-hover: #EA580C;
+    --cor-primaria-soft-bg: rgba(251, 146, 60, 0.18);
+    --cor-retorno: #FB923C;
+    --retorno-bg: rgba(251, 146, 60, 0.18);
+}
+
+/* Identidade do setor no hero */
+.pcp-shell .page-header::after {
+    content: "Fila inteligente • PCP J7S" !important;
+}
+
+.pcp-shell .page-overline i,
+.pcp-shell .view-eyebrow i,
+.pcp-shell .view-chip i,
+.pcp-shell .status-badge-top.online i {
+    color: var(--cor-primaria) !important;
+}
+
+.pcp-shell #page-sector-label {
+    background: #0B0D0C;
+    color: #fff;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 950;
+    letter-spacing: 0.02em;
+}
+
+.pcp-shell .layout-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+/* Barra de busca/filtros do Layout */
+.pcp-shell .filters {
+    margin: 0 0 18px !important;
+    padding: 14px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+}
+
+.pcp-shell .filters > div:first-child {
+    flex: 1 1 360px !important;
+}
+
+.pcp-shell .filters .input-box,
+.pcp-shell .filters .btn {
+    min-height: 48px !important;
+}
+
+/* KPIs do setor */
+.pcp-shell .kpi-grid-cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    margin-bottom: 18px !important;
+}
+
+.pcp-shell .kpi-card {
+    min-height: 124px !important;
+}
+
+.pcp-shell .kpi-val {
+    color: var(--cor-texto);
+    font-size: clamp(2rem, 2.8vw, 3rem);
+    line-height: 0.95;
+    font-weight: 950;
+    letter-spacing: -0.06em;
+}
+
+.pcp-shell .kpi-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--cor-texto-mutado);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 950;
+}
+
+.pcp-shell .kpi-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--sombra-sm);
+}
+
+/* Linhas de pedido do PCP */
+.pcp-shell .orders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.pcp-shell .list-row {
+    overflow: visible !important;
+    border-left: 6px solid transparent !important;
+}
+
+.pcp-shell .list-row.late {
+    border-left-color: var(--cor-erro) !important;
+}
+
+.pcp-shell .list-row.warning {
+    border-left-color: var(--cor-alerta) !important;
+}
+
+.pcp-shell .list-row.is-retorno {
+    border-left-color: var(--cor-primaria) !important;
+}
+
+.pcp-shell .row-header {
+    min-height: 112px !important;
+    padding: 20px 22px !important;
+    display: grid !important;
+    grid-template-columns: minmax(260px, 1.25fr) minmax(390px, 1.5fr) minmax(280px, auto) !important;
+    gap: 22px !important;
+    align-items: center !important;
+}
+
+.pcp-shell .col-info,
+.pcp-shell .col-stepper,
+.pcp-shell .col-actions {
+    min-width: 0 !important;
+}
+
+.pcp-shell .row-id {
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: #0B0D0C;
+    color: #FFFFFF;
+    font-size: 0.74rem !important;
+    line-height: 1;
+    font-weight: 950;
+}
+
+.pcp-shell .row-client {
+    max-width: 100%;
+    color: var(--cor-texto);
+    font-size: clamp(1.04rem, 1.3vw, 1.32rem) !important;
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pcp-shell .info-praz {
+    color: var(--cor-texto-mutado);
+    font-weight: 750;
+}
+
+.pcp-shell .col-stepper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pcp-shell .info-status {
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.56);
+    color: var(--cor-texto);
+    border: 1px solid rgba(255,255,255,0.54);
+    box-shadow: var(--sombra-sm);
+    font-size: 0.7rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.pcp-shell .info-status.status-active i {
+    color: var(--cor-primaria);
+}
+
+.pcp-shell .info-status.status-waiting i {
+    color: var(--cor-alerta);
+}
+
+.pcp-shell .stepper-wrapper {
+    width: 100%;
+    max-width: 520px;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    overflow: visible !important;
+}
+
+.pcp-shell .stepper-item {
+    min-width: 0 !important;
+    display: grid !important;
+    justify-items: center !important;
+    gap: 5px !important;
+}
+
+.pcp-shell .stepper-circle {
+    width: 25px !important;
+    height: 25px !important;
+    min-width: 25px !important;
+    border-radius: 50%;
+}
+
+.pcp-shell .stepper-label {
+    max-width: 72px;
+    color: var(--cor-texto-mutado);
+    font-size: 0.62rem;
+    line-height: 1.05;
+    font-weight: 900;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pcp-shell .stepper-line {
+    width: 34px !important;
+    height: 2px !important;
+    margin-top: 2px !important;
+}
+
+.pcp-shell .col-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.pcp-shell .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pcp-shell .btn-detalhes {
+    color: var(--cor-texto-mutado);
+    font-size: 0.72rem;
+    font-weight: 900;
+}
+
+/* Tags de tipo/prioridade */
+.pcp-shell .tag-urgente,
+.pcp-shell .tag-homologado,
+.pcp-shell .tag-projeto,
+.pcp-shell .tag-normal,
+.pcp-shell .tag-retorno {
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--cor-texto);
+    border: 1px solid rgba(255,255,255,0.54);
+    box-shadow: var(--sombra-sm);
+    font-size: 0.68rem;
+    font-weight: 950;
+}
+
+.pcp-shell .tag-urgente { background: var(--danger-bg); color: var(--cor-erro); }
+.pcp-shell .tag-homologado { background: var(--warning-bg); color: var(--cor-alerta); }
+.pcp-shell .tag-projeto { background: var(--cor-primaria-soft-bg); color: var(--cor-primaria); }
+.pcp-shell .tag-normal { background: var(--info-bg); color: var(--cor-info); }
+.pcp-shell .tag-retorno { background: var(--retorno-bg); color: var(--cor-primaria); }
+
+/* Detalhes do card */
+.pcp-shell .card-details {
+    padding: 0 22px 20px;
+}
+
+.pcp-shell .obs-block,
+.pcp-shell .obs-comercial {
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.44);
+    border: 1px solid rgba(255,255,255,0.48);
+    box-shadow: var(--sombra-sm);
+}
+
+.pcp-shell .obs-comercial {
+    color: var(--cor-texto);
+}
+
+/* Modais / arquivos */
+.pcp-shell ~ .modal-overlay .modal-card,
+.pcp-shell ~ .modal-overlay .modal-card-lg,
+.modal-overlay .modal-card,
+.modal-overlay .modal-card-lg {
+    color: var(--cor-texto);
+}
+
+#filesModal .file-browser {
+    grid-template-columns: 330px minmax(0, 1fr) !important;
+}
+
+#filesModal > .modal-card-lg {
+    width: min(1500px, calc(100vw - 44px)) !important;
+    height: min(900px, calc(100vh - 44px)) !important;
+}
+
+/* Relatórios */
+#view-reports .gamer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+/* Dark mode Layout com roxo preservado */
+body[data-theme="dark"] .pcp-shell .layout-view-intro,
+body[data-theme="dark"] .pcp-shell .action-workspace .view-intro {
+    border-left-color: var(--cor-primaria) !important;
+    box-shadow:
+        inset 7px 0 0 rgba(168,85,247,0.20),
+        0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .nav-btn.active {
+    border-color: rgba(168,85,247,0.42) !important;
+    box-shadow:
+        inset 4px 0 0 var(--cor-primaria),
+        0 18px 34px rgba(0,0,0,0.42) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .btn-primary,
+body[data-theme="dark"] .pcp-shell .btn-success {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+    border-color: rgba(168,85,247,0.44) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        0 16px 36px rgba(147,51,234,0.24) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .page-header::after,
+body[data-theme="dark"] .pcp-shell #page-sector-label {
+    background: #FFFFFF !important;
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .obs-block,
+body[data-theme="dark"] .pcp-shell .obs-comercial {
+    background: linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+}
+
+/* Responsivo */
+@media (max-width: 1180px) {
+    .pcp-shell .row-header {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .pcp-shell .col-stepper {
+        align-items: stretch;
+    }
+
+    .pcp-shell .stepper-wrapper {
+        max-width: none;
+    }
+
+    .pcp-shell .col-actions {
+        align-items: stretch;
+    }
+
+    .pcp-shell .action-buttons {
+        justify-content: flex-start;
+    }
+
+    .pcp-shell .kpi-grid-cols {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* =========================================================
+   REAVALIAÇÃO — LAYOUT COMO PÁGINA DE TRABALHO
+   - Remove visual gigante do hero no setor Layout.
+   - Remove dependência visual da busca superior duplicada.
+   - Organiza relatórios em cards consistentes.
+   ========================================================= */
+
+/* Topbar sem busca duplicada: ações à direita, sem Ctrl K */
+.pcp-shell .topbar {
+    min-height: 58px !important;
+    justify-content: flex-end !important;
+    padding: 8px 10px !important;
+    margin-bottom: 16px !important;
+}
+
+.pcp-shell .topbar-actions {
+    margin-left: auto !important;
+}
+
+/* Botão de subir não deve aparecer solto no canto superior */
+#scrollTopBtn.btn-scroll-top {
+    right: 34px !important;
+    bottom: 28px !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 80 !important;
+}
+
+/* Hero mais objetivo para trabalho operacional */
+.pcp-shell .page-header,
+.pcp-shell .dashboard-header {
+    min-height: 118px !important;
+    margin-bottom: 16px !important;
+    padding: 24px 30px !important;
+    align-items: center !important;
+    border-radius: 30px !important;
+}
+
+.pcp-shell .page-header::before {
+    display: none !important;
+    content: none !important;
+}
+
+.pcp-shell .page-header::after {
+    display: none !important;
+    content: none !important;
+}
+
+.pcp-shell .page-user-identity {
+    max-width: min(780px, 70vw) !important;
+}
+
+.pcp-shell .page-overline {
+    margin-bottom: 7px !important;
+    padding: 6px 11px !important;
+    font-size: 0.68rem !important;
+}
+
+.pcp-shell .page-header h1 {
+    font-size: clamp(2rem, 3vw, 3.2rem) !important;
+    line-height: 0.96 !important;
+    letter-spacing: -0.065em !important;
+}
+
+.pcp-shell .page-header p {
+    margin-top: 7px !important;
+    font-size: 0.98rem !important;
+    max-width: 760px !important;
+}
+
+.pcp-shell .page-header-actions .status-badge-top {
+    min-height: 42px !important;
+}
+
+/* Intro também compacta */
+.pcp-shell .view-intro {
+    min-height: 92px !important;
+    padding: 20px 24px !important;
+    margin-bottom: 16px !important;
+    border-radius: 26px !important;
+}
+
+.pcp-shell .view-intro h2 {
+    font-size: clamp(1.55rem, 2.2vw, 2.15rem) !important;
+    margin: 5px 0 4px !important;
+}
+
+.pcp-shell .view-intro p {
+    font-size: 0.92rem !important;
+}
+
+/* KPIs e filtros mais próximos, sem parecer bloco solto */
+.pcp-shell .kpi-grid-cols {
+    gap: 14px !important;
+    margin-bottom: 16px !important;
+}
+
+.pcp-shell .kpi-card {
+    min-height: 112px !important;
+    padding: 18px 20px !important;
+}
+
+.pcp-shell .filters {
+    margin: 0 0 16px !important;
+}
+
+/* Listas de pedido: melhor aproveitamento de tela */
+.pcp-shell .row-header {
+    min-height: 104px !important;
+    padding: 18px 20px !important;
+    grid-template-columns: minmax(255px, 1.2fr) minmax(390px, 1.6fr) minmax(300px, auto) !important;
+}
+
+.pcp-shell .action-buttons .btn,
+.pcp-shell .action-buttons .btn-icon-only {
+    min-height: 38px !important;
+}
+
+.pcp-shell .action-buttons .btn:not(.btn-icon-only) {
+    padding: 0 14px !important;
+}
+
+/* =========================================================
+   RELATÓRIOS FORMATADOS EM CARDS
+   ========================================================= */
+
+.pcp-shell .report-workspace {
+    padding-bottom: 30px !important;
+}
+
+.pcp-shell .report-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+.pcp-shell .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: start !important;
+}
+
+.pcp-shell .report-panel {
+    background: var(--cor-card-bg) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    border-radius: var(--radius-card) !important;
+    box-shadow: var(--sombra-sm) !important;
+    backdrop-filter: blur(18px) !important;
+    padding: 20px !important;
+    min-height: 180px !important;
+    overflow: hidden !important;
+}
+
+.pcp-shell .report-panel-full {
+    grid-column: 1 / -1 !important;
+}
+
+.pcp-shell .report-panel-head {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 14px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.40) !important;
+}
+
+.pcp-shell .report-panel-head h3 {
+    margin: 5px 0 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(1.1rem, 1.6vw, 1.45rem) !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.045em !important;
+}
+
+.pcp-shell .designer-distribution-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+}
+
+.pcp-shell .designer-pill {
+    min-height: 42px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px 14px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,0.54) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.88rem !important;
+    font-weight: 900 !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.pcp-shell .designer-count {
+    min-width: 26px !important;
+    height: 26px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    border-radius: 999px !important;
+    background: var(--cor-primaria) !important;
+    color: #fff !important;
+    font-size: 0.75rem !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .report-metric-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.pcp-shell .report-card-grid,
+.pcp-shell .gamer-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.pcp-shell .gamer-card,
+.pcp-shell #micro-funnel-grid > div {
+    background: rgba(255,255,255,0.44) !important;
+    border: 1px solid rgba(255,255,255,0.46) !important;
+    border-radius: 22px !important;
+    box-shadow: var(--sombra-sm) !important;
+    overflow: hidden !important;
+}
+
+.pcp-shell .gamer-header,
+.pcp-shell .gamer-body {
+    color: var(--cor-texto) !important;
+}
+
+.pcp-shell .report-list-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+/* Dark mode dos relatórios */
+body[data-theme="dark"] .pcp-shell .report-panel,
+body[data-theme="dark"] .pcp-shell .gamer-card,
+body[data-theme="dark"] .pcp-shell #micro-funnel-grid > div,
+body[data-theme="dark"] .pcp-shell .designer-pill {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(10,12,11,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .report-panel-head {
+    border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .report-view-intro {
+    box-shadow:
+        inset 7px 0 0 rgba(168,85,247,0.20),
+        0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+/* Responsivo */
+@media (max-width: 1280px) {
+    .pcp-shell .report-metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .pcp-shell .report-dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .pcp-shell .page-header,
+    .pcp-shell .dashboard-header {
+        min-height: auto !important;
+        padding: 22px !important;
+    }
+
+    .pcp-shell .report-metric-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =========================================================
+   AJUSTE POR ETAPAS — HEADER OPERACIONAL DO LAYOUT
+   - Setor de Criação na barra superior.
+   - Página atual abaixo: Fila de Criação + usuário ao lado.
+   - Remove hero gigante e bloco repetido.
+   ========================================================= */
+
+.pcp-shell .topbar {
+    min-height: 62px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 14px !important;
+    margin-bottom: 14px !important;
+}
+
+.pcp-shell .topbar-sector-context {
+    display: flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    min-width: 260px !important;
+    padding: 8px 14px !important;
+    border-radius: 22px !important;
+    background: rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.52) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.pcp-shell .topbar-sector-context .sector-dot {
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 999px !important;
+    background: var(--cor-primaria) !important;
+    box-shadow: 0 0 0 5px rgba(147, 51, 234, 0.12) !important;
+    flex: 0 0 auto !important;
+}
+
+.pcp-shell .topbar-sector-context strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.05 !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.025em !important;
+}
+
+.pcp-shell .topbar-sector-context span:not(.sector-dot) {
+    display: block !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1.1 !important;
+    font-weight: 750 !important;
+}
+
+.pcp-shell .topbar-actions {
+    margin-left: auto !important;
+}
+
+/* Header objetivo da página */
+.pcp-shell .layout-work-header {
+    min-height: 108px !important;
+    margin-bottom: 14px !important;
+    padding: 22px 28px !important;
+    border-radius: 28px !important;
+    align-items: center !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
+}
+
+.pcp-shell .layout-work-header::before,
+.pcp-shell .layout-work-header::after {
+    display: none !important;
+    content: none !important;
+}
+
+.pcp-shell .layout-work-header .page-user-identity {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+.pcp-shell .layout-page-title-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+}
+
+.pcp-shell .layout-work-header h1 {
+    margin: 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(2rem, 3.1vw, 3.2rem) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.065em !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .layout-work-header p {
+    margin: 7px 0 0 !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.96rem !important;
+    font-weight: 700 !important;
+}
+
+.pcp-shell .layout-current-user {
+    min-height: 34px !important;
+    padding: 7px 12px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    background: #0B0D0C !important;
+    color: #FFFFFF !important;
+    font-size: 0.78rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.pcp-shell .layout-current-user i,
+.pcp-shell .layout-current-user span {
+    color: #FFFFFF !important;
+}
+
+/* Evita duplicidade da intro "Fila de Criação" logo abaixo do header */
+.pcp-shell .layout-view-intro {
+    display: none !important;
+}
+
+/* Aproxima KPIs e filtros do cabeçalho operacional */
+.pcp-shell .kpi-grid-cols {
+    margin-top: 0 !important;
+    margin-bottom: 14px !important;
+}
+
+.pcp-shell .filters {
+    margin-bottom: 14px !important;
+}
+
+/* Dark mode do novo header */
+body[data-theme="dark"] .pcp-shell .topbar-sector-context {
+    background: linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+    border-color: rgba(168,85,247,0.22) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .topbar-sector-context strong {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .pcp-shell .topbar-sector-context span:not(.sector-dot) {
+    color: #AEB7B2 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .layout-current-user {
+    background: #FFFFFF !important;
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .layout-current-user i,
+body[data-theme="dark"] .pcp-shell .layout-current-user span {
+    color: #050606 !important;
+}
+
+
+/* =========================================================
+   AJUSTE — BOTÃO SUBIR E STEPPER COM PROGRESSO
+   - A seta só aparece suspensa após scroll.
+   - Etapas validadas: check verde.
+   - Etapa atual: roxo com spinner de progresso.
+   ========================================================= */
+
+/* Botão subir flutuante */
+#scrollTopBtn.btn-scroll-top {
+    position: fixed !important;
+    right: 38px !important;
+    bottom: 34px !important;
+    left: auto !important;
+    top: auto !important;
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    min-height: 54px !important;
+    border-radius: 18px !important;
+    display: grid !important;
+    place-items: center !important;
+    z-index: 9998 !important;
+    background: linear-gradient(145deg, #0B0D0C, #050606) !important;
+    border: 1px solid rgba(255,255,255,0.36) !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        0 18px 42px rgba(0,0,0,0.34) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transform: translateY(18px) scale(0.92) !important;
+    transition: opacity .24s ease, transform .24s ease, visibility .24s ease !important;
+}
+
+#scrollTopBtn.btn-scroll-top.visible {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    transform: translateY(0) scale(1) !important;
+}
+
+#scrollTopBtn.btn-scroll-top i {
+    color: #FFFFFF !important;
+    font-size: 1.28rem !important;
+    line-height: 1 !important;
+}
+
+#scrollTopBtn.btn-scroll-top:hover {
+    background: linear-gradient(145deg, var(--cor-primaria), var(--cor-primaria-hover)) !important;
+    border-color: rgba(255,255,255,0.42) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+body[data-theme="dark"] #scrollTopBtn.btn-scroll-top {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+    border-color: rgba(168,85,247,0.55) !important;
+    box-shadow: 0 20px 46px rgba(168,85,247,0.22), 0 18px 42px rgba(0,0,0,0.54) !important;
+}
+
+/* Stepper: base mais clara e legível */
+.pcp-shell .stepper-circle {
+    position: relative !important;
+    display: grid !important;
+    place-items: center !important;
+    background: rgba(255,255,255,0.68) !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    color: var(--cor-texto-mutado) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.pcp-shell .stepper-item.done .stepper-circle {
+    background: linear-gradient(145deg, #10B981, #059669) !important;
+    border-color: rgba(16,185,129,0.65) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 10px 22px rgba(16,185,129,0.28) !important;
+}
+
+.pcp-shell .stepper-item.done .stepper-circle i {
+    color: #FFFFFF !important;
+    font-size: 0.92rem !important;
+    font-weight: 900 !important;
+}
+
+.pcp-shell .stepper-item.done .stepper-label {
+    color: #059669 !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .stepper-item.active .stepper-circle {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+    border-color: rgba(168,85,247,0.76) !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        0 0 0 5px rgba(168,85,247,0.13),
+        0 12px 26px rgba(168,85,247,0.34) !important;
+}
+
+.pcp-shell .stepper-item.active .stepper-circle i {
+    color: #FFFFFF !important;
+}
+
+.pcp-shell .stepper-item.active .stepper-label {
+    color: var(--cor-primaria) !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .stepper-item.active .stepper-spinner {
+    display: inline-block !important;
+    font-size: 0.96rem !important;
+    animation: layoutStepperSpin 0.95s linear infinite !important;
+}
+
+.pcp-shell .stepper-line {
+    background: rgba(0,0,0,0.10) !important;
+    border-radius: 999px !important;
+}
+
+.pcp-shell .stepper-item.done .stepper-line {
+    background: linear-gradient(90deg, #10B981, #7C3AED) !important;
+}
+
+/* Estados especiais mantêm alerta visual, mas com spinner */
+.pcp-shell .stepper-item.active.warning .stepper-circle {
+    background: linear-gradient(145deg, #F59E0B, #D97706) !important;
+    border-color: rgba(245,158,11,0.70) !important;
+    box-shadow: 0 0 0 5px rgba(245,158,11,0.14), 0 12px 26px rgba(245,158,11,0.30) !important;
+}
+
+.pcp-shell .stepper-item.active.late .stepper-circle {
+    background: linear-gradient(145deg, #EF4444, #DC2626) !important;
+    border-color: rgba(239,68,68,0.70) !important;
+    box-shadow: 0 0 0 5px rgba(239,68,68,0.14), 0 12px 26px rgba(239,68,68,0.30) !important;
+}
+
+@keyframes layoutStepperSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+body[data-theme="dark"] .pcp-shell .stepper-circle {
+    background: rgba(255,255,255,0.10) !important;
+    border-color: rgba(255,255,255,0.12) !important;
+    color: #AEB7B2 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .stepper-item.done .stepper-circle {
+    background: linear-gradient(145deg, #12B981, #047857) !important;
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .pcp-shell .stepper-item.done .stepper-label {
+    color: #34D399 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .stepper-item.active .stepper-circle {
+    background: linear-gradient(145deg, #A855F7, #7E22CE) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .stepper-line {
+    background: rgba(255,255,255,0.10) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .stepper-item.done .stepper-line {
+    background: linear-gradient(90deg, #12B981, #A855F7) !important;
+}
+
+
+/* =========================================================
+   AJUSTE — USUÁRIO EM DESTAQUE + RADIAL ROXO NO DARK
+   - Remove dependência visual do usuário na topbar/sidebar.
+   - Usuário aparece grande no lado oposto do título da página.
+   - Dark mode ganha radial gradient roxo no canto superior esquerdo.
+   ========================================================= */
+
+/* remove espaços/resquícios de usuário na sidebar/topbar caso exista em cache */
+.pcp-shell .sidebar-user,
+.pcp-shell .topbar-user {
+    display: none !important;
+}
+
+.pcp-shell .topbar-actions {
+    margin-left: auto !important;
+}
+
+.pcp-shell .layout-work-header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 24px !important;
+    align-items: center !important;
+    min-height: 126px !important;
+    padding: 24px 30px !important;
+}
+
+.pcp-shell .layout-page-left {
+    min-width: 0 !important;
+}
+
+.pcp-shell .layout-page-title-row {
+    display: block !important;
+}
+
+.pcp-shell .layout-work-header h1 {
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.pcp-shell .layout-user-highlight {
+    min-width: 230px !important;
+    padding: 18px 22px !important;
+    border-radius: 28px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(147,51,234,0.20), transparent 40%),
+        rgba(255,255,255,0.54) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.pcp-shell .layout-user-highlight span {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .layout-user-highlight strong {
+    margin-top: 6px !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(1.8rem, 3vw, 3.1rem) !important;
+    line-height: 0.9 !important;
+    letter-spacing: -0.065em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+}
+
+/* neutraliza o modelo antigo de usuário pequeno, caso algum HTML antigo ainda tenha */
+.pcp-shell .layout-current-user {
+    display: none !important;
+}
+
+/* Radial roxo: fundo do setor no modo escuro */
+body[data-theme="dark"] .pcp-shell {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+body[data-theme="dark"] .pcp-shell::after {
+    content: "" !important;
+    position: absolute !important;
+    top: -180px !important;
+    left: -40px !important;
+    width: 720px !important;
+    height: 520px !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+    background:
+        radial-gradient(circle at 28% 34%, rgba(168,85,247,0.28) 0%, rgba(147,51,234,0.16) 28%, rgba(147,51,234,0.06) 48%, transparent 70%) !important;
+    filter: blur(6px) !important;
+    opacity: 0.92 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .app-sidebar,
+body[data-theme="dark"] .pcp-shell #main-content {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .app-sidebar::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -120px !important;
+    left: -120px !important;
+    width: 340px !important;
+    height: 340px !important;
+    pointer-events: none !important;
+    background: radial-gradient(circle, rgba(168,85,247,0.24), transparent 66%) !important;
+    filter: blur(8px) !important;
+    opacity: 0.70 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .topbar-sector-context {
+    background:
+        radial-gradient(circle at 10% 18%, rgba(168,85,247,0.20), transparent 42%),
+        linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .layout-work-header {
+    background:
+        radial-gradient(circle at 84% 16%, rgba(168,85,247,0.16), transparent 36%),
+        linear-gradient(145deg, rgba(16,18,17,0.985), rgba(7,8,8,0.985)) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .layout-user-highlight {
+    background:
+        radial-gradient(circle at 12% 18%, rgba(168,85,247,0.28), transparent 42%),
+        linear-gradient(145deg, rgba(24,26,25,0.98), rgba(10,12,11,0.98)) !important;
+    border-color: rgba(168,85,247,0.30) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 18px 40px rgba(168,85,247,0.10),
+        0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .layout-user-highlight span {
+    color: #BFB5D4 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .layout-user-highlight strong {
+    color: #FFFFFF !important;
+}
+
+@media (max-width: 1180px) {
+    .pcp-shell .layout-work-header {
+        grid-template-columns: 1fr !important;
+    }
+
+    .pcp-shell .layout-user-highlight {
+        min-width: 0 !important;
+        width: 100% !important;
+        align-items: flex-start !important;
+    }
+}
+
+/* =========================================================
+   AJUSTE FINAL — USUÁRIO SEM CAIXA + GRADIENTE NO FUNDO + KPI SELECIONÁVEL
+   ========================================================= */
+
+/* Usuário fora da caixa, maior e mais limpo */
+.pcp-shell .layout-user-highlight {
+    min-width: auto !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+}
+
+.pcp-shell .layout-user-highlight span {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.09em !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .layout-user-highlight strong {
+    margin-top: 8px !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(2.45rem, 4.5vw, 5rem) !important;
+    line-height: 0.82 !important;
+    letter-spacing: -0.08em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    text-shadow: none !important;
+}
+
+/* Remove gradientes roxos espalhados em caixas internas */
+body[data-theme="dark"] .pcp-shell::after,
+body[data-theme="dark"] .pcp-shell .app-sidebar::before {
+    content: none !important;
+    display: none !important;
+}
+
+body[data-theme="dark"] .pcp-shell .topbar-sector-context,
+body[data-theme="dark"] .pcp-shell .layout-work-header,
+body[data-theme="dark"] .pcp-shell .layout-user-highlight {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="dark"] .pcp-shell .layout-work-header {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(7,8,8,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .topbar-sector-context {
+    background: linear-gradient(145deg, rgba(20,22,21,0.985), rgba(11,13,12,0.985)) !important;
+    border-color: rgba(168,85,247,0.22) !important;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.28) !important;
+}
+
+/* Gradiente roxo somente no fundo, vindo do canto superior esquerdo */
+body[data-theme="dark"] {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(168,85,247,0.34) 0%, rgba(147,51,234,0.22) 16%, rgba(147,51,234,0.10) 31%, transparent 48%),
+        linear-gradient(135deg, #030404 0%, #060707 45%, #0A0C0B 100%) !important;
+}
+
+body[data-theme="dark"] .pcp-shell {
+    position: relative !important;
+    overflow: hidden !important;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(168,85,247,0.22) 0%, rgba(147,51,234,0.12) 18%, rgba(147,51,234,0.05) 31%, transparent 46%),
+        linear-gradient(145deg, rgba(11,13,12,0.985), rgba(6,8,7,0.99)) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .app-sidebar,
+body[data-theme="dark"] .pcp-shell #main-content {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* KPI selecionável: o destaque preto/branco acompanha o filtro escolhido */
+.pcp-shell .kpi-content-line {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+.pcp-shell .kpi-filter-card {
+    cursor: pointer !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+
+.pcp-shell .kpi-filter-card:hover {
+    transform: translateY(-1px) !important;
+}
+
+.pcp-shell .kpi-filter-card .kpi-icon {
+    background: rgba(255,255,255,0.62) !important;
+    color: var(--cor-texto-mutado) !important;
+}
+
+.pcp-shell .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-icon,
+.pcp-shell .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-val {
+    color: var(--cor-alerta) !important;
+}
+
+.pcp-shell .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-icon,
+.pcp-shell .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-val {
+    color: var(--cor-primaria) !important;
+}
+
+.pcp-shell .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #0B0D0C, #020303) !important;
+    border-color: #0B0D0C !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 20px 42px rgba(0,0,0,0.28) !important;
+}
+
+.pcp-shell .kpi-filter-card.is-selected .kpi-label,
+.pcp-shell .kpi-filter-card.is-selected .kpi-val {
+    color: #FFFFFF !important;
+}
+
+.pcp-shell .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(255,255,255,0.16) !important;
+    color: #FFFFFF !important;
+}
+
+/* Modo escuro: inverso do modo claro. Selecionado fica claro para destacar no preto. */
+body[data-theme="dark"] .pcp-shell .kpi-filter-card {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(10,12,11,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-filter-card .kpi-icon {
+    background: rgba(255,255,255,0.08) !important;
+    color: #DDE4E1 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #FFFFFF, #DDE4E1) !important;
+    border-color: rgba(255,255,255,0.38) !important;
+    color: #050606 !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.80),
+        0 18px 34px rgba(0,0,0,0.42) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-filter-card.is-selected .kpi-label,
+body[data-theme="dark"] .pcp-shell .kpi-filter-card.is-selected .kpi-val,
+body[data-theme="dark"] .pcp-shell .kpi-filter-card.is-selected .kpi-icon,
+body[data-theme="dark"] .pcp-shell .kpi-filter-card.is-selected i {
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(0,0,0,0.08) !important;
+}
+
+/* Responsivo: mantém usuário abaixo do título se faltar espaço */
+@media (max-width: 1180px) {
+    .pcp-shell .layout-user-highlight {
+        align-items: flex-start !important;
+    }
+
+    .pcp-shell .layout-user-highlight strong {
+        font-size: clamp(2.2rem, 9vw, 4rem) !important;
+    }
+}
+
+/* =========================================================
+   CORREÇÃO FINAL — KPI COM SELEÇÃO ÚNICA VISUAL
+   Regra: somente o KPI selecionado fica em destaque.
+   Os demais permanecem brancos no claro e escuros no dark.
+   ========================================================= */
+
+/* Remove o destaque fixo do primeiro card herdado do padrão global */
+.pcp-shell .kpi-grid-cols .kpi-card,
+.pcp-shell .kpi-grid-cols .kpi-card:first-child,
+.pcp-shell .kpi-grid-cols .kpi-filter-card,
+.pcp-shell .kpi-grid-cols .kpi-filter-card:first-child {
+    background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.48)) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    color: var(--cor-texto) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-label,
+.pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-val,
+.pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) i {
+    color: var(--cor-texto) !important;
+}
+
+.pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-icon {
+    background: rgba(255,255,255,0.70) !important;
+    color: var(--cor-texto-mutado) !important;
+}
+
+/* Cores funcionais quando NÃO estiver selecionado */
+.pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-val,
+.pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-icon,
+.pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) i {
+    color: var(--cor-alerta) !important;
+}
+
+.pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-val,
+.pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-icon,
+.pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) i {
+    color: var(--cor-primaria) !important;
+}
+
+/* Somente o selecionado fica preto no modo claro */
+.pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #0B0D0C, #020303) !important;
+    border-color: #0B0D0C !important;
+    color: #FFFFFF !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 20px 42px rgba(0,0,0,0.28) !important;
+}
+
+.pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-label,
+.pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-val,
+.pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected i {
+    color: #FFFFFF !important;
+}
+
+.pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(255,255,255,0.16) !important;
+    color: #FFFFFF !important;
+}
+
+/* Dark mode: não selecionados ficam escuros, somente selecionado fica claro */
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-card,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-card:first-child,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card:first-child {
+    background: linear-gradient(145deg, rgba(16,18,17,0.985), rgba(10,12,11,0.985)) !important;
+    border-color: rgba(255,255,255,0.07) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-label,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-val,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) i {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-card:not(.is-selected) .kpi-icon {
+    background: rgba(255,255,255,0.08) !important;
+    color: #DDE4E1 !important;
+}
+
+/* Cores funcionais no dark quando NÃO estiver selecionado */
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-val,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) .kpi-icon,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="waiting"]:not(.is-selected) i {
+    color: #F5A400 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-val,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) .kpi-icon,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card[data-filter="progress"]:not(.is-selected) i {
+    color: var(--cor-primaria) !important;
+}
+
+/* Somente o selecionado fica claro no modo escuro */
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected {
+    background: linear-gradient(145deg, #FFFFFF, #DDE4E1) !important;
+    border-color: rgba(255,255,255,0.38) !important;
+    color: #050606 !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.80),
+        0 18px 34px rgba(0,0,0,0.42) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-label,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-val,
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected i {
+    color: #050606 !important;
+}
+
+body[data-theme="dark"] .pcp-shell .kpi-grid-cols .kpi-filter-card.is-selected .kpi-icon {
+    background: rgba(0,0,0,0.08) !important;
+    color: #050606 !important;
+}
+
+/* =========================================================
+   REFINO — RADIAL GRADIENT AMPLIADO NO DARK MODE
+   Objetivo: manter o preto profundo, mas trazer mais presença
+   do roxo do setor vindo do canto superior esquerdo.
+   ========================================================= */
+
+body[data-theme="dark"] {
+    background:
+        radial-gradient(circle at 0% 0%,
+            rgba(168, 85, 247, 0.62) 0%,
+            rgba(147, 51, 234, 0.42) 13%,
+            rgba(147, 51, 234, 0.25) 27%,
+            rgba(147, 51, 234, 0.12) 43%,
+            transparent 68%),
+        radial-gradient(circle at 18% 22%,
+            rgba(168, 85, 247, 0.24) 0%,
+            rgba(147, 51, 234, 0.12) 28%,
+            transparent 62%),
+        linear-gradient(135deg, #030404 0%, #060707 44%, #0A0C0B 100%) !important;
+}
+
+body[data-theme="dark"] .pcp-shell {
+    position: relative !important;
+    isolation: isolate !important;
+    overflow: hidden !important;
+    background:
+        radial-gradient(circle at 0% 0%,
+            rgba(168, 85, 247, 0.46) 0%,
+            rgba(147, 51, 234, 0.30) 16%,
+            rgba(147, 51, 234, 0.16) 32%,
+            rgba(147, 51, 234, 0.07) 50%,
+            transparent 74%),
+        radial-gradient(circle at 22% 26%,
+            rgba(168, 85, 247, 0.18) 0%,
+            rgba(147, 51, 234, 0.08) 30%,
+            transparent 70%),
+        linear-gradient(145deg, rgba(9, 11, 10, 0.96), rgba(4, 5, 5, 0.98)) !important;
+}
+
+/* Camada de luz no fundo do app, sem afetar cliques nem layout */
+body[data-theme="dark"] .pcp-shell::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    display: block !important;
+    background:
+        radial-gradient(900px 760px at -8% -6%,
+            rgba(168, 85, 247, 0.36) 0%,
+            rgba(147, 51, 234, 0.25) 23%,
+            rgba(147, 51, 234, 0.13) 42%,
+            transparent 72%),
+        radial-gradient(620px 520px at 18% 18%,
+            rgba(168, 85, 247, 0.18) 0%,
+            rgba(147, 51, 234, 0.08) 44%,
+            transparent 76%) !important;
+    opacity: 1 !important;
+}
+
+/* Mantém sidebar e conteúdo acima do efeito */
+body[data-theme="dark"] .pcp-shell .app-sidebar,
+body[data-theme="dark"] .pcp-shell #main-content {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Deixa a sidebar receber levemente o brilho do fundo sem perder contraste */
+body[data-theme="dark"] .pcp-shell .app-sidebar {
+    background:
+        linear-gradient(180deg, rgba(20, 17, 25, 0.92), rgba(7, 9, 8, 0.96)) !important;
+    border-color: rgba(168, 85, 247, 0.18) !important;
+}
+
+/* Topbar e header ficam um pouco translúcidos para o radial aparecer suavemente */
+body[data-theme="dark"] .pcp-shell .topbar,
+body[data-theme="dark"] .pcp-shell .layout-work-header {
+    background:
+        linear-gradient(145deg, rgba(16, 18, 17, 0.90), rgba(7, 8, 8, 0.94)) !important;
+    border-color: rgba(168, 85, 247, 0.13) !important;
+    backdrop-filter: blur(22px) !important;
+}
+
+/* Cards principais continuam legíveis, mas com borda roxa sutil */
+body[data-theme="dark"] .pcp-shell .list-row,
+body[data-theme="dark"] .pcp-shell .filters,
+body[data-theme="dark"] .pcp-shell .kpi-filter-card:not(.is-selected) {
+    background:
+        linear-gradient(145deg, rgba(16, 18, 17, 0.90), rgba(8, 10, 9, 0.94)) !important;
+    border-color: rgba(168, 85, 247, 0.10) !important;
+}
+
+/* =========================================================
+   CORREÇÃO — RELATÓRIOS / HALL DA FAMA
+   Corrige cards quebrados, avatar cortado e estatísticas sem
+   espaçamento no ranking de designers.
+   ========================================================= */
+
+.pcp-shell #ranking-grid.report-card-grid,
+.pcp-shell #ranking-grid.gamer-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(260px, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+}
+
+.pcp-shell #ranking-grid .gamer-card {
+    position: relative !important;
+    min-height: 232px !important;
+    padding: 0 !important;
+    border-radius: 26px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.48)) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    box-shadow: var(--sombra-sm) !important;
+}
+
+.pcp-shell #ranking-grid .gamer-card:nth-child(1) {
+    border-top: 5px solid var(--cor-alerta) !important;
+}
+
+.pcp-shell #ranking-grid .gamer-card:nth-child(2) {
+    border-top: 5px solid var(--cor-primaria) !important;
+}
+
+.pcp-shell #ranking-grid .gamer-card:nth-child(3) {
+    border-top: 5px solid var(--cor-info) !important;
+}
+
+.pcp-shell #ranking-grid .gamer-header {
+    min-height: 84px !important;
+    padding: 18px 18px 12px !important;
+    display: grid !important;
+    grid-template-columns: 54px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    column-gap: 12px !important;
+    align-items: center !important;
+    color: var(--cor-texto) !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.46), rgba(255,255,255,0.18)) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.36) !important;
+}
+
+.pcp-shell #ranking-grid .avatar-circle {
+    grid-row: 1 / 3 !important;
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    border-radius: 18px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: linear-gradient(145deg, var(--cor-primaria), #6D28D9) !important;
+    color: #FFFFFF !important;
+    font-size: 1.35rem !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    box-shadow: 0 12px 24px rgba(147,51,234,0.24) !important;
+    overflow: hidden !important;
+}
+
+.pcp-shell #ranking-grid .gamer-header > div:not(.avatar-circle) {
+    min-width: 0 !important;
+    color: var(--cor-texto) !important;
+    line-height: 1.05 !important;
+}
+
+.pcp-shell #ranking-grid .gamer-header > div:nth-child(2) {
+    font-size: 1.08rem !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.035em !important;
+    text-transform: capitalize !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.pcp-shell #ranking-grid .gamer-header > div:nth-child(3) {
+    margin-top: 5px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.74rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.045em !important;
+}
+
+.pcp-shell #ranking-grid .gamer-body {
+    flex: 1 1 auto !important;
+    padding: 16px 18px 18px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    color: var(--cor-texto) !important;
+}
+
+.pcp-shell #ranking-grid .stat-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    min-height: 30px !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px dashed rgba(0,0,0,0.08) !important;
+}
+
+.pcp-shell #ranking-grid .stat-row span:first-child {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.82rem !important;
+    font-weight: 850 !important;
+}
+
+.pcp-shell #ranking-grid .stat-row span:last-child {
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+    white-space: nowrap !important;
+}
+
+.pcp-shell #ranking-grid .xp-bar-container {
+    width: 100% !important;
+    height: 9px !important;
+    border-radius: 999px !important;
+    background: rgba(0,0,0,0.08) !important;
+    overflow: hidden !important;
+    margin-top: 2px !important;
+}
+
+.pcp-shell #ranking-grid .xp-bar-fill {
+    height: 100% !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-alerta)) !important;
+    box-shadow: 0 0 18px rgba(147,51,234,0.28) !important;
+}
+
+.pcp-shell #ranking-grid .gamer-body .ph-trophy {
+    display: inline-grid !important;
+    place-items: center !important;
+    color: var(--cor-alerta) !important;
+    font-size: 1.6rem !important;
+    margin: 0 !important;
+}
+
+.pcp-shell #ranking-grid .gamer-body > div[title="Mestre da Produtividade"] {
+    margin-top: 4px !important;
+    text-align: right !important;
+    font-size: 1.6rem !important;
+    line-height: 1 !important;
+}
+
+/* Impede que o card de Hall da Fama fique cortado dentro do painel */
+.pcp-shell .report-panel:has(#ranking-grid) {
+    overflow: visible !important;
+}
+
+/* Dark mode do Hall da Fama */
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-card {
+    background: linear-gradient(145deg, rgba(16,18,17,0.94), rgba(8,10,9,0.96)) !important;
+    border-color: rgba(168,85,247,0.12) !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.36) !important;
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-header {
+    background: linear-gradient(145deg, rgba(168,85,247,0.10), rgba(255,255,255,0.025)) !important;
+    border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-header > div:not(.avatar-circle),
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-body,
+body[data-theme="dark"] .pcp-shell #ranking-grid .stat-row span:last-child {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-header > div:nth-child(3),
+body[data-theme="dark"] .pcp-shell #ranking-grid .stat-row span:first-child {
+    color: #AEB7B2 !important;
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .stat-row {
+    border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .xp-bar-container {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+@media (max-width: 1280px) {
+    .pcp-shell #ranking-grid.report-card-grid,
+    .pcp-shell #ranking-grid.gamer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    }
+}
+
+/* =========================================================
+   PONTUAÇÃO — SIDEBAR + TROFÉU MODERNO
+   ========================================================= */
+
+/* Card de pontuação na lateral */
+.pcp-shell .sidebar-score-card {
+    width: 100% !important;
+    padding: 14px !important;
+    margin: 0 0 12px !important;
+    border-radius: 24px !important;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(168,85,247,0.20), transparent 38%),
+        linear-gradient(145deg, rgba(255,255,255,0.62), rgba(255,255,255,0.38)) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
+    box-shadow: var(--sombra-sm) !important;
+    overflow: hidden !important;
+}
+
+.pcp-shell .sidebar-score-top {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 12px !important;
+}
+
+.pcp-shell .sidebar-score-orb {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 15px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(145deg, var(--cor-primaria), #6D28D9) !important;
+    box-shadow: 0 12px 28px rgba(147,51,234,0.24) !important;
+    animation: scoreOrbPulse 2.6s ease-in-out infinite !important;
+}
+
+.pcp-shell .sidebar-score-top span {
+    display: block !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.66rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+}
+
+.pcp-shell .sidebar-score-top strong {
+    display: block !important;
+    margin-top: 4px !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.96rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.035em !important;
+}
+
+.pcp-shell .sidebar-score-main {
+    display: grid !important;
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: center !important;
+}
+
+.pcp-shell .sidebar-score-ring {
+    --score-percent: 0;
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 50% !important;
+    display: grid !important;
+    place-items: center !important;
+    background:
+        conic-gradient(var(--cor-primaria) calc(var(--score-percent) * 1%), rgba(147,51,234,0.12) 0) !important;
+    box-shadow: 0 12px 28px rgba(147,51,234,0.18) !important;
+    position: relative !important;
+}
+
+.pcp-shell .sidebar-score-ring::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: -4px !important;
+    border-radius: inherit !important;
+    border: 1px solid rgba(147,51,234,0.24) !important;
+    animation: scoreRingGlow 2.8s ease-in-out infinite !important;
+}
+
+.pcp-shell .sidebar-score-ring-inner {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 50% !important;
+    display: grid !important;
+    place-items: center !important;
+    background: rgba(255,255,255,0.88) !important;
+    border: 1px solid rgba(255,255,255,0.62) !important;
+}
+
+.pcp-shell .sidebar-score-ring-inner span {
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.04em !important;
+}
+
+.pcp-shell .sidebar-score-info {
+    min-width: 0 !important;
+}
+
+.pcp-shell .sidebar-score-info strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.96rem !important;
+    line-height: 1.05 !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .sidebar-score-info span,
+.pcp-shell .sidebar-score-info small {
+    display: block !important;
+    margin-top: 5px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    line-height: 1.05 !important;
+    font-weight: 800 !important;
+}
+
+.pcp-shell .sidebar-score-progress {
+    height: 8px !important;
+    margin-top: 12px !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    background: rgba(0,0,0,0.08) !important;
+}
+
+.pcp-shell .sidebar-score-progress span {
+    display: block !important;
+    width: 0%;
+    height: 100% !important;
+    border-radius: inherit !important;
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-alerta)) !important;
+    box-shadow: 0 0 18px rgba(147,51,234,0.28) !important;
+    transition: width .5s ease !important;
+}
+
+.pcp-shell .sidebar-score-caption {
+    margin-top: 8px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.68rem !important;
+    font-weight: 850 !important;
+    text-align: center !important;
+}
+
+/* Badge moderno no Hall da Fama */
+.pcp-shell #ranking-grid .fame-card.is-champion {
+    overflow: hidden !important;
+}
+
+.pcp-shell #ranking-grid .fame-card.is-champion::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 160px !important;
+    height: 160px !important;
+    right: -70px !important;
+    bottom: -75px !important;
+    border-radius: 50% !important;
+    background: radial-gradient(circle, rgba(245,158,11,0.25), transparent 68%) !important;
+    pointer-events: none !important;
+}
+
+.pcp-shell #ranking-grid .modern-award-badge {
+    position: absolute !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 20px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(145deg, #F59E0B, #E66A00) !important;
+    box-shadow:
+        0 16px 34px rgba(245,158,11,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.28) !important;
+    overflow: hidden !important;
+    z-index: 3 !important;
+}
+
+.pcp-shell #ranking-grid .modern-award-badge .award-glow {
+    position: absolute !important;
+    inset: -20px !important;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.42), transparent) !important;
+    animation: awardRotate 3.2s linear infinite !important;
+}
+
+.pcp-shell #ranking-grid .modern-award-badge i {
+    position: relative !important;
+    z-index: 2 !important;
+    font-size: 1.55rem !important;
+    color: #FFFFFF !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.22)) !important;
+}
+
+.pcp-shell #ranking-grid .modern-award-badge span {
+    position: absolute !important;
+    z-index: 2 !important;
+    bottom: 6px !important;
+    color: #FFFFFF !important;
+    font-size: 0.52rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.06em !important;
+}
+
+/* Esconde o troféu antigo caso algum cache ainda renderize o ícone anterior */
+.pcp-shell #ranking-grid .ph-trophy {
+    display: none !important;
+}
+
+@keyframes awardRotate {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes scoreOrbPulse {
+    0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 12px 28px rgba(147,51,234,0.24); }
+    50% { transform: translateY(-1px) scale(1.03); box-shadow: 0 16px 38px rgba(147,51,234,0.36); }
+}
+
+@keyframes scoreRingGlow {
+    0%, 100% { opacity: .55; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+}
+
+/* Dark mode */
+body[data-theme="dark"] .pcp-shell .sidebar-score-card {
+    background:
+        radial-gradient(circle at 18% 0%, rgba(168,85,247,0.24), transparent 44%),
+        linear-gradient(145deg, rgba(20,17,25,0.92), rgba(7,9,8,0.96)) !important;
+    border-color: rgba(168,85,247,0.18) !important;
+    box-shadow: 0 16px 34px rgba(0,0,0,0.34) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .sidebar-score-top strong,
+body[data-theme="dark"] .pcp-shell .sidebar-score-info strong {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .pcp-shell .sidebar-score-ring-inner {
+    background: #090B0A !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .sidebar-score-ring-inner span {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .pcp-shell .sidebar-score-progress {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .modern-award-badge {
+    box-shadow:
+        0 16px 34px rgba(245,158,11,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.22) !important;
+}
+
+/* =========================================================
+   ABA RANKING — PÓDIO, TROFÉUS E ORIENTAÇÕES
+   ========================================================= */
+
+.pcp-shell .ranking-workspace {
+    display: block;
+}
+
+.pcp-shell .ranking-workspace.hidden {
+    display: none !important;
+}
+
+.pcp-shell .ranking-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+    margin-bottom: 18px !important;
+}
+
+.pcp-shell .ranking-layout-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.8fr) !important;
+    gap: 18px !important;
+    align-items: stretch !important;
+}
+
+.pcp-shell .ranking-podium-panel,
+.pcp-shell .ranking-list-panel {
+    grid-column: span 1 !important;
+}
+
+.pcp-shell .ranking-podium {
+    min-height: 390px !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    align-items: end !important;
+    padding-top: 12px !important;
+}
+
+.pcp-shell .podium-card {
+    min-height: 300px !important;
+    padding: 22px !important;
+    border-radius: 30px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    text-align: center !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.76), rgba(255,255,255,0.46)) !important;
+    border: 1px solid rgba(255,255,255,0.62) !important;
+    box-shadow: var(--sombra-md) !important;
+    animation: podiumIn .55s cubic-bezier(.2,.8,.2,1) both !important;
+}
+
+.pcp-shell .podium-card.rank-1 {
+    min-height: 360px !important;
+    order: 2 !important;
+    border-color: rgba(245,158,11,0.36) !important;
+    box-shadow:
+        0 24px 58px rgba(245,158,11,0.16),
+        var(--sombra-md) !important;
+}
+
+.pcp-shell .podium-card.rank-2 {
+    min-height: 320px !important;
+    order: 1 !important;
+    animation-delay: .08s !important;
+}
+
+.pcp-shell .podium-card.rank-3 {
+    min-height: 300px !important;
+    order: 3 !important;
+    animation-delay: .16s !important;
+}
+
+.pcp-shell .podium-card::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 190px !important;
+    height: 190px !important;
+    border-radius: 50% !important;
+    right: -80px !important;
+    top: -80px !important;
+    background: radial-gradient(circle, rgba(147,51,234,0.12), transparent 68%) !important;
+    pointer-events: none !important;
+}
+
+.pcp-shell .podium-card.rank-1::after {
+    background: radial-gradient(circle, rgba(245,158,11,0.26), transparent 68%) !important;
+}
+
+.pcp-shell .podium-trophy {
+    width: 92px !important;
+    height: 92px !important;
+    border-radius: 30px !important;
+    display: grid !important;
+    place-items: center !important;
+    position: absolute !important;
+    top: 22px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    color: #FFFFFF !important;
+    overflow: hidden !important;
+    box-shadow:
+        0 20px 42px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.28) !important;
+    animation: trophyFloat 2.8s ease-in-out infinite !important;
+}
+
+.pcp-shell .podium-trophy.rank-1 {
+    background: linear-gradient(145deg, #FFD166, #F59E0B, #D97706) !important;
+}
+
+.pcp-shell .podium-trophy.rank-2 {
+    background: linear-gradient(145deg, #F8FAFC, #AEB7C2, #6B7280) !important;
+}
+
+.pcp-shell .podium-trophy.rank-3 {
+    background: linear-gradient(145deg, #FDBA74, #C76A24, #92400E) !important;
+}
+
+.pcp-shell .podium-trophy i {
+    font-size: 2.35rem !important;
+    position: relative !important;
+    z-index: 2 !important;
+    color: #FFFFFF !important;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.24)) !important;
+    animation: trophyIconPop 1.8s ease-in-out infinite !important;
+}
+
+.pcp-shell .podium-trophy span {
+    position: absolute !important;
+    bottom: 9px !important;
+    z-index: 2 !important;
+    color: #FFFFFF !important;
+    font-size: 0.7rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.02em !important;
+}
+
+.pcp-shell .trophy-shine {
+    position: absolute !important;
+    inset: -30px !important;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.50), transparent) !important;
+    animation: trophyShine 3.2s linear infinite !important;
+    z-index: 1 !important;
+}
+
+.pcp-shell .podium-position {
+    margin-top: 92px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+}
+
+.pcp-shell .podium-card h3 {
+    margin: 8px 0 0 !important;
+    color: var(--cor-texto) !important;
+    font-size: clamp(1.6rem, 2.5vw, 2.5rem) !important;
+    line-height: 0.92 !important;
+    letter-spacing: -0.06em !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .podium-level {
+    margin-top: 8px !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    color: var(--cor-primaria) !important;
+    background: var(--cor-primaria-soft-bg) !important;
+    font-size: 0.75rem !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .podium-stats {
+    width: 100% !important;
+    margin-top: 18px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+}
+
+.pcp-shell .podium-stats div {
+    padding: 12px !important;
+    border-radius: 18px !important;
+    background: rgba(255,255,255,0.52) !important;
+    border: 1px solid rgba(255,255,255,0.56) !important;
+}
+
+.pcp-shell .podium-stats strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 1.18rem !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .podium-stats span {
+    display: block !important;
+    margin-top: 3px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.68rem !important;
+    font-weight: 850 !important;
+}
+
+.pcp-shell .podium-xp {
+    width: 100% !important;
+    height: 9px !important;
+    margin-top: 16px !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    background: rgba(0,0,0,0.08) !important;
+}
+
+.pcp-shell .podium-xp span {
+    display: block !important;
+    height: 100% !important;
+    border-radius: inherit !important;
+    background: linear-gradient(90deg, var(--cor-primaria), #F59E0B) !important;
+    animation: podiumXpGrow .85s cubic-bezier(.2,.8,.2,1) both !important;
+}
+
+.pcp-shell .podium-empty {
+    opacity: .64 !important;
+}
+
+.pcp-shell .ranking-empty-state,
+.pcp-shell .ranking-loading {
+    grid-column: 1 / -1 !important;
+    min-height: 220px !important;
+    display: grid !important;
+    place-items: center !important;
+    text-align: center !important;
+    color: var(--cor-texto-mutado) !important;
+    font-weight: 850 !important;
+}
+
+.pcp-shell .ranking-empty-state i,
+.pcp-shell .ranking-loading i {
+    font-size: 3rem !important;
+    color: var(--cor-primaria) !important;
+}
+
+.pcp-shell .ranking-rules-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.pcp-shell .ranking-rule-item {
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.54) !important;
+}
+
+.pcp-shell .ranking-rule-item i {
+    width: 40px !important;
+    height: 40px !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 15px !important;
+    color: #FFFFFF !important;
+    background: linear-gradient(145deg, var(--cor-primaria), #6D28D9) !important;
+}
+
+.pcp-shell .ranking-rule-item strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 0.9rem !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .ranking-rule-item span {
+    display: block !important;
+    margin-top: 4px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.78rem !important;
+    line-height: 1.25 !important;
+    font-weight: 750 !important;
+}
+
+.pcp-shell .ranking-full-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.pcp-shell .ranking-row {
+    display: grid !important;
+    grid-template-columns: 64px minmax(0, 1fr) 110px 130px !important;
+    gap: 14px !important;
+    align-items: center !important;
+    padding: 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255,255,255,0.50) !important;
+    border: 1px solid rgba(255,255,255,0.54) !important;
+    animation: rankingRowIn .45s cubic-bezier(.2,.8,.2,1) both !important;
+}
+
+.pcp-shell .ranking-row-position span {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 15px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: #0B0D0C !important;
+    color: #FFFFFF !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .ranking-row.rank-1 .ranking-row-position span { background: linear-gradient(145deg, #FFD166, #F59E0B) !important; }
+.pcp-shell .ranking-row.rank-2 .ranking-row-position span { background: linear-gradient(145deg, #E5E7EB, #6B7280) !important; }
+.pcp-shell .ranking-row.rank-3 .ranking-row-position span { background: linear-gradient(145deg, #FDBA74, #92400E) !important; }
+
+.pcp-shell .ranking-row-user strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .ranking-row-user span,
+.pcp-shell .ranking-row-metric span {
+    display: block !important;
+    margin-top: 3px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.72rem !important;
+    font-weight: 850 !important;
+}
+
+.pcp-shell .ranking-row-metric strong {
+    display: block !important;
+    color: var(--cor-texto) !important;
+    font-size: 1rem !important;
+    font-weight: 950 !important;
+}
+
+.pcp-shell .ranking-meaning-panel p {
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.55 !important;
+    font-weight: 750 !important;
+}
+
+.pcp-shell .ranking-meaning-tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-top: 14px !important;
+}
+
+.pcp-shell .ranking-meaning-tags span {
+    padding: 8px 10px !important;
+    border-radius: 999px !important;
+    background: var(--cor-primaria-soft-bg) !important;
+    color: var(--cor-primaria) !important;
+    font-size: 0.72rem !important;
+    font-weight: 950 !important;
+}
+
+/* Dark mode */
+body[data-theme="dark"] .pcp-shell .podium-card,
+body[data-theme="dark"] .pcp-shell .ranking-rule-item,
+body[data-theme="dark"] .pcp-shell .ranking-row {
+    background: linear-gradient(145deg, rgba(16,18,17,0.94), rgba(8,10,9,0.96)) !important;
+    border-color: rgba(168,85,247,0.12) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .podium-stats div {
+    background: rgba(255,255,255,0.06) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+body[data-theme="dark"] .pcp-shell .podium-card h3,
+body[data-theme="dark"] .pcp-shell .podium-stats strong,
+body[data-theme="dark"] .pcp-shell .ranking-rule-item strong,
+body[data-theme="dark"] .pcp-shell .ranking-row-user strong,
+body[data-theme="dark"] .pcp-shell .ranking-row-metric strong {
+    color: #FFFFFF !important;
+}
+
+body[data-theme="dark"] .pcp-shell .podium-xp {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+/* Keyframes */
+@keyframes podiumIn {
+    from { opacity: 0; transform: translateY(20px) scale(.96); filter: blur(8px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes trophyFloat {
+    0%, 100% { transform: translateX(-50%) translateY(0) rotate(-1deg); }
+    50% { transform: translateX(-50%) translateY(-8px) rotate(2deg); }
+}
+
+@keyframes trophyIconPop {
+    0%, 100% { transform: scale(1); }
+    45% { transform: scale(1.12); }
+}
+
+@keyframes trophyShine {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes podiumXpGrow {
+    from { width: 0; }
+}
+
+@keyframes rankingRowIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsivo */
+@media (max-width: 1180px) {
+    .pcp-shell .ranking-layout-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .pcp-shell .ranking-podium {
+        grid-template-columns: 1fr !important;
+        align-items: stretch !important;
+    }
+
+    .pcp-shell .podium-card,
+    .pcp-shell .podium-card.rank-1,
+    .pcp-shell .podium-card.rank-2,
+    .pcp-shell .podium-card.rank-3 {
+        min-height: 300px !important;
+        order: initial !important;
+    }
+
+    .pcp-shell .ranking-row {
+        grid-template-columns: 52px minmax(0, 1fr) !important;
+    }
+
+    .pcp-shell .ranking-row-metric {
+        grid-column: 2 !important;
+    }
+}
+
+/* =========================================================
+   RELATÓRIOS — PRIMEIRA REORGANIZAÇÃO DE ESPAÇO
+   Objetivo: retirar bloco duplicado e aproveitar melhor a linha
+   de "Total finalizado por designer".
+   ========================================================= */
+
+/* A página já tem o header "Relatórios"; este bloco interno fica redundante */
+.pcp-shell #view-reports .report-view-intro {
+    display: none !important;
+}
+
+/* Grid mais inteligente para relatórios */
+.pcp-shell #view-reports .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+/* Remove regra global de full-width nos relatórios */
+.pcp-shell #view-reports .report-panel-full,
+.pcp-shell #view-reports .report-panel {
+    grid-column: auto !important;
+}
+
+/* Primeira linha: distribuição compacta + funil ocupando o restante */
+.pcp-shell #view-reports .report-panel-distribution {
+    grid-column: span 4 !important;
+    min-height: 168px !important;
+}
+
+.pcp-shell #view-reports .report-panel-funnel {
+    grid-column: span 8 !important;
+    min-height: 168px !important;
+}
+
+/* Segunda linha: projetos e ranking/hall aproveitando lado a lado */
+.pcp-shell #view-reports .report-panel-active {
+    grid-column: span 7 !important;
+}
+
+.pcp-shell #view-reports .report-panel-fame {
+    grid-column: span 5 !important;
+}
+
+/* Gargalos e prazo extra dividem a linha */
+.pcp-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+    grid-column: span 6 !important;
+}
+
+/* Cards mais baixos, sem sensação de linha desperdiçada */
+.pcp-shell #view-reports .report-panel {
+    min-height: 150px !important;
+    padding: 18px !important;
+}
+
+.pcp-shell #view-reports .report-panel-head {
+    padding-bottom: 10px !important;
+    margin-bottom: 12px !important;
+}
+
+.pcp-shell #view-reports .report-panel-head h3 {
+    font-size: clamp(1.05rem, 1.35vw, 1.35rem) !important;
+    letter-spacing: -0.05em !important;
+}
+
+/* Distribuição: compacta e útil */
+.pcp-shell #view-reports .designer-distribution-panel {
+    min-height: 72px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-content: flex-start !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.pcp-shell #view-reports .designer-pill {
+    min-height: 38px !important;
+    padding: 8px 10px 8px 12px !important;
+    gap: 7px !important;
+    font-size: 0.82rem !important;
+    box-shadow: none !important;
+}
+
+.pcp-shell #view-reports .designer-count {
+    min-width: 25px !important;
+    height: 25px !important;
+    font-size: 0.72rem !important;
+}
+
+/* Funil: usa bem o espaço horizontal ao lado */
+.pcp-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.pcp-shell #view-reports #micro-funnel-grid > div {
+    min-height: 110px !important;
+    padding: 14px !important;
+}
+
+/* Projetos ativos e Hall da Fama não devem "estourar" a largura */
+.pcp-shell #view-reports .report-card-grid,
+.pcp-shell #view-reports .gamer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)) !important;
+    gap: 12px !important;
+}
+
+.pcp-shell #view-reports .report-panel-fame .gamer-grid {
+    grid-template-columns: 1fr !important;
+}
+
+.pcp-shell #view-reports .report-panel-fame .gamer-card {
+    min-height: 128px !important;
+}
+
+/* Ajuste de scroll visual do relatório */
+.pcp-shell #view-reports {
+    padding-top: 0 !important;
+}
+
+/* Dark mode mantém a organização sem pesar */
+body[data-theme="dark"] .pcp-shell #view-reports .report-panel {
+    background: linear-gradient(145deg, rgba(16,18,17,0.94), rgba(8,10,9,0.96)) !important;
+    border-color: rgba(168,85,247,0.10) !important;
+}
+
+/* Responsivo */
+@media (max-width: 1380px) {
+    .pcp-shell #view-reports .report-panel-distribution,
+    .pcp-shell #view-reports .report-panel-funnel,
+    .pcp-shell #view-reports .report-panel-active,
+    .pcp-shell #view-reports .report-panel-fame,
+    .pcp-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+        grid-column: span 12 !important;
+    }
+
+    .pcp-shell #view-reports .report-panel-funnel .report-metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .pcp-shell #view-reports .report-panel-funnel .report-metric-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* =========================================================
+   RELATÓRIOS — AJUSTE FINO DE TAMANHO DOS CARDS
+   Objetivo: dar mais espaço para os blocos mais densos e
+   compactar os blocos mais simples, conforme o layout aprovado.
+   ========================================================= */
+
+/* Primeira linha: distribuição menor, funil com mais área útil */
+.pcp-shell #view-reports .report-panel-distribution {
+    grid-column: span 3 !important;
+    min-height: 146px !important;
+}
+
+.pcp-shell #view-reports .report-panel-funnel {
+    grid-column: span 9 !important;
+    min-height: 146px !important;
+}
+
+/* Segunda linha: projetos ativos precisa de mais espaço */
+.pcp-shell #view-reports .report-panel-active {
+    grid-column: span 8 !important;
+    min-height: 320px !important;
+}
+
+.pcp-shell #view-reports .report-panel-fame {
+    grid-column: span 4 !important;
+    min-height: 320px !important;
+}
+
+/* Linha inferior permanece equilibrada */
+.pcp-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+    grid-column: span 6 !important;
+    min-height: 240px !important;
+}
+
+/* distribuição compacta: cabeçalhos e pills mais econômicos */
+.pcp-shell #view-reports .report-panel-distribution .report-panel-head {
+    margin-bottom: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.pcp-shell #view-reports .report-panel-distribution .designer-distribution-panel {
+    min-height: auto !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.pcp-shell #view-reports .report-panel-distribution .designer-pill {
+    min-height: 40px !important;
+    padding: 10px 14px !important;
+    font-size: 0.88rem !important;
+}
+
+/* funil ocupa horizontal melhor */
+.pcp-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+}
+
+.pcp-shell #view-reports .report-panel-funnel #micro-funnel-grid > div {
+    min-height: 112px !important;
+}
+
+/* Projetos ativos: 3 colunas confortáveis */
+.pcp-shell #view-reports .report-panel-active .report-card-grid,
+.pcp-shell #view-reports .report-panel-active .gamer-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.pcp-shell #view-reports .report-panel-active .gamer-card {
+    min-height: 250px !important;
+}
+
+/* Hall da fama: card único mais elegante e espaçoso */
+.pcp-shell #view-reports .report-panel-fame .gamer-grid {
+    grid-template-columns: 1fr !important;
+}
+
+.pcp-shell #view-reports .report-panel-fame .gamer-card {
+    min-height: 250px !important;
+}
+
+/* Ajuste de títulos para não desperdiçar altura */
+.pcp-shell #view-reports .report-panel-fame .report-panel-head,
+.pcp-shell #view-reports .report-panel-active .report-panel-head {
+    margin-bottom: 12px !important;
+}
+
+/* quebra progressiva em telas médias */
+@media (max-width: 1480px) {
+    .pcp-shell #view-reports .report-panel-distribution {
+        grid-column: span 4 !important;
+    }
+
+    .pcp-shell #view-reports .report-panel-funnel {
+        grid-column: span 8 !important;
+    }
+
+    .pcp-shell #view-reports .report-panel-active {
+        grid-column: span 12 !important;
+    }
+
+    .pcp-shell #view-reports .report-panel-fame {
+        grid-column: span 12 !important;
+    }
+
+    .pcp-shell #view-reports .report-panel-active .report-card-grid,
+    .pcp-shell #view-reports .report-panel-active .gamer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 1120px) {
+    .pcp-shell #view-reports .report-panel-distribution,
+    .pcp-shell #view-reports .report-panel-funnel,
+    .pcp-shell #view-reports .report-panel-active,
+    .pcp-shell #view-reports .report-panel-fame,
+    .pcp-shell #view-reports .report-panel:not(.report-panel-distribution):not(.report-panel-funnel):not(.report-panel-active):not(.report-panel-fame) {
+        grid-column: span 12 !important;
+    }
+}
+
+
+/* =========================================================
+   HALL DA FAMA — TROFÉU E POSIÇÃO POR USUÁRIO
+   Exibe 1º, 2º e 3º lugar ao lado do nome sem cobrir os números.
+   ========================================================= */
+.pcp-shell #ranking-grid .gamer-header {
+    grid-template-columns: 54px minmax(0, 1fr) auto !important;
+    grid-template-rows: auto auto !important;
+    min-height: 94px !important;
+}
+
+.pcp-shell #ranking-grid .fame-user-name {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    font-size: 1.08rem !important;
+    font-weight: 950 !important;
+    letter-spacing: -0.035em !important;
+    text-transform: capitalize !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.pcp-shell #ranking-grid .fame-level {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    margin-top: 5px !important;
+    color: var(--cor-texto-mutado) !important;
+    font-size: 0.74rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.045em !important;
+}
+
+.pcp-shell #ranking-grid .gamer-rank-badge {
+    grid-column: 3 !important;
+    grid-row: 1 / 3 !important;
+    align-self: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    background: rgba(255,255,255,0.72) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+    min-width: 122px !important;
+}
+
+.pcp-shell #ranking-grid .gamer-rank-badge i {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+}
+
+.pcp-shell #ranking-grid .gamer-rank-meta {
+    display: flex !important;
+    flex-direction: column !important;
+    line-height: 1.05 !important;
+}
+
+.pcp-shell #ranking-grid .gamer-rank-meta strong {
+    font-size: 0.82rem !important;
+    font-weight: 900 !important;
+    color: var(--cor-texto) !important;
+    white-space: nowrap !important;
+}
+
+.pcp-shell #ranking-grid .gamer-rank-meta span {
+    font-size: 0.62rem !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    color: var(--cor-texto-mutado) !important;
+}
+
+.pcp-shell #ranking-grid .gamer-rank-badge.rank-1 {
+    background: linear-gradient(145deg, rgba(255,245,214,0.98), rgba(255,233,170,0.88)) !important;
+    border-color: rgba(245, 158, 11, 0.35) !important;
+}
+.pcp-shell #ranking-grid .gamer-rank-badge.rank-1 i { color: #D97706 !important; }
+
+.pcp-shell #ranking-grid .gamer-rank-badge.rank-2 {
+    background: linear-gradient(145deg, rgba(246,248,252,0.98), rgba(226,232,240,0.92)) !important;
+    border-color: rgba(148, 163, 184, 0.45) !important;
+}
+.pcp-shell #ranking-grid .gamer-rank-badge.rank-2 i { color: #64748B !important; }
+
+.pcp-shell #ranking-grid .gamer-rank-badge.rank-3 {
+    background: linear-gradient(145deg, rgba(255,241,233,0.98), rgba(251, 191, 142, 0.78)) !important;
+    border-color: rgba(234, 88, 12, 0.26) !important;
+}
+.pcp-shell #ranking-grid .gamer-rank-badge.rank-3 i { color: #C2410C !important; }
+
+/* remove o badge antigo no rodapé do card */
+.pcp-shell #ranking-grid .modern-award-badge {
+    display: none !important;
+}
+
+/* evita que o selo cubra dados em telas menores */
+@media (max-width: 640px) {
+    .pcp-shell #ranking-grid .gamer-header {
+        grid-template-columns: 54px minmax(0, 1fr) !important;
+    }
+
+    .pcp-shell #ranking-grid .gamer-rank-badge {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 !important;
+        margin-top: 10px !important;
+        width: fit-content !important;
+    }
+
+    .pcp-shell #ranking-grid .gamer-header {
+        min-height: 124px !important;
+    }
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-rank-badge {
+    background: rgba(17, 21, 27, 0.9) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.28) !important;
+}
+
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-rank-meta strong {
+    color: #FFFFFF !important;
+}
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-rank-meta span {
+    color: rgba(255,255,255,0.72) !important;
+}
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-rank-badge.rank-1 {
+    background: linear-gradient(145deg, rgba(92,63,4,0.92), rgba(181,111,10,0.38)) !important;
+    border-color: rgba(245, 158, 11, 0.25) !important;
+}
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-rank-badge.rank-2 {
+    background: linear-gradient(145deg, rgba(39,45,56,0.95), rgba(95,111,133,0.28)) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
+}
+body[data-theme="dark"] .pcp-shell #ranking-grid .gamer-rank-badge.rank-3 {
+    background: linear-gradient(145deg, rgba(74,40,16,0.95), rgba(194,65,12,0.22)) !important;
+    border-color: rgba(234, 88, 12, 0.18) !important;
+}
+
+
+/* =========================================================
+   PCP — AJUSTES ESPECÍFICOS DO SETOR
+   ========================================================= */
+
+.pcp-shell .brand-wordmark span,
+.pcp-shell .sector-dot,
+.pcp-shell .page-overline i,
+.pcp-shell .view-eyebrow i,
+.pcp-shell .view-chip i,
+.pcp-shell .status-badge-top.online i {
+    color: var(--cor-primaria) !important;
+}
+
+.pcp-shell .sector-dot {
+    background: var(--cor-primaria) !important;
+    box-shadow: 0 0 0 6px var(--cor-primaria-soft-bg) !important;
+}
+
+.pcp-shell .pcp-view-intro {
+    border-left: 7px solid var(--cor-primaria) !important;
+}
+
+.pcp-shell .kpi-grid-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.pcp-shell .list-row.is-retorno {
+    border-left-color: var(--cor-erro) !important;
+}
+
+.pcp-shell .row-header {
+    grid-template-columns: minmax(280px, 1.1fr) minmax(360px, 1.3fr) minmax(280px, auto) !important;
+}
+
+.pcp-shell .col-id {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.pcp-shell .col-client {
+    min-width: 0 !important;
+}
+
+.pcp-shell .tag-retorno,
+.pcp-shell .tag-urgente,
+.pcp-shell .tag-homologado,
+.pcp-shell .tag-projeto,
+.pcp-shell .tag-normal {
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.pcp-shell .tag-normal { background: rgba(59,130,246,.12); color: #2563EB; }
+.pcp-shell .tag-projeto { background: rgba(147,51,234,.14); color: #9333EA; }
+.pcp-shell .tag-urgente { background: rgba(239,68,68,.14); color: var(--cor-erro); }
+.pcp-shell .tag-homologado { background: rgba(245,158,11,.16); color: var(--cor-alerta); }
+.pcp-shell .tag-retorno { background: rgba(239,68,68,.14); color: var(--cor-erro); }
+
+.pcp-shell .obs-block,
+.pcp-shell .obs-comercial,
+.pcp-shell .obs-layout,
+.pcp-shell .obs-producao {
+    border-radius: 20px;
+}
+
+/* Relatórios PCP */
+.pcp-shell #view-reports .report-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+.pcp-shell #view-reports .report-panel-distribution {
+    grid-column: span 3 !important;
+    min-height: 146px !important;
+}
+
+.pcp-shell #view-reports .report-panel-funnel {
+    grid-column: span 9 !important;
+    min-height: 146px !important;
+}
+
+.pcp-shell #view-reports .report-panel-active {
+    grid-column: span 8 !important;
+    min-height: 300px !important;
+}
+
+.pcp-shell #view-reports .report-panel-fame {
+    grid-column: span 4 !important;
+    min-height: 300px !important;
+}
+
+.pcp-shell #view-reports .report-panel-full {
+    grid-column: span 12 !important;
+}
+
+.pcp-shell #view-reports .designer-distribution-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.pcp-shell #view-reports .designer-pill {
+    min-height: 40px !important;
+    padding: 10px 14px !important;
+}
+
+.pcp-shell #view-reports #micro-funnel-grid > div {
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 112px !important;
+}
+
+.pcp-shell #view-reports .report-panel-funnel .report-metric-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+/* Modal de arquivos maior e centralizado no padrão atual */
+.pcp-shell ~ .modal-overlay,
+.modal-overlay {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#filesModal .modal-card-lg {
+    width: min(92vw, 1280px) !important;
+    height: min(82vh, 820px) !important;
+    max-width: 1280px !important;
+}
+
+#filesModal .file-browser {
+    height: calc(82vh - 82px) !important;
+    max-height: 740px !important;
+}
+
+@media (max-width: 1360px) {
+    .pcp-shell #view-reports .report-panel-distribution,
+    .pcp-shell #view-reports .report-panel-funnel,
+    .pcp-shell #view-reports .report-panel-active,
+    .pcp-shell #view-reports .report-panel-fame,
+    .pcp-shell #view-reports .report-panel-full {
+        grid-column: span 12 !important;
+    }
+
+    .pcp-shell .kpi-grid-cols {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+body[data-theme="dark"] .pcp-shell {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(251,146,60,0.24), transparent 36%),
+        radial-gradient(circle at 12% 12%, rgba(234,88,12,0.14), transparent 30%),
+        #030504 !important;
+}
